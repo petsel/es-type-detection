@@ -1,5 +1,7 @@
 # es-type-detection
 
+[![codecov](https://codecov.io/gh/petsel/es-type-detection/branch/dev/graph/badge.svg)](https://codecov.io/gh/petsel/es-type-detection)
+
 A utility library for consistent and extensible type detection in JavaScript.
 
 ## 🛡 License and Usage Notice
