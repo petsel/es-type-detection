@@ -1,0 +1,13 @@
+.github/
+.vscode/
+.idea/
+node_modules/
+src/
+test/
+docs/
+coverage/
+*.json
+*.config.js
+*.config.mjs
+# *.ts
+# *.log

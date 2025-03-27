@@ -1,0 +1,78 @@
+name: Package Release
+
+on:
+  push:
+    tags:
+      - 'v*' # e.g. v1.2.3
+
+  # branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies.
+        run: npm ci
+
+      - name: Run es-lint.
+        run: npm run lint
+
+      - name: Run prettier.
+        run: npm run format
+
+      - name: Run test suites.
+        run: npm run test
+
+      - name: Run test coverage and create report.
+        run: npm run coverage
+
+      - name: Create documentation.
+        run: npm run docs
+
+      - name: Build.
+        run: npm run build
+
+      - name: Set up .npmrc for publishing.
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "@petsel:registry=https://registry.npmjs.org/" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Set up .npmrc for publishing.
+        run: |
+          # Authenticate with the npm registry using the automation token
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+          # - tells npm that anything under the @petsel scope should go to the default public registry.
+          # - matters only if
+          #    - one uses a custom private registry elsewhere
+          #    - one wants to be explicit (some monorepo setups do this)
+          # echo "@petsel:registry=https://registry.npmjs.org/" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Dry run npm publish.
+        run: npm publish --access public --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    # - name: Publish to nmp.
+    #   run: npm publish --access public
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    # - run: npx semantic-release
+    #   env:
+    #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

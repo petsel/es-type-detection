@@ -1,0 +1,13 @@
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running lint-staged on staged files..."
+
+npx lint-staged
+
+# # ... instead of the following ...
+# echo "🔍 Running pre-commit checks ... Linting, checking format, running tests..."
+#
+# npm run lint
+# npm run format:check
+# npm run test

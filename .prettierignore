@@ -1,0 +1,16 @@
+# Ignore built files
+dist/
+coverage/
+docs/api/
+docs/coverage/
+node_modules/
+
+# Ignore VitePress build output
+.vitepress/dist/
+
+# Ignore test snapshots if using them
+*.snap
+
+# Ignore generated YAML files (if any)
+*.gen.yml
+*.gen.yaml

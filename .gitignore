@@ -1,0 +1,9 @@
+# **/.*/
+.vscode/
+.idea/
+node_modules/
+dist/
+docs/.vitepress/
+docs/api/
+coverage/
+.release
