@@ -15,12 +15,13 @@
     "dist"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky install && chmod +x .husky/*",
     "release:mock": "npm run lint && npm run format && npm run test && npm run coverage && npm run docs && npm run build",
     "rollup:build": "rollup -c",
     "build": "vite build",
-    "lint": "eslint src/**/*.js test/**/*.js",
+    "lint": "eslint src/**/*.{js,mjs,cjs} test/**/*.{js,mjs,cjs} --no-error-on-unmatched-pattern",
     "lint:check": "npm run lint -- --quiet",
+    "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
@@ -28,7 +29,7 @@
     "docs:docdash": "jsdoc -c jsdoc.docdash.json",
     "docs": "npm run docs:docdash",
     "dev:docs": "vitepress dev docs",
-    "build:docs": "vitepress build docs",
+    "build:docs": "rm -rf docs/.vitepress/dist && vitepress build docs",
     "preview:docs": "npm run build:docs && vitepress preview docs"
   },
   "dependencies": {
