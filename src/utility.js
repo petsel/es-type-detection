@@ -1,0 +1,276 @@
+/**
+ * @module utility
+ * @typicalname utility
+ */
+import { isFunction, isString } from './base';
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+// @ts-check
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * Returns the internal type signature of the first argument, if provided.
+ *
+ * This function exposes a value’s internal `[[Class]]` tag (aka type signature),
+ * such as `'[object Function]'` for a function or `'[object String]'` for a string -
+ * whether it's a primitive string value or a `String` object type.
+ *
+ * Internally, it delegates to the standard prototype `toString` method:
+ *
+ * ```js
+ * Object.prototype.toString.call(value);
+ * ```
+ * @param {...any} args
+ *  A variadic argument list. The first argument (`args[0]`) is the optional
+ *  `value` parameter. Its **presence** is detected via `args.length`, allowing
+ *  the function to distinguish between an explicitly passed `undefined` value
+ *  and a completely omitted argument.
+ * @returns {string | undefined}
+ *  The value’s internal type signature (e.g., `'[object Array]'` for an
+ *  `Array` instance), or the `undefined` value if no argument was passed.
+ */
+export function getTypeSignature(...args) {
+  /** @type {any} */
+  const value = args[0];
+
+  return (args.length >= 1 && Object.prototype.toString.call(value)) || value;
+}
+
+/**
+ * Returns the tag name extracted from a value's internal type signature.
+ *
+ * This function wraps `getTypeSignature` and extracts the value’s internal
+ * `[[Class]]` tag name - e.g., `'Array'` for arrays, `'Date'` for dates, or
+ * even `'FooBar'` for objects _"spoofed"_ via `Symbol.toStringTag` ...
+ *
+ * ```js
+ * const myObj = { foo: 'bar' }
+ * myObj[Symbol.toStringTag] = 'FooBar';
+ * ```
+ *
+ * If no argument is passed, the function returns `undefined`.
+ *
+ * ### Note
+ * The tag name is the portion inside the brackets of the full type signature:
+ *
+ * ```js
+ * Object.prototype.toString.call([]); // => '[object Array]'
+ * ```
+ *
+ * Custom tag names can be defined via the `Symbol.toStringTag` property.
+ *
+ * Full example code for a successful  _"spoofing"_ attempt:
+ *
+ * ```js
+ * const myObj = { foo: 'bar' }
+ * myObj[Symbol.toStringTag] = 'FooBar';
+ *
+ * console.log(myObj+'');                               // '[object FooBar]'
+ * console.log(String(myObj));                          // '[object FooBar]'
+ * console.log(myObj.toString());                       // '[object FooBar]'
+ * console.log(Object.prototype.toString.call(myObj));  // '[object FooBar]'
+ * ```
+ *
+ * This works for both custom types and overrides of built-in types.
+ * @param {...any} args
+ *  A variadic argument list. The first argument (`args[0]`) is optional.
+ *  Its **presence** is detected via the result of the forwarding call to
+ *  `getTypeSignature`.
+ * @returns {string | undefined}
+ *  The extracted tag name (e.g. `'Array'`, `'Date'`) or `undefined` if no
+ *  value was provided.
+ */
+export function getTaggedType(...args) {
+  const result = getTypeSignature(...args);
+
+  return (isString(result) && result.slice(8, -1)) || result;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {FunctionConstructor | undefined}
+ *  if available, the passed value's constructor-function - either an
+ *  ES3-function or an ES6-class constructor-function - otherwise `undefined`.
+ */
+export function getDefinedConstructor(value = null) {
+  /** @type {Object|null} */
+  const prototype = (value !== null && Object.getPrototypeOf(value)) ?? null;
+  // guard.
+  if (prototype === null) {
+    return;
+  }
+  return Object.getOwnPropertyDescriptor(prototype, 'constructor').value;
+}
+
+/**
+ * Implements a getter for the passed value's constructor-function name.
+ * In case of being able to retrieve a constructor, the remaining constraint
+ * is due to any function's `name` related property descriptor which by default,
+ * hence without any intentional further change, is ...
+ *
+ * ```
+ * { ... writable: false, enumerable: false, configurable: true }
+ * ```
+ *
+ * ...
+ * - neither writable
+ * - nor enumerable
+ * - but configurable.
+ *
+ * Thus, something like ...
+ *
+ * ```
+ * Object.defineProperty(fct, 'name', { value: 'FOO' })
+ * ```
+ *
+ * ... will change any passed function's `name` value to "FOO". As long
+ * as the latter can be safely excluded, the detection approach is safe.
+ * One even can or better yet should take advantage of it, branding a
+ * function permanently, in order to e.g. let constructor functions
+ * harden each their name as countermeasure to code-minification tasks.
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {string | undefined}
+ *  if available, the passed value's constructor-function name - retrieved
+ *  exclusively from linked property-descriptors - otherwise `undefined`.
+ *  Any unnamed function refers to the empty string value/`''` as its name.
+ */
+export function getDefinedConstructorName(value) {
+  const constructor = getDefinedConstructor(value) ?? null;
+  // guard.
+  if (constructor === null) {
+    return;
+  }
+  return Object.getOwnPropertyDescriptor(constructor, 'name').value;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * Reaches for a function's stringified version by making
+ * use of ...
+ *
+ * ```
+ * Function.prototype.toString.call(value);
+ * ```
+ *
+ * ... which helps in passing by some possibly manipulated
+ * `toString` functionality.
+ * @param {Function} value
+ *  Assumes a `'function'` type, but does not check for it.
+ * @returns {string}
+ *  Returns a function's stringified implementation.
+ */
+export function getFunctionSource(value) {
+  return Function.prototype.toString.call(value).trim();
+}
+
+/**
+ * Resolves the passed value's type through a combined approach of either retrieving
+ * the passed values `toString` tag, or - in case of dealing with non-branded custom
+ * constructors (both ES6 class and ES3 constructor-functions) - by retrieving the
+ * constructor-function name of the passed type's prototype.
+ * @param {any} value
+ * @returns {string}
+ *  A `'string'` value which either corresponds with the passed value's tagged type
+ *  or its related constructor-function's name.
+ */
+export function resolveType(value) {
+  let name = getTaggedType(value);
+
+  if (name === 'Object') {
+    const constructor = getDefinedConstructor(value) ?? null;
+    if (constructor !== null && getFunctionSource(constructor).startsWith('class')) {
+      name = Object.getOwnPropertyDescriptor(constructor, 'name').value;
+    }
+  } else if (name === 'Error') {
+    name = getDefinedConstructorName(value);
+  }
+  return name;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+function createToStringTagGetter(taggedType) {
+  return () => taggedType;
+}
+
+export function defineStableType(constructor, taggedType) {
+  // guard
+  if (!isFunction(constructor)) {
+    throw new TypeError('The provided "constructor" parameter has to be a function type.');
+  }
+  // guard
+  if (!isString(taggedType)) {
+    throw new TypeError('The provided "taggedType" parameter needs to be a string.');
+  }
+  Object.defineProperty(constructor, 'name', {
+    configurable: false,
+    value: taggedType
+  });
+  Object.defineProperty(constructor.prototype, Symbol.toStringTag, {
+    configurable: false,
+    get: createToStringTagGetter(taggedType)
+  });
+  return constructor;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * @param {...any} args
+ *  A variadic argument list. The first argument (`args[0]`) is the optional
+ *  `value` parameter. Its **presence** is detected via `args.length`, allowing
+ *  the function to distinguish between an explicitly passed `undefined` value
+ *  and a completely omitted argument.
+ * @returns {boolean}
+ *  Whether the passed value's type has been approved of being safely/durably
+ *  resolvable at any time within every environment.
+ */
+export function hasStableTypeIdentity(...args) {
+  let isApproved = args.length >= 1;
+
+  if (isApproved) {
+    /** @type {any} */
+    const value = args[0] ?? null;
+
+    if (value !== null) {
+      const toStringTagSymbol = Symbol.toStringTag;
+
+      if (Object.hasOwn(value, toStringTagSymbol)) {
+        const descriptor = Object.getOwnPropertyDescriptor(value, toStringTagSymbol);
+        isApproved = descriptor.configurable === false;
+      }
+      if (!isApproved) {
+        const prototype = Object.getPrototypeOf(value);
+
+        isApproved = getTaggedType(value) === 'Object' && prototype === null;
+
+        if (!isApproved) {
+          /** @type {FunctionConstructor | null} */
+          const constructor =
+            Object.getOwnPropertyDescriptor(prototype, 'constructor').value ?? null;
+
+          /** @type {Record<(string|symbol), PropertyDescriptor> | Object} */
+          const descriptors =
+            (constructor !== null &&
+              getFunctionSource(constructor).startsWith('class') &&
+              Object.getOwnPropertyDescriptors(constructor.prototype)) ||
+            {};
+
+          isApproved =
+            Object.hasOwn(descriptors, toStringTagSymbol) &&
+            descriptors[toStringTagSymbol].configurable === false;
+        }
+      }
+    }
+  }
+  return isApproved;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

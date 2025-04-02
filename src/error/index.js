@@ -1,0 +1,103 @@
+import { getTypeSignature, getDefinedConstructorName } from '../utility';
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+// @ts-check
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/** @typedef {import('../typedef.js').AnyError} AnyError */
+/** @typedef {import('../typedef.js').PlainError} PlainError */
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is AnyError}
+ *  whether the passed value matches any error type, hence it is
+ *  an instance, either of the basic `Error` type, or of one of the
+ *  built-in error-type subclasses (`SyntaxError`, `ReferenceError` etc.),
+ *  or of a custom error-type that extends the basic `Error` type.
+ */
+export function isError(value) {
+  return getTypeSignature(value) === '[object Error]';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is PlainError}
+ *  whether the passed value matches exactly the built-in basic `Error` type.
+ */
+export function isErrorError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'Error';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is EvalError}
+ *  whether the passed value matches exactly the built-in `EvalError` subtype.
+ */
+export function isEvalError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'EvalError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is RangeError}
+ *  whether the passed value matches exactly the built-in `RangeError` subtype.
+ */
+export function isRangeError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'RangeError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is ReferenceError}
+ *  whether the passed value matches exactly the built-in `ReferenceError` subtype.
+ */
+export function isReferenceError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'ReferenceError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is SyntaxError}
+ *  whether the passed value matches exactly the built-in `SyntaxError` subtype.
+ */
+export function isSyntaxError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'SyntaxError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is TypeError}
+ *  whether the passed value matches exactly the built-in `TypeError` subtype.
+ */
+export function isTypeError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'TypeError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is URIError}
+ *  whether the passed value matches exactly the built-in `URIError` subtype.
+ */
+export function isURIError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'URIError';
+}
+
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is AggregateError}
+ *  whether the passed value matches exactly the built-in `AggregateError` subtype.
+ */
+export function isAggregateError(value) {
+  return isError(value) && getDefinedConstructorName(value) === 'AggregateError';
+}
