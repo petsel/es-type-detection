@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2022: true,
@@ -12,6 +13,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:jsdoc/recommended',
 
     // // for future use
     // 'plugin:@typescript-eslint/recommended',
@@ -21,7 +23,7 @@ module.exports = {
 
     'plugin:yml/standard'
   ],
-  plugins: ['prettier', 'yml'],
+  plugins: ['jsdoc', 'prettier', 'yml'],
   overrides: [
     {
       files: ['*.yml', '*.yaml'],
@@ -30,6 +32,12 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 'error',
+    'jsdoc/require-param-description': 'off',
+    'jsdoc/require-returns-description': 'off',
+    'jsdoc/check-tag-names': 'off',
+    'jsdoc/require-jsdoc': 'off',
+    'jsdoc/newline-after-description': 'off',
+    'jsdoc/check-types': 'off',
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
   }
 };

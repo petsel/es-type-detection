@@ -30,16 +30,43 @@ export default [
       },
       {
         file: 'dist/es-type-detection.umd.js',
-        name: 'MethodModifier',
+        name: 'es_td',
         format: 'umd',
         sourcemap: true
+
+        //         file: 'dist/es-type-detection.umd.js',
+        //         format: 'umd',
+        //         name: 'petsel',
+        //         intro: `
+        // globalThis.petsel = globalThis.petsel || {};
+        // globalThis.petsel.typedetection = (function() {
+        //         `,
+        //         outro: `
+        // return exports;
+        // })();
+        //         `,
+        //         sourcemap: true
       },
       {
         file: 'dist/es-type-detection.umd.min.js',
-        name: 'MethodModifier',
+        name: 'es_td',
         format: 'umd',
-        plugins: [terser()],
-        sourcemap: true
+        sourcemap: true,
+        plugins: [terser()]
+
+        //         file: 'dist/es-type-detection.umd.min.js',
+        //         format: 'umd',
+        //         name: 'petsel',
+        //         intro: `
+        // globalThis.petsel = globalThis.petsel || {};
+        // globalThis.petsel.typedetection = (function() {
+        //         `,
+        //         outro: `
+        // return exports;
+        // })();
+        //         `,
+        //         sourcemap: true,
+        //         plugins: [terser()]
       }
     ],
     plugins: [nodeResolve(), commonjs()]

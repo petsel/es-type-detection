@@ -6,9 +6,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.js',
-      name: 'ESTypeDetection',
-      fileName: (format) => `es-type-detection.${format}.js`,
-      formats: ['es', 'cjs', 'umd']
+      name: 'es_td',
+      formats: ['es', 'cjs', 'umd'],
+      fileName: (format) => `es-type-detection.${format}.js`
     },
     rollupOptions: {
       output: {

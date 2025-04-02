@@ -1,0 +1,10 @@
+{
+  "tsconfig": "tsconfig.typedoc.json",
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "out": "docs/api/html",
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "includeVersion": true
+}

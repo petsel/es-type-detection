@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "allowJs": true,
+  "checkJs": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "out": "docs/api",
+  "includeVersion": true
+}
