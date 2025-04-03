@@ -12,7 +12,7 @@ function runTestCases(label, testFct, expected, cases) {
   });
 }
 
-describe('isObject', () => {
+describe('`isObject` - detects any object type. Function types are excluded alongside all primitive values.', () => {
   runTestCases(
     '✅ Returns true for object types and boxed object types (function types and the `null` value excluded).',
     isObject,

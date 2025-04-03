@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 
 import { isFunction } from '../../src/base';
 
-describe('isFunction', () => {
-  describe('✅ True Positives: valid function types', () => {
+describe('`isFunction` - detects any kind of function type.', () => {
+  describe('✅ True Positives: valid function types.', () => {
     it('detects regular functions', () => {
       expect(isFunction(function () {})).toBe(true);
       expect(isFunction(() => {})).toBe(true);
@@ -11,25 +11,25 @@ describe('isFunction', () => {
       expect(isFunction(function* () {})).toBe(true);
     });
 
-    it('detects built-in/native functions', () => {
+    it('detects built-in/native functions.', () => {
       expect(isFunction(Array.isArray)).toBe(true);
       expect(isFunction(Math.max)).toBe(true);
       expect(isFunction(setTimeout)).toBe(true);
     });
 
-    it('detects class constructors as functions', () => {
+    it('detects class constructors as functions.', () => {
       class MyClass {}
       expect(isFunction(MyClass)).toBe(true);
     });
 
-    it('detects bound functions', () => {
+    it('detects bound functions.', () => {
       const bound = function (x) {
         return x;
       }.bind(null, 42);
       expect(isFunction(bound)).toBe(true);
     });
 
-    it('detects function proxies with full function trap', () => {
+    it('detects function proxies with full function trap.', () => {
       const proxy = new Proxy(() => {}, {
         apply: (target, thisArg, args) => target.apply(thisArg, args)
       });
@@ -37,8 +37,8 @@ describe('isFunction', () => {
     });
   });
 
-  describe('❌ True Negatives: definitely not functions', () => {
-    it('rejects primitives and non-functions', () => {
+  describe('❌ True Negatives: definitely not functions.', () => {
+    it('rejects primitives and non-functions.', () => {
       expect(isFunction(undefined)).toBe(false);
       expect(isFunction(null)).toBe(false);
       expect(isFunction(0)).toBe(false);
@@ -48,7 +48,7 @@ describe('isFunction', () => {
       expect(isFunction(Symbol('x'))).toBe(false);
     });
 
-    it('rejects structured objects and arrays', () => {
+    it('rejects structured objects and arrays.', () => {
       expect(isFunction({})).toBe(false);
       expect(isFunction([])).toBe(false);
       expect(isFunction(/regex/)).toBe(false);
@@ -56,8 +56,8 @@ describe('isFunction', () => {
     });
   });
 
-  describe('⚠️ False Positives: objects that mimic functions', () => {
-    it('rejects object with call/apply/toString methods', () => {
+  describe('⚠️ False Positives: objects that mimic functions.', () => {
+    it('rejects object with call/apply/toString methods.', () => {
       const fakeFn = {
         call: () => {},
         apply: () => {},
@@ -66,7 +66,7 @@ describe('isFunction', () => {
       expect(isFunction(fakeFn)).toBe(false);
     });
 
-    it('rejects class instances with call/apply properties', () => {
+    it('rejects class instances with call/apply properties.', () => {
       class FakeCallable {
         call() {}
         apply() {}
@@ -74,7 +74,7 @@ describe('isFunction', () => {
       expect(isFunction(new FakeCallable())).toBe(false);
     });
 
-    it('rejects proxies that lack proper function internals', () => {
+    it('rejects proxies that lack proper function internals.', () => {
       const proxy = new Proxy(
         {},
         {
@@ -87,8 +87,8 @@ describe('isFunction', () => {
     });
   });
 
-  describe('🧪 Realm and host environment edge cases', () => {
-    it('detects Function.prototype (still a function)', () => {
+  describe('🧪 Realm and host environment edge cases.', () => {
+    it('detects Function.prototype (still a function).', () => {
       expect(isFunction(Function.prototype)).toBe(true);
     });
 
@@ -97,7 +97,7 @@ describe('isFunction', () => {
     //   expect(isFunction(Function)).toBe(true); // substitute for real test
     // });
 
-    it('rejects overridden typeof return values', () => {
+    it('rejects overridden typeof return values.', () => {
       const tricky = {
         call: () => {},
         apply: () => {},

@@ -5,7 +5,6 @@ import {
   isObject,
   isObjectObject,
   isDictionaryObject,
-  isArray,
   isString,
   isStringValue,
   isStringObject,
@@ -88,8 +87,8 @@ describe('The top most exported module ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.base)).toStrictEqual(true);
     });
-    it('... that again features exactly 20 own property keys.', () => {
-      expect(Object.keys(module.base).length).toStrictEqual(20);
+    it('... that again features exactly 19 own property keys.', () => {
+      expect(Object.keys(module.base).length).toStrictEqual(19);
     });
     describe('The `base` namespace should feature following type detection methods ...', () => {
       it(' - `isFunction`', () => {
@@ -108,11 +107,6 @@ describe('The top most exported module ...', () => {
       it(' - `isDictionaryObject`', () => {
         expect(isFunction(module.base.isDictionaryObject)).toStrictEqual(true);
         expect(module.base.isDictionaryObject).toStrictEqual(isDictionaryObject);
-      });
-
-      it(' - `isArray`', () => {
-        expect(isFunction(module.base.isArray)).toStrictEqual(true);
-        expect(module.base.isArray).toStrictEqual(isArray);
       });
 
       it(' - `isString`', () => {

@@ -12,7 +12,7 @@ function runTestCases(label, cases) {
   });
 }
 
-describe('getTypeSignature', () => {
+describe('`getTypeSignature` - gets the internal type signature of any passed value.', () => {
   it('returns `undefined` when no argument is passed', () => {
     expect(getTypeSignature()).toBeUndefined();
   });
