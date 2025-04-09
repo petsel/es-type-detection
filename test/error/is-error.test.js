@@ -296,3 +296,44 @@ describe('Built-in subclass error type detection', () => {
     );
   });
 });
+
+// Additional edge cases for thorough coverage
+
+describe('Extended `isError` edge-case coverage', () => {
+  runTestCases('✅ Matches unconventional but valid error instances.', isError, true, [
+    // - this one gets covered by the additionally introduced
+    //   `hasMatchingErrorPrototype` check, already in its non-recursive form.
+    [Object.create(Error.prototype), 'Object.create(Error.prototype)'],
+    [
+      new (class CustomSyntaxError extends SyntaxError {})(),
+      'CustomSyntaxError extends SyntaxError'
+    ],
+    // - this one gets covered only by recursive ping-pong
+    //   calls of `hasMatchingErrorPrototype` and `isError`.
+    [
+      (() => {
+        function LegacyError() {}
+        LegacyError.prototype = Object.create(Error.prototype);
+        LegacyError.prototype.name = 'LegacyError';
+        return new LegacyError();
+      })(),
+      'LegacyError ES3-style'
+    ],
+    [
+      (() => {
+        class NullProtoError extends Error {}
+        Object.setPrototypeOf(NullProtoError.prototype, null);
+        return new NullProtoError('null-proto');
+      })(),
+      'Error subclass with null prototype'
+    ],
+    [new AggregateError([], 'fail', { cause: new Error('inner') }), 'AggregateError with metadata']
+  ]);
+
+  runTestCases('❌ Still rejects structurally similar but invalid error values.', isError, false, [
+    [Object.create(null), 'Object.create(null)'],
+    [{ name: 'Error', message: 'fake' }, 'Plain object with name/message'],
+    [Error, 'Error constructor'],
+    [() => new Error(), 'function that returns Error']
+  ]);
+});
