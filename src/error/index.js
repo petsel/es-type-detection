@@ -1,4 +1,5 @@
 import { getTypeSignature, getDefinedConstructorName } from '../utility';
+import { hasMatchingErrorPrototype } from './utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -6,8 +7,7 @@ import { getTypeSignature, getDefinedConstructorName } from '../utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-/** @typedef {import('../typedef.js').AnyError} AnyError */
-/** @typedef {import('../typedef.js').PlainError} PlainError */
+/** @typedef {import('./typedef.js').AnyError} AnyError */
 
 /**
  * @param {any} [value]
@@ -19,8 +19,29 @@ import { getTypeSignature, getDefinedConstructorName } from '../utility';
  *  or of a custom error-type that extends the basic `Error` type.
  */
 export function isError(value) {
-  return getTypeSignature(value) === '[object Error]';
+  const signature = getTypeSignature(value);
+
+  return (
+    signature === '[object Error]' ||
+    (signature === '[object Object]' && hasMatchingErrorPrototype(value))
+  );
+  // return getTypeSignature(value) === '[object Error]';
+  // //
+  // // - the above commented approach does not cover
+  // //   the error test-suite edge cases of ...
+  // //    - `Object.create(Error.prototype)`
+  // //    - and an ES3 style `LegacyError` like ...
+  // //      ```
+  // //      (() => {
+  // //        function LegacyError() {}
+  // //        LegacyError.prototype = Object.create(Error.prototype);
+  // //        LegacyError.prototype.name = 'LegacyError';
+  // //        return new LegacyError();
+  // //      })(),
+  // //      ```
 }
+
+/** @typedef {import('./typedef.js').PlainError} PlainError */
 
 /**
  * @param {any} [value]
@@ -101,3 +122,5 @@ export function isURIError(value) {
 export function isAggregateError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'AggregateError';
 }
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
