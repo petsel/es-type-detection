@@ -10,12 +10,12 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd'],
       fileName: (format) => `es-type-detection.${format}.js`
     },
-    rollupOptions: {
-      output: {
-        exports: 'named'
-        //sourcemap: true
-      }
-    },
+    // rollupOptions: {
+    //   output: {
+    //     exports: 'named'
+    //     //sourcemap: true
+    //   }
+    // },
     sourcemap: true
   }
 });
