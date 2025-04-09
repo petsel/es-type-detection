@@ -30,7 +30,7 @@ export default [
       },
       {
         file: 'dist/es-type-detection.umd.js',
-        name: 'es_td',
+        name: 'typex',
         format: 'umd',
         sourcemap: true
 
@@ -49,7 +49,7 @@ export default [
       },
       {
         file: 'dist/es-type-detection.umd.min.js',
-        name: 'es_td',
+        name: 'typex',
         format: 'umd',
         sourcemap: true,
         plugins: [terser()]

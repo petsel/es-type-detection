@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.js',
-      name: 'es_td',
+      name: 'typex',
       formats: ['es', 'cjs', 'umd'],
       fileName: (format) => `es-type-detection.${format}.js`
     },
