@@ -93,7 +93,7 @@ export function getTaggedType(...args) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {FunctionConstructor | undefined}
+ * @returns {NewableFunction|CallableFunction|undefined}
  *  if available, the passed value's constructor-function - either an
  *  ES3-function or an ES6-class constructor-function - otherwise `undefined`.
  */
@@ -162,7 +162,7 @@ export function getDefinedConstructorName(value) {
  * ... which helps in passing by some possibly manipulated
  * `toString` functionality.
  * @param {Function} value
- *  Assumes a `'function'` type, but does not check for it.
+ *  Assumes a function type, but does not check for it.
  * @returns {string}
  *  Returns a function's stringified implementation.
  */
@@ -252,7 +252,7 @@ export function hasStableTypeIdentity(...args) {
         isApproved = getTaggedType(value) === 'Object' && prototype === null;
 
         if (!isApproved) {
-          /** @type {FunctionConstructor | null} */
+          /** @type {NewableFunction | CallableFunction | null} */
           const constructor =
             Object.getOwnPropertyDescriptor(prototype, 'constructor').value ?? null;
 

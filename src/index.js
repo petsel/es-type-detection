@@ -30,6 +30,33 @@ import {
   isBigIntObject
 } from './base';
 
+import { hasOwnPrototype, hasOwnWritablePrototype } from './function/utility';
+import {
+  isClass,
+  isNonAsyncGenerator,
+  isAsyncGenerator,
+  isGenerator,
+  isAsyncFunction,
+  isAsyncNonArrow,
+  isAsyncArrow,
+  isNonAsyncArrow,
+  isArrow,
+  isES3Function,
+  isGenericFunction
+} from './function';
+
+import {
+  isError,
+  isErrorError,
+  isEvalError,
+  isRangeError,
+  isReferenceError,
+  isSyntaxError,
+  isTypeError,
+  isURIError,
+  isAggregateError
+} from './error';
+
 export default {
   utility: {
     getTypeSignature,
@@ -38,7 +65,9 @@ export default {
     getDefinedConstructorName,
     resolveType,
     defineStableType,
-    hasStableTypeIdentity
+    hasStableTypeIdentity,
+    hasOwnPrototype,
+    hasOwnWritablePrototype
   },
   base: {
     isFunction,
@@ -62,6 +91,27 @@ export default {
     isBigIntObject
   },
   function: {
-    utility: {}
+    isClass,
+    isNonAsyncGenerator,
+    isAsyncGenerator,
+    isGenerator,
+    isAsyncFunction,
+    isAsyncNonArrow,
+    isAsyncArrow,
+    isNonAsyncArrow,
+    isArrow,
+    isES3Function,
+    isGenericFunction
+  },
+  error: {
+    isError,
+    isErrorError,
+    isEvalError,
+    isRangeError,
+    isReferenceError,
+    isSyntaxError,
+    isTypeError,
+    isURIError,
+    isAggregateError
   }
 };

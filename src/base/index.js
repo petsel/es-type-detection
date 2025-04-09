@@ -1,4 +1,4 @@
-import { getDefinedConstructorName, getTypeSignature } from '../utility';
+import { getTypeSignature, getDefinedConstructorName } from '../utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -6,19 +6,28 @@ import { getDefinedConstructorName, getTypeSignature } from '../utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+/* eslint-disable yoda */
+
 /**
+ * Detects any function type, which is ... not only the `typeof` operator
+ * returns the `'function'` string for the operated `value`, but the latter
+ * also features both of a function's call methods `call` and `apply`.
+ *
+ * This method is essential and **safe**.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is Function}
- *  Whether the passed value is a function type of any kind.
+ *  A boolean value which indicates whether
+ *  the tested type is any kind of function.
  */
 export function isFunction(value) {
   return (
-    typeof value === 'function' &&
-    typeof value.call === 'function' &&
-    typeof value.apply === 'function'
+    'function' === typeof value &&
+    'function' === typeof value.call &&
+    'function' === typeof value.apply
   );
 }
+/* eslint-enable yoda */
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -78,15 +87,15 @@ export function isDictionaryObject(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-/**
- * @param {any} [value]
- *  An optionally passed value of any type.
- * @returns {value is Array}
- *  Whether the passed value is an `Array` type.
- */
-export function isArray(value) {
-  return Array.isArray(value);
-}
+// /**
+//  * @param {any} [value]
+//  *  An optionally passed value of any type.
+//  * @returns {value is Array}
+//  *  Whether the passed value is an `Array` type.
+//  */
+// export function isArray(value) {
+//   return Array.isArray(value);
+// }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
