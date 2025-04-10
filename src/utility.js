@@ -1,12 +1,20 @@
-/**
- * @module utility
- * @typicalname utility
- */
+// @ts-check
+
 import { isFunction, isString } from './base';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-// @ts-check
+/** @internal */
+export const getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors;
+
+/** @internal */
+export const getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+/** @internal */
+export const getPrototypeOf = Object.getPrototypeOf;
+
+const defineProperty = Object.defineProperty;
+const hasOwn = Object.hasOwn;
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -99,12 +107,14 @@ export function getTaggedType(...args) {
  */
 export function getDefinedConstructor(value = null) {
   /** @type {Object|null} */
-  const prototype = (value !== null && Object.getPrototypeOf(value)) ?? null;
+  const prototype = (value !== null && getPrototypeOf(value)) ?? null;
   // guard.
   if (prototype === null) {
     return;
   }
-  return Object.getOwnPropertyDescriptor(prototype, 'constructor').value;
+  const descriptor = getOwnPropertyDescriptor(prototype, 'constructor') ?? null;
+
+  return descriptor?.value || (isFunction(prototype) && prototype) || void 0;
 }
 
 /**
@@ -146,7 +156,7 @@ export function getDefinedConstructorName(value) {
   if (constructor === null) {
     return;
   }
-  return Object.getOwnPropertyDescriptor(constructor, 'name').value;
+  return getOwnPropertyDescriptor(constructor, 'name').value;
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -186,7 +196,7 @@ export function resolveType(value) {
   if (name === 'Object') {
     const constructor = getDefinedConstructor(value) ?? null;
     if (constructor !== null && getFunctionSource(constructor).startsWith('class')) {
-      name = Object.getOwnPropertyDescriptor(constructor, 'name').value;
+      name = getOwnPropertyDescriptor(constructor, 'name').value;
     }
   } else if (name === 'Error') {
     name = getDefinedConstructorName(value);
@@ -209,11 +219,11 @@ export function defineStableType(constructor, taggedType) {
   if (!isString(taggedType)) {
     throw new TypeError('The provided "taggedType" parameter needs to be a string.');
   }
-  Object.defineProperty(constructor, 'name', {
+  defineProperty(constructor, 'name', {
     configurable: false,
     value: taggedType
   });
-  Object.defineProperty(constructor.prototype, Symbol.toStringTag, {
+  defineProperty(constructor.prototype, Symbol.toStringTag, {
     configurable: false,
     get: createToStringTagGetter(taggedType)
   });
@@ -242,29 +252,28 @@ export function hasStableTypeIdentity(...args) {
     if (value !== null) {
       const toStringTagSymbol = Symbol.toStringTag;
 
-      if (Object.hasOwn(value, toStringTagSymbol)) {
-        const descriptor = Object.getOwnPropertyDescriptor(value, toStringTagSymbol);
+      if (hasOwn(value, toStringTagSymbol)) {
+        const descriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
         isApproved = descriptor.configurable === false;
       }
       if (!isApproved) {
-        const prototype = Object.getPrototypeOf(value);
+        const prototype = getPrototypeOf(value);
 
         isApproved = getTaggedType(value) === 'Object' && prototype === null;
 
         if (!isApproved) {
           /** @type {NewableFunction | CallableFunction | null} */
-          const constructor =
-            Object.getOwnPropertyDescriptor(prototype, 'constructor').value ?? null;
+          const constructor = getOwnPropertyDescriptor(prototype, 'constructor').value ?? null;
 
           /** @type {Record<(string|symbol), PropertyDescriptor> | Object} */
           const descriptors =
             (constructor !== null &&
               getFunctionSource(constructor).startsWith('class') &&
-              Object.getOwnPropertyDescriptors(constructor.prototype)) ||
+              getOwnPropertyDescriptors(constructor.prototype)) ||
             {};
 
           isApproved =
-            Object.hasOwn(descriptors, toStringTagSymbol) &&
+            hasOwn(descriptors, toStringTagSymbol) &&
             descriptors[toStringTagSymbol].configurable === false;
         }
       }

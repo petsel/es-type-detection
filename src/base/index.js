@@ -1,8 +1,6 @@
-import { getTypeSignature, getDefinedConstructorName } from '../utility';
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
 // @ts-check
+
+import { getPrototypeOf, getTypeSignature, getDefinedConstructorName } from '../utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -80,9 +78,7 @@ export function isObjectObject(value) {
  *  or _"Prototype-less object"_.
  */
 export function isDictionaryObject(value) {
-  return (
-    getTypeSignature(value) === '[object Object]' && (Object.getPrototypeOf(value) ?? null) === null
-  );
+  return getTypeSignature(value) === '[object Object]' && (getPrototypeOf(value) ?? null) === null;
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

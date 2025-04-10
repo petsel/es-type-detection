@@ -112,44 +112,86 @@ describe('Testing all `Function` introspection methods related to function types
     });
   });
 
-  describe('The introspection method `isArrow` ...', () => {
+  describe('The introspection method `isNonAsyncGenerator` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
       expect(
         allTestEntries.filter(([key /* , spec */]) =>
-          isArrow(getTestCandidateBySpecificationKey(key))
+          isNonAsyncGenerator(getTestCandidateBySpecificationKey(key))
         ).length
       ).toBe(
         allTestEntries
           // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_arrow).length
+          .filter(([_, spec]) => !!spec.is_non_async_generator).length
       );
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_arrow)
+        .filter(([_, spec]) => !!spec.is_non_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ✅ ${spec.description} is either kind of arrow function, async or not.`, () => {
-            expect(isArrow(candidate)).toBe(true);
+          it(`- ✅ ${spec.description} is explicitly a \`GeneratorFunction\` type.`, () => {
+            expect(isNonAsyncGenerator(candidate)).toBe(true);
           });
         });
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_arrow)
+        .filter(([_, spec]) => !spec.is_non_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ❌ ${spec.description} is **not** any kind of arrow function.`, () => {
-            expect(isArrow(candidate)).toBe(false);
+          it(`- ❌ ${spec.description} is **not** explicitly a \`GeneratorFunction\` type.`, () => {
+            expect(isNonAsyncGenerator(candidate)).toBe(false);
           });
         });
 
-      it('- ❌ an `Array` instance is **not** any kind of arrow function.', () => {
-        expect(isArrow([])).toBe(false);
+      it('- ❌ an `Array` instance is **not** explicitly a `GeneratorFunction` type.', () => {
+        expect(isNonAsyncGenerator([])).toBe(false);
       });
-      it('- ❌ an `Object` instance is **not** any kind of arrow function.', () => {
-        expect(isArrow({})).toBe(false);
+      it('- ❌ an `Object` instance is **not** explicitly a `GeneratorFunction` type.', () => {
+        expect(isNonAsyncGenerator({})).toBe(false);
+      });
+    });
+  });
+
+  describe('The introspection method `isAsyncGenerator` ...', () => {
+    it('- filters the correct amount of items from a given array of mixed function types.', () => {
+      expect(
+        allTestEntries.filter(([key /* , spec */]) =>
+          isAsyncGenerator(getTestCandidateBySpecificationKey(key))
+        ).length
+      ).toBe(
+        allTestEntries
+          // eslint-disable-next-line no-unused-vars
+          .filter(([_, spec]) => !!spec.is_async_generator).length
+      );
+    });
+
+    describe('... verifies whether ...', () => {
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !!spec.is_async_generator)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} is explicitly an \`AsyncGeneratorFunction\` type.`, () => {
+            expect(isAsyncGenerator(candidate)).toBe(true);
+          });
+        });
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !spec.is_async_generator)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ❌ ${spec.description} is **not** explicitly an \`AsyncGeneratorFunction\` type.`, () => {
+            expect(isAsyncGenerator(candidate)).toBe(false);
+          });
+        });
+
+      it('- ❌ an `Array` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
+        expect(isAsyncGenerator([])).toBe(false);
+      });
+      it('- ❌ an `Object` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
+        expect(isAsyncGenerator({})).toBe(false);
       });
     });
   });
@@ -234,90 +276,6 @@ describe('Testing all `Function` introspection methods related to function types
       });
       it('- ❌ an `Object` instance is **not** any kind of async function.', () => {
         expect(isAsyncFunction({})).toBe(false);
-      });
-    });
-  });
-
-  describe('The introspection method `isAsyncGenerator` ...', () => {
-    it('- filters the correct amount of items from a given array of mixed function types.', () => {
-      expect(
-        allTestEntries.filter(([key /* , spec */]) =>
-          isAsyncGenerator(getTestCandidateBySpecificationKey(key))
-        ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_async_generator).length
-      );
-    });
-
-    describe('... verifies whether ...', () => {
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_async_generator)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ✅ ${spec.description} is explicitly an \`AsyncGeneratorFunction\` type.`, () => {
-            expect(isAsyncGenerator(candidate)).toBe(true);
-          });
-        });
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_async_generator)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ❌ ${spec.description} is **not** explicitly an \`AsyncGeneratorFunction\` type.`, () => {
-            expect(isAsyncGenerator(candidate)).toBe(false);
-          });
-        });
-
-      it('- ❌ an `Array` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
-        expect(isAsyncGenerator([])).toBe(false);
-      });
-      it('- ❌ an `Object` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
-        expect(isAsyncGenerator({})).toBe(false);
-      });
-    });
-  });
-
-  describe('The introspection method `isNonAsyncGenerator` ...', () => {
-    it('- filters the correct amount of items from a given array of mixed function types.', () => {
-      expect(
-        allTestEntries.filter(([key /* , spec */]) =>
-          isNonAsyncGenerator(getTestCandidateBySpecificationKey(key))
-        ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_non_async_generator).length
-      );
-    });
-
-    describe('... verifies whether ...', () => {
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_non_async_generator)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ✅ ${spec.description} is explicitly a \`GeneratorFunction\` type.`, () => {
-            expect(isNonAsyncGenerator(candidate)).toBe(true);
-          });
-        });
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_non_async_generator)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ❌ ${spec.description} is **not** explicitly a \`GeneratorFunction\` type.`, () => {
-            expect(isNonAsyncGenerator(candidate)).toBe(false);
-          });
-        });
-
-      it('- ❌ an `Array` instance is **not** explicitly a `GeneratorFunction` type.', () => {
-        expect(isNonAsyncGenerator([])).toBe(false);
-      });
-      it('- ❌ an `Object` instance is **not** explicitly a `GeneratorFunction` type.', () => {
-        expect(isNonAsyncGenerator({})).toBe(false);
       });
     });
   });
@@ -448,44 +406,44 @@ describe('Testing all `Function` introspection methods related to function types
     });
   });
 
-  describe('The introspection method `isFunctionSubtype` ...', () => {
+  describe('The introspection method `isArrow` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
       expect(
         allTestEntries.filter(([key /* , spec */]) =>
-          isFunctionSubtype(getTestCandidateBySpecificationKey(key))
+          isArrow(getTestCandidateBySpecificationKey(key))
         ).length
       ).toBe(
         allTestEntries
           // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_extended_function).length
+          .filter(([_, spec]) => !!spec.is_arrow).length
       );
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_extended_function)
+        .filter(([_, spec]) => !!spec.is_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ✅ ${spec.description} is exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
-            expect(isFunctionSubtype(candidate)).toBe(true);
+          it(`- ✅ ${spec.description} is either kind of arrow function, async or not.`, () => {
+            expect(isArrow(candidate)).toBe(true);
           });
         });
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_extended_function)
+        .filter(([_, spec]) => !spec.is_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ❌ ${spec.description} is **not** exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
-            expect(isFunctionSubtype(candidate)).toBe(false);
+          it(`- ❌ ${spec.description} is **not** any kind of arrow function.`, () => {
+            expect(isArrow(candidate)).toBe(false);
           });
         });
 
-      it('- ❌ an `Array` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
-        expect(isES3Function([])).toBe(false);
+      it('- ❌ an `Array` instance is **not** any kind of arrow function.', () => {
+        expect(isArrow([])).toBe(false);
       });
-      it('- ❌ an `Object` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
-        expect(isES3Function({})).toBe(false);
+      it('- ❌ an `Object` instance is **not** any kind of arrow function.', () => {
+        expect(isArrow({})).toBe(false);
       });
     });
   });
@@ -570,6 +528,48 @@ describe('Testing all `Function` introspection methods related to function types
       });
       it('- ❌ an `Object` instance is **neither** a non async arrow function **nor** a good old ES3 function.', () => {
         expect(isGenericFunction({})).toBe(false);
+      });
+    });
+  });
+
+  describe('The introspection method `isFunctionSubtype` ...', () => {
+    it('- filters the correct amount of items from a given array of mixed function types.', () => {
+      expect(
+        allTestEntries.filter(([key /* , spec */]) =>
+          isFunctionSubtype(getTestCandidateBySpecificationKey(key))
+        ).length
+      ).toBe(
+        allTestEntries
+          // eslint-disable-next-line no-unused-vars
+          .filter(([_, spec]) => !!spec.is_extended_function).length
+      );
+    });
+
+    describe('... verifies whether ...', () => {
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !!spec.is_extended_function)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} is exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
+            expect(isFunctionSubtype(candidate)).toBe(true);
+          });
+        });
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !spec.is_extended_function)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ❌ ${spec.description} is **not** exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
+            expect(isFunctionSubtype(candidate)).toBe(false);
+          });
+        });
+
+      it('- ❌ an `Array` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
+        expect(isFunctionSubtype([])).toBe(false);
+      });
+      it('- ❌ an `Object` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
+        expect(isFunctionSubtype({})).toBe(false);
       });
     });
   });

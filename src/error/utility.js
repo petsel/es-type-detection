@@ -1,25 +1,38 @@
+// @ts-check
+
+import { getPrototypeOf, getOwnPropertyDescriptors } from '../utility';
+
 import { isFunction, isString } from '../base';
 import { isError } from './index';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-// @ts-check
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
+/**
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {boolean}
+ *  whether the passed value along its (non/existing) prototype chain
+ *  does feature a prototype object which does qualify as the plain
+ *  `Error` type's prototype.
+ */
 export function hasMatchingErrorPrototype(value) {
-  const prototype = Object.getPrototypeOf(value) ?? null;
+  const prototype = getPrototypeOf(value) ?? null;
 
   // guard.
   if (prototype === null) {
     return false;
   }
-  const {
-    constructor: constrDesc = null,
-    message: messageDesc = null,
-    name: nameDesc = null,
-    toString: toStringDesc = null
-  } = Object.getOwnPropertyDescriptors(prototype);
+  /** @type {PropertyDescriptorMap | Object} */
+  const descriptors = getOwnPropertyDescriptors(prototype) ?? {};
+
+  /** @type {PropertyDescriptor | null} */
+  const constrDesc = descriptors.constructor ?? null;
+  /** @type {PropertyDescriptor | null} */
+  const messageDesc = descriptors.message ?? null;
+  /** @type {PropertyDescriptor | null} */
+  const nameDesc = descriptors.name ?? null;
+  /** @type {PropertyDescriptor | null} */
+  const toStringDesc = descriptors.toString ?? null;
 
   return (
     (isFunction(constrDesc?.value) &&

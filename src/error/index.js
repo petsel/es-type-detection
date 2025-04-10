@@ -1,9 +1,7 @@
+// @ts-check
+
 import { getTypeSignature, getDefinedConstructorName } from '../utility';
 import { hasMatchingErrorPrototype } from './utility';
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-// @ts-check
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
