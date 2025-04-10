@@ -44,7 +44,9 @@ import {
   isNonAsyncArrow,
   isArrow,
   isES3Function,
-  isGenericFunction
+  isGenericFunction,
+  isFunctionSubtype,
+  isUnnamedFunction
 } from '../src/function';
 
 import {
@@ -144,8 +146,8 @@ describe('The top most exported module ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.function)).toStrictEqual(true);
     });
-    it('... that again features exactly 11 own property keys.', () => {
-      expect(Object.keys(module.function).length).toStrictEqual(11);
+    it('... that again features exactly 13 own property keys.', () => {
+      expect(Object.keys(module.function).length).toStrictEqual(13);
     });
     describe('The `function` namespace should feature following function-type detection methods ...', () => {
       runTestCases(module.function, [
@@ -163,7 +165,10 @@ describe('The top most exported module ...', () => {
         ['isArrow', isArrow],
 
         ['isES3Function', isES3Function],
-        ['isGenericFunction', isGenericFunction]
+        ['isGenericFunction', isGenericFunction],
+
+        ['isFunctionSubtype', isFunctionSubtype],
+        ['isUnnamedFunction', isUnnamedFunction]
       ]);
     });
   });
