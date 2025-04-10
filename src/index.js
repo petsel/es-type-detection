@@ -42,7 +42,9 @@ import {
   isNonAsyncArrow,
   isArrow,
   isES3Function,
-  isGenericFunction
+  isGenericFunction,
+  isFunctionSubtype,
+  isUnnamedFunction
 } from './function';
 
 import {
@@ -101,7 +103,9 @@ export default {
     isNonAsyncArrow,
     isArrow,
     isES3Function,
-    isGenericFunction
+    isGenericFunction,
+    isFunctionSubtype,
+    isUnnamedFunction
   },
   error: {
     isError,
