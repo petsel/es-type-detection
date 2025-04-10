@@ -1,5 +1,8 @@
+// @ts-check
+
 import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
 import {
+  getOwnPropertyDescriptor,
   getTypeSignature,
   // getTaggedType,
   getDefinedConstructor,
@@ -8,10 +11,6 @@ import {
 } from '../utility';
 
 import { isFunction } from '../base';
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-// @ts-check
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -42,7 +41,7 @@ export function isClass(value) {
  *  `GeneratorFunction` type.
  */
 export function isNonAsyncGenerator(value) {
-  return isFunction(value) && getTypeSignature() === '[object GeneratorFunction]';
+  return isFunction(value) && getTypeSignature(value) === '[object GeneratorFunction]';
   // return isFunction(value) && getTaggedType(value) === 'GeneratorFunction';
 }
 
@@ -55,7 +54,7 @@ export function isNonAsyncGenerator(value) {
  *  `AsyncGeneratorFunction` type.
  */
 export function isAsyncGenerator(value) {
-  return isFunction(value) && getTypeSignature() === '[object AsyncGeneratorFunction]';
+  return isFunction(value) && getTypeSignature(value) === '[object AsyncGeneratorFunction]';
   // return isFunction(value) && getTaggedType(value) === 'AsyncGeneratorFunction';
 }
 
@@ -98,7 +97,7 @@ export function isGenerator(value) {
  *  tested value is a(n) (non-generator) async function.
  */
 export function isAsyncFunction(value) {
-  return isFunction(value) && getTypeSignature() === '[object AsyncFunction]';
+  return isFunction(value) && getTypeSignature(value) === '[object AsyncFunction]';
   // return isFunction(value) && getTaggedType(value) === 'AsyncFunction';
 }
 
@@ -148,8 +147,10 @@ export function isAsyncArrow(value) {
  */
 export function isNonAsyncArrow(value) {
   return (
-    isFunction(value) && !hasOwnPrototype(value) && getTypeSignature() !== '[object AsyncFunction]'
-    // getTaggedType() !== 'AsyncFunction'
+    isFunction(value) &&
+    !hasOwnPrototype(value) &&
+    getTypeSignature(value) !== '[object AsyncFunction]'
+    // getTaggedType(value) !== 'AsyncFunction'
   );
   // return isArrow(value) && !isAsyncFunction(value);
 }
@@ -224,6 +225,54 @@ export function isES3Function(value) {
  */
 export function isGenericFunction(value) {
   return isNonAsyncArrow(value) || isES3Function(value);
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/** @typedef {import('./typedef.js').FunctionSubtype} FunctionSubtype */
+
+/**
+ * Detects whether the passed `value` is exclusively an instance
+ * of a `Function` subclass, hence a `Function` subtype of e.g.
+ * following form ...
+ *
+ * ```
+ * class Applicator extends Function {
+ * constructor(...args) {
+ * super(...args);
+ * }
+ * }
+ * // - constructable and callable instance of the
+ * //   custom `Applicator` function subtype/class.
+ * const Area = new Applicator('length = 1, width = 1', 'this.area = length * width');
+ *
+ * console.log(new Area); // { area: 1 }
+ * ```
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is FunctionSubtype}
+ *  A boolean value which indicates whether the tested type is a
+ *  `Function` subtype (an instance of a class which extends `Function`).
+ */
+export function isFunctionSubtype(value) {
+  return isFunction(value) && getFunctionSource(getDefinedConstructor(value)).startsWith('class');
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/** @typedef {import('./typedef.js').UnnamedFunction} UnnamedFunction */
+
+/**
+ * Detects whether the passed `value` is any kind of function type
+ * but without a given name.
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is UnnamedFunction}
+ *  A boolean value which indicates whether
+ *  the tested type is an unnamed function.
+ */
+export function isUnnamedFunction(value) {
+  return isFunction(value) && getOwnPropertyDescriptor(value, 'name').value === '';
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

@@ -62,3 +62,43 @@ export {};
  */
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * A runtime class which extends `Function`.
+ * @class
+ * @extends {Function}
+ */
+class ExtendedFunction extends Function {
+  /**
+   * @param {...any} args
+   *  A variadic argument list.
+   */
+  constructor(...args) {
+    super(...args);
+  }
+}
+
+/**
+ * @typedef {Function & {
+ *   __brand: 'FunctionSubtype',
+ *   __constructor: ExtendedFunction
+ * }} FunctionSubtype
+ *
+ * A branded structural type for instances of a function
+ * created via a custom `Function` subclass.
+ */
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/**
+ * @typedef {Function & {
+ *   __brand: 'UnnamedFunction',
+ *   __name: ''
+ * }} UnnamedFunction
+ *
+ * A branded type representing any function whose `name` value
+ * is explicitly the empty string (`''`). Often anonymous or
+ * dynamically created.
+ */
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

@@ -1,6 +1,6 @@
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
 // @ts-check
+
+import { getOwnPropertyDescriptor } from '../utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -12,7 +12,7 @@
  *  Whether the passed type features an own `prototype` property.
  */
 export function hasOwnPrototype(value) {
-  return !!Object.getOwnPropertyDescriptor(value, 'prototype');
+  return !!getOwnPropertyDescriptor(value, 'prototype');
 }
 
 /**
@@ -25,7 +25,7 @@ export function hasOwnPrototype(value) {
  *  `prototype` property.
  */
 export function hasOwnWritablePrototype(value) {
-  return Object.getOwnPropertyDescriptor(value, 'prototype')?.writable === true;
+  return getOwnPropertyDescriptor(value, 'prototype')?.writable === true;
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
