@@ -3,6 +3,7 @@
   "entryPointStrategy": "expand",
   "allowJs": true,
   "checkJs": true,
+  "excludeInternal": true,
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeProtected": true,

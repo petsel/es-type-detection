@@ -3,6 +3,7 @@
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
   "out": "docs/api/html",
+  "excludeInternal": true,
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeProtected": true,
