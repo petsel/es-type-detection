@@ -4,7 +4,6 @@ import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
 import {
   getOwnPropertyDescriptor,
   getTypeSignature,
-  // getTaggedType,
   getDefinedConstructor,
   getFunctionSource,
   resolveType
@@ -14,12 +13,14 @@ import { isFunction } from '../base';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+/** @typedef {import('./typedef.js').ClassConstructor<typeof Function>} ClassConstructor */
+
 /**
  * Detects whether the passed `value` is a
  * constructor function implemented as `class`.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is NewableFunction}
+ * @returns {value is ClassConstructor}
  *  A boolean value which indicates whether the
  *  tested value is a class-constructor function.
  */
@@ -27,6 +28,29 @@ export function isClass(value) {
   return (
     isFunction(value) && getFunctionSource(value).startsWith('class')
     // (/^class(\s+[^{]+)?\s*{/).test(getFunctionSource(value))
+  );
+}
+
+/**
+ * @template {new (...args: any[]) => any} T
+ * @typedef {import('./typedef.js').SubclassedConstructor<T>} SubclassedConstructor
+ */
+
+/**
+ * Detects whether the passed `value` is a
+ * constructor function implemented as `class`
+ * that in addition extends another class.
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is SubclassedConstructor}
+ *  A boolean value which indicates whether the
+ *  tested value is a subclassed constructor function.
+ */
+export function isSubclass(value) {
+  return (
+    isClass(value) &&
+    // see ... [https://regex101.com/r/MoEhSd/1]
+    /^class\s+([_$\p{L}][_$\p{L}\p{N}]+\s+)?extends\b/u.test(getFunctionSource(value))
   );
 }
 
@@ -42,7 +66,6 @@ export function isClass(value) {
  */
 export function isNonAsyncGenerator(value) {
   return isFunction(value) && getTypeSignature(value) === '[object GeneratorFunction]';
-  // return isFunction(value) && getTaggedType(value) === 'GeneratorFunction';
 }
 
 /**
@@ -55,7 +78,6 @@ export function isNonAsyncGenerator(value) {
  */
 export function isAsyncGenerator(value) {
   return isFunction(value) && getTypeSignature(value) === '[object AsyncGeneratorFunction]';
-  // return isFunction(value) && getTaggedType(value) === 'AsyncGeneratorFunction';
 }
 
 /** @typedef {import('./typedef.js').AnyGenerator} AnyGenerator */
@@ -98,7 +120,6 @@ export function isGenerator(value) {
  */
 export function isAsyncFunction(value) {
   return isFunction(value) && getTypeSignature(value) === '[object AsyncFunction]';
-  // return isFunction(value) && getTaggedType(value) === 'AsyncFunction';
 }
 
 /**
@@ -150,7 +171,6 @@ export function isNonAsyncArrow(value) {
     isFunction(value) &&
     !hasOwnPrototype(value) &&
     getTypeSignature(value) !== '[object AsyncFunction]'
-    // getTaggedType(value) !== 'AsyncFunction'
   );
   // return isArrow(value) && !isAsyncFunction(value);
 }
@@ -229,7 +249,7 @@ export function isGenericFunction(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-/** @typedef {import('./typedef.js').FunctionSubtype} FunctionSubtype */
+/** @typedef {import('./typedef.js').FunctionSubtype<Function>} FunctionSubtype */
 
 /**
  * Detects whether the passed `value` is exclusively an instance
@@ -238,9 +258,9 @@ export function isGenericFunction(value) {
  *
  * ```
  * class Applicator extends Function {
- * constructor(...args) {
- * super(...args);
- * }
+ *   constructor(...args) {
+ *     super(...args);
+ *   }
  * }
  * // - constructable and callable instance of the
  * //   custom `Applicator` function subtype/class.
@@ -255,7 +275,12 @@ export function isGenericFunction(value) {
  *  `Function` subtype (an instance of a class which extends `Function`).
  */
 export function isFunctionSubtype(value) {
-  return isFunction(value) && getFunctionSource(getDefinedConstructor(value)).startsWith('class');
+  return (
+    isFunction(value) &&
+    getFunctionSource(
+      getOwnPropertyDescriptor(value, 'constructor') ?? value.constructor ?? ((_) => _)
+    ).startsWith('class')
+  );
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
