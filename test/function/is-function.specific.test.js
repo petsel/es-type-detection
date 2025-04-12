@@ -541,14 +541,14 @@ describe('Testing all `Function` introspection methods related to function types
       ).toBe(
         allTestEntries
           // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_extended_function).length
+          .filter(([_, spec]) => !!spec.is_function_subtype).length
       );
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_extended_function)
+        .filter(([_, spec]) => !!spec.is_function_subtype)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ✅ ${spec.description} is exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
@@ -557,7 +557,7 @@ describe('Testing all `Function` introspection methods related to function types
         });
       allTestEntries
         // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_extended_function)
+        .filter(([_, spec]) => !spec.is_function_subtype)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ❌ ${spec.description} is **not** exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {

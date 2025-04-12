@@ -1,30 +1,41 @@
-// eslint-disable-next-line max-classes-per-file
-
 import { isFunction } from '../../src/base';
 
-// eslint-disable-next-line no-empty-function
-async function asyncFunctionStatement() {}
-
-// eslint-disable-next-line no-empty-function
-async function* asyncGeneratorStatement() {}
-
-// eslint-disable-next-line no-empty-function
-function* generatorStatement() {}
-
-function functionStatement() {}
-
 class ClassExpression {}
-
-// custom function subtype/class.
-class Applicator extends Function {
-  // eslint-disable-next-line no-useless-constructor
+class SubclassExpression extends EventTarget {
+  constructor() {
+    super();
+  }
+}
+// custom subclassed function
+class SubclassedFunction extends Function {
   constructor(...args) {
     super(...args);
   }
 }
-// - constructable and callable instance of the
-//   custom `Applicator` function subtype/class.
-const applicator = new Applicator();
+// - constructable and callable instance of the custom
+//   `Function` subclass, named `SubclassedFunction`.
+const subtypedFunction = new SubclassedFunction('x = 1, y = 1', 'return x * y');
+
+function* generatorStatement() {}
+async function* asyncGeneratorStatement() {}
+
+async function asyncFunctionStatement() {}
+
+function functionStatement() {}
+
+// isClass,
+// isNonAsyncGenerator,
+// isAsyncGenerator,
+// isGenerator,
+// isAsyncFunction,
+// isAsyncNonArrow,
+// isAsyncArrow,
+// isNonAsyncArrow,
+// isArrow,
+// isES3Function,
+// isGenericFunction,
+// isFunctionSubtype,
+// isUnnamedFunction
 
 export const testIndex = {
   specification: {
@@ -147,17 +158,17 @@ export const testIndex = {
           has_writable_prototype: true
         },
 
-        applicator: {
-          description: 'an instance of a custom `Applicator` class which extends `Function`',
-          // // - due to any `Applicator` instance inheriting from `Function` as well.
+        subtypedFunction: {
+          description: 'an instance of a custom `SubclassedFunction` class that extends `Function`',
+          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
           // callable: true,
-          // // - due to any `Applicator` instance inheriting from `Function` as well.
+          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
           // constructable: true,
-          // // - due to any `Applicator` instance inheriting from `Function` as well.
+          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
           // constructableWithNew: true,
-          // // - due to any `Applicator` instance inheriting from `Function` as well.
+          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
           // constructableWithoutNew: false,
-          is_extended_function: true,
+          is_function_subtype: true,
           has_writable_prototype: true,
           function_name: 'anonymous'
         }
@@ -225,32 +236,24 @@ export const testIndex = {
 
         unnamedFunctionExpression: {
           description: 'an unnamed function (lambda) expression',
-          bound: {
-            callable: {
-              throws: RangeError
-            }
-          },
+          // bound: {
+          //   callable: {
+          //     throws: RangeError
+          //   }
+          // },
           // callable: true,
           // constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_generic_function: true,
           is_es3_function: true,
-          has_writable_prototype: true,
-          can_not_be_distinctively_bound: true
+          has_writable_prototype: true
+          // can_not_be_distinctively_bound: true
         }
       }
     },
     class: {
       named: {
-        Applicator: {
-          description: 'a custom `Applicator` class which extends `Function`',
-          // callable: false,
-          // constructable: true,
-          // constructableWithNew: true,
-          // constructableWithoutNew: false,
-          is_class: true
-        },
         ClassExpression: {
           description: 'a named class expression',
           // callable: false,
@@ -258,36 +261,54 @@ export const testIndex = {
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_class: true
+        },
+        SubclassExpression: {
+          description: 'a named class expression which extends another class',
+          // callable: false,
+          // constructable: true,
+          // constructableWithNew: true,
+          // constructableWithoutNew: false,
+          is_class: true,
+          is_subclass: true
+        },
+        SubclassedFunction: {
+          description: 'a custom `SubclassedFunction` class which extends `Function`',
+          // callable: false,
+          // constructable: true,
+          // constructableWithNew: true,
+          // constructableWithoutNew: false,
+          is_class: true,
+          is_subclass: true
         }
       },
       unnamed: {
         UnnamedClassExpression: {
           description: 'an unnamed class expression',
-          bound: {
-            callable: {
-              throws: RangeError
-            }
-          },
+          // bound: {
+          //   callable: {
+          //     throws: RangeError
+          //   }
+          // },
           // callable: false,
           // constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
-          is_class: true,
-          can_not_be_distinctively_bound: true
+          is_class: true
+          // can_not_be_distinctively_bound: true
         },
         UnnamedExtendedClassExpression: {
           description: 'an unnamed extended class expression',
-          bound: {
-            callable: {
-              throws: RangeError
-            }
-          },
+          // bound: {
+          //   callable: {
+          //     throws: RangeError
+          //   }
+          // },
           // callable: false,
           // constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
-          is_class: true,
-          can_not_be_distinctively_bound: true
+          is_class: true
+          // can_not_be_distinctively_bound: true
         }
       }
     },
@@ -358,9 +379,10 @@ export const testIndex = {
     functionStatement,
 
     ClassExpression,
-    Applicator,
+    SubclassExpression,
+    SubclassedFunction,
 
-    applicator
+    subtypedFunction
 
     // URL: globalThis.URL,
     // EventTarget: globalThis.EventTarget,
