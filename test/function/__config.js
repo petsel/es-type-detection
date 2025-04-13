@@ -6,15 +6,15 @@ class SubclassExpression extends EventTarget {
     super();
   }
 }
-// custom subclassed function
-class SubclassedFunction extends Function {
-  constructor(...args) {
-    super(...args);
-  }
-}
-// - constructable and callable instance of the custom
-//   `Function` subclass, named `SubclassedFunction`.
-const subtypedFunction = new SubclassedFunction('x = 1, y = 1', 'return x * y');
+// // custom subclassed function
+// class SubclassedFunction extends Function {
+//   constructor(...args) {
+//     super(...args);
+//   }
+// }
+// // - constructable and callable instance of the custom
+// //   `Function` subclass, named `SubclassedFunction`.
+// const subtypedFunction = new SubclassedFunction('x = 1, y = 1', 'return x * y');
 
 function* generatorStatement() {}
 async function* asyncGeneratorStatement() {}
@@ -22,20 +22,6 @@ async function* asyncGeneratorStatement() {}
 async function asyncFunctionStatement() {}
 
 function functionStatement() {}
-
-// isClass,
-// isNonAsyncGenerator,
-// isAsyncGenerator,
-// isGenerator,
-// isAsyncFunction,
-// isAsyncNonArrow,
-// isAsyncArrow,
-// isNonAsyncArrow,
-// isArrow,
-// isES3Function,
-// isGenericFunction,
-// isFunctionSubtype,
-// isUnnamedFunction
 
 export const testIndex = {
   specification: {
@@ -156,22 +142,22 @@ export const testIndex = {
           is_generic_function: true,
           is_es3_function: true,
           has_writable_prototype: true
-        },
-
-        subtypedFunction: {
-          description: 'an instance of a custom `SubclassedFunction` class that extends `Function`',
-          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
-          // callable: true,
-          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
-          // constructable: true,
-          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
-          // constructableWithNew: true,
-          // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
-          // constructableWithoutNew: false,
-          is_function_subtype: true,
-          has_writable_prototype: true,
-          function_name: 'anonymous'
         }
+
+        // subtypedFunction: {
+        //   description: 'an instance of a custom `SubclassedFunction` class that extends `Function`',
+        //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
+        //   // callable: true,
+        //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
+        //   // constructable: true,
+        //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
+        //   // constructableWithNew: true,
+        //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
+        //   // constructableWithoutNew: false,
+        //   is_function_subtype: true,
+        //   has_writable_prototype: true,
+        //   function_name: 'anonymous'
+        // }
       },
       unnamed: {
         unnamedArrowFunctionExpression: {
@@ -270,16 +256,16 @@ export const testIndex = {
           // constructableWithoutNew: false,
           is_class: true,
           is_subclass: true
-        },
-        SubclassedFunction: {
-          description: 'a custom `SubclassedFunction` class which extends `Function`',
-          // callable: false,
-          // constructable: true,
-          // constructableWithNew: true,
-          // constructableWithoutNew: false,
-          is_class: true,
-          is_subclass: true
         }
+        // SubclassedFunction: {
+        //   description: 'a custom `SubclassedFunction` class which extends `Function`',
+        //   // callable: false,
+        //   // constructable: true,
+        //   // constructableWithNew: true,
+        //   // constructableWithoutNew: false,
+        //   is_class: true,
+        //   is_subclass: true
+        // }
       },
       unnamed: {
         UnnamedClassExpression: {
@@ -361,31 +347,46 @@ export const testIndex = {
     }
   },
   candidate: {
-    namedArrowFunctionExpression: (_) => _,
-    namedAsyncArrowFunctionExpression: async (_) => _,
-    namedAsyncFunctionExpression:
-      // eslint-disable-next-line no-empty-function
-      async function namedAsyncFunctionExpression() {},
-    namedAsyncGeneratorExpression:
-      // eslint-disable-next-line no-empty-function
-      async function* namedAsyncGeneratorExpression() {},
-    // eslint-disable-next-line no-empty-function
-    namedGeneratorExpression: function* namedGeneratorExpression() {},
-    namedFunctionExpression: function namedFunctionExpression() {},
-
-    asyncFunctionStatement,
-    asyncGeneratorStatement,
-    generatorStatement,
-    functionStatement,
-
+    // isClass,
     ClassExpression,
     SubclassExpression,
-    SubclassedFunction,
+    // SubclassedFunction,
 
-    subtypedFunction
+    // isGenerator,
 
-    // URL: globalThis.URL,
-    // EventTarget: globalThis.EventTarget,
+    // isNonAsyncGenerator,
+    generatorStatement,
+    namedGeneratorExpression: function* namedGeneratorExpression() {},
+
+    // isAsyncGenerator,
+    asyncGeneratorStatement,
+    namedAsyncGeneratorExpression: async function* namedAsyncGeneratorExpression() {},
+
+    // isAsyncFunction,
+
+    // isAsyncNonArrow,
+    asyncFunctionStatement,
+    namedAsyncFunctionExpression: async function namedAsyncFunctionExpression() {},
+
+    // isAsyncArrow,
+    namedAsyncArrowFunctionExpression: async (_) => _,
+
+    // isNonAsyncArrow,
+    namedArrowFunctionExpression: (_) => _,
+
+    // isArrow,
+    fakeArrow: Object.assign(() => {}, { prototype: {} }),
+
+    // isES3Function,
+    functionStatement,
+    namedFunctionExpression: function namedFunctionExpression() {}
+
+    // isGenericFunction,
+
+    // // isFunctionSubtype,
+    // subtypedFunction,
+
+    // isUnnamedFunction
   }
 };
 

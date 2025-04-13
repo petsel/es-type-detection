@@ -43,7 +43,6 @@ import {
   isArrow,
   isES3Function,
   isGenericFunction,
-  isFunctionSubtype,
   isUnnamedFunction
 } from './function';
 
@@ -104,7 +103,6 @@ export default {
     isArrow,
     isES3Function,
     isGenericFunction,
-    isFunctionSubtype,
     isUnnamedFunction
   },
   error: {

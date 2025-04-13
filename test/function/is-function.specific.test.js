@@ -13,7 +13,6 @@ import {
   isArrow,
   isES3Function,
   isGenericFunction,
-  isFunctionSubtype,
   isUnnamedFunction
 } from '../../src/function';
 
@@ -532,47 +531,47 @@ describe('Testing all `Function` introspection methods related to function types
     });
   });
 
-  describe('The introspection method `isFunctionSubtype` ...', () => {
-    it('- filters the correct amount of items from a given array of mixed function types.', () => {
-      expect(
-        allTestEntries.filter(([key /* , spec */]) =>
-          isFunctionSubtype(getTestCandidateBySpecificationKey(key))
-        ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_function_subtype).length
-      );
-    });
-
-    describe('... verifies whether ...', () => {
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !!spec.is_function_subtype)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ✅ ${spec.description} is exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
-            expect(isFunctionSubtype(candidate)).toBe(true);
-          });
-        });
-      allTestEntries
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, spec]) => !spec.is_function_subtype)
-        .forEach(([key, spec]) => {
-          const candidate = getTestCandidateBySpecificationKey(key);
-          it(`- ❌ ${spec.description} is **not** exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
-            expect(isFunctionSubtype(candidate)).toBe(false);
-          });
-        });
-
-      it('- ❌ an `Array` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
-        expect(isFunctionSubtype([])).toBe(false);
-      });
-      it('- ❌ an `Object` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
-        expect(isFunctionSubtype({})).toBe(false);
-      });
-    });
-  });
+  // describe('The introspection method `isFunctionSubtype` ...', () => {
+  //   it('- filters the correct amount of items from a given array of mixed function types.', () => {
+  //     expect(
+  //       allTestEntries.filter(([key /* , spec */]) =>
+  //         isFunctionSubtype(getTestCandidateBySpecificationKey(key))
+  //       ).length
+  //     ).toBe(
+  //       allTestEntries
+  //         // eslint-disable-next-line no-unused-vars
+  //         .filter(([_, spec]) => !!spec.is_function_subtype).length
+  //     );
+  //   });
+  //
+  //   describe('... verifies whether ...', () => {
+  //     allTestEntries
+  //       // eslint-disable-next-line no-unused-vars
+  //       .filter(([_, spec]) => !!spec.is_function_subtype)
+  //       .forEach(([key, spec]) => {
+  //         const candidate = getTestCandidateBySpecificationKey(key);
+  //         it(`- ✅ ${spec.description} is exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
+  //           expect(isFunctionSubtype(candidate)).toBe(true);
+  //         });
+  //       });
+  //     allTestEntries
+  //       // eslint-disable-next-line no-unused-vars
+  //       .filter(([_, spec]) => !spec.is_function_subtype)
+  //       .forEach(([key, spec]) => {
+  //         const candidate = getTestCandidateBySpecificationKey(key);
+  //         it(`- ❌ ${spec.description} is **not** exclusively a \`Function\` subtype (an instance of a class which extends \`Function\`).`, () => {
+  //           expect(isFunctionSubtype(candidate)).toBe(false);
+  //         });
+  //       });
+  //
+  //     it('- ❌ an `Array` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
+  //       expect(isFunctionSubtype([])).toBe(false);
+  //     });
+  //     it('- ❌ an `Object` instance is **not** exclusively a `Function` subtype (an instance of a class which extends `Function`).', () => {
+  //       expect(isFunctionSubtype({})).toBe(false);
+  //     });
+  //   });
+  // });
 
   describe('The introspection method `isUnnamedFunction` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {

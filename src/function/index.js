@@ -31,28 +31,28 @@ export function isClass(value) {
   );
 }
 
-/**
- * @template {new (...args: any[]) => any} T
- * @typedef {import('./typedef.js').SubclassedConstructor<T>} SubclassedConstructor
- */
-
-/**
- * Detects whether the passed `value` is a
- * constructor function implemented as `class`
- * that in addition extends another class.
- * @param {any} [value]
- *  An optionally passed value of any type.
- * @returns {value is SubclassedConstructor}
- *  A boolean value which indicates whether the
- *  tested value is a subclassed constructor function.
- */
-export function isSubclass(value) {
-  return (
-    isClass(value) &&
-    // see ... [https://regex101.com/r/MoEhSd/1]
-    /^class\s+([_$\p{L}][_$\p{L}\p{N}]+\s+)?extends\b/u.test(getFunctionSource(value))
-  );
-}
+// /**
+//  * @template {new (...args: any[]) => any} T
+//  * @typedef {import('./typedef.js').SubclassedConstructor<T>} SubclassedConstructor
+//  */
+//
+// /**
+//  * Detects whether the passed `value` is a
+//  * constructor function implemented as `class`
+//  * that in addition extends another class.
+//  * @param {any} [value]
+//  *  An optionally passed value of any type.
+//  * @returns {value is SubclassedConstructor}
+//  *  A boolean value which indicates whether the
+//  *  tested value is a subclassed constructor function.
+//  */
+// export function isSubclass(value) {
+//   return (
+//     isClass(value) &&
+//     // see ... [https://regex101.com/r/MoEhSd/1]
+//     /^class\s+([_$\p{L}][_$\p{L}\p{N}]+\s+)?extends\b/u.test(getFunctionSource(value))
+//   );
+// }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -104,7 +104,7 @@ export function isGenerator(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-/** @typedef {import('./typedef.js').AsyncFunctionType} AsyncFunctionType */
+/** @typedef {import('./typedef.js').AsyncFunction} AsyncFunction */
 
 /**
  * Detects whether the passed `value` is an async function type, either an
@@ -114,7 +114,7 @@ export function isGenerator(value) {
  * an async function itself but the factory function of an async generator.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is AsyncFunctionType}
+ * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether the
  *  tested value is a(n) (non-generator) async function.
  */
@@ -128,7 +128,7 @@ export function isAsyncFunction(value) {
  * or an async function statement.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is AsyncFunctionType}
+ * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether the tested value does match
  *  exclusively a non-arrow async function.
  */
@@ -144,7 +144,7 @@ export function isAsyncNonArrow(value) {
  * Detects whether the passed `value` is exclusively an async arrow function.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is AsyncFunctionType}
+ * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether the tested value is exclusively
  *  an async arrow function.
  */
@@ -247,43 +247,43 @@ export function isGenericFunction(value) {
   return isNonAsyncArrow(value) || isES3Function(value);
 }
 
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-/** @typedef {import('./typedef.js').FunctionSubtype<Function>} FunctionSubtype */
-
-/**
- * Detects whether the passed `value` is exclusively an instance
- * of a `Function` subclass, hence a `Function` subtype of e.g.
- * following form ...
- *
- * ```
- * class Applicator extends Function {
- *   constructor(...args) {
- *     super(...args);
- *   }
- * }
- * // - constructable and callable instance of the
- * //   custom `Applicator` function subtype/class.
- * const Area = new Applicator('length = 1, width = 1', 'this.area = length * width');
- *
- * console.log(new Area); // { area: 1 }
- * ```
- * @param {any} [value]
- *  An optionally passed value of any type.
- * @returns {value is FunctionSubtype}
- *  A boolean value which indicates whether the tested type is a
- *  `Function` subtype (an instance of a class which extends `Function`).
- */
-export function isFunctionSubtype(value) {
-  return (
-    isFunction(value) &&
-    getFunctionSource(
-      getOwnPropertyDescriptor(value, 'constructor') ?? value.constructor ?? ((_) => _)
-    ).startsWith('class')
-  );
-}
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+// // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+//
+// /** @typedef {import('./typedef.js').FunctionSubtype<Function>} FunctionSubtype */
+//
+// /**
+//  * Detects whether the passed `value` is exclusively an instance
+//  * of a `Function` subclass, hence a `Function` subtype of e.g.
+//  * following form ...
+//  *
+//  * ```
+//  * class Applicator extends Function {
+//  *   constructor(...args) {
+//  *     super(...args);
+//  *   }
+//  * }
+//  * // - constructable and callable instance of the
+//  * //   custom `Applicator` function subtype/class.
+//  * const Area = new Applicator('length = 1, width = 1', 'this.area = length * width');
+//  *
+//  * console.log(new Area); // { area: 1 }
+//  * ```
+//  * @param {any} [value]
+//  *  An optionally passed value of any type.
+//  * @returns {value is FunctionSubtype}
+//  *  A boolean value which indicates whether the tested type is a
+//  *  `Function` subtype (an instance of a class which extends `Function`).
+//  */
+// export function isFunctionSubtype(value) {
+//   return (
+//     isFunction(value) &&
+//     getFunctionSource(
+//       getOwnPropertyDescriptor(value, 'constructor') ?? value.constructor ?? ((_) => _)
+//     ).startsWith('class')
+//   );
+// }
+//
+// // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('./typedef.js').UnnamedFunction} UnnamedFunction */
 
