@@ -4,6 +4,11 @@ import { isFunction, isString } from './base';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+/** @typedef {import('./function/typedef.js').ES3Function} ES3Function */
+/** @typedef {import('./function/typedef.js').ClassConstructor<typeof Function>} ClassConstructor */
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
 /** @internal */
 export const getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors;
 
@@ -101,20 +106,65 @@ export function getTaggedType(...args) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {NewableFunction|CallableFunction|undefined}
- *  if available, the passed value's constructor-function - either an
- *  ES3-function or an ES6-class constructor-function - otherwise `undefined`.
+ * @returns {ClassConstructor | NewableFunction | ES3Function | CallableFunction | undefined}
+ *  if available, the passed value's constructor-function - either a built-in
+ *  type's constructor-function or an ES6-class constructor-function or an
+ *  ES3-function - otherwise `undefined`.
  */
 export function getDefinedConstructor(value = null) {
+  // guard.
+  if (value === null) {
+    return;
+  }
+  /** @type {Function|Object} */
+  const constructor = getOwnPropertyDescriptor(value, 'constructor')?.value ?? value.constructor;
+
+  // various guards.
+  if (isFunction(constructor)) {
+    // exit early with valid result.
+    return constructor;
+  } else {
+    /** @type {Function|undefined} */
+    const creator = constructor?.constructor;
+
+    if (isFunction(creator)) {
+      // exit early with valid result.
+      return creator;
+    }
+  }
+  // - in case function execution reaches beyond this comment,
+  //   the `constructor` slot most probably has been manipulated, ...
+  //
+  //   ... or the passed `value` was created via `Object.create(null)`.
+
   /** @type {Object|null} */
-  const prototype = (value !== null && getPrototypeOf(value)) ?? null;
+  const prototype = getPrototypeOf(value) ?? null;
+
   // guard.
   if (prototype === null) {
     return;
   }
-  const descriptor = getOwnPropertyDescriptor(prototype, 'constructor') ?? null;
+  // - in case function execution reaches beyond this comment,
+  //   the `constructor` slot definitely has been manipulated.
 
-  return descriptor?.value || (isFunction(prototype) && prototype) || void 0;
+  /** @type {Function|Object} */
+  const protoConstructor =
+    getOwnPropertyDescriptor(prototype, 'constructor')?.value ?? prototype.constructor;
+
+  // various guards.
+  if (isFunction(protoConstructor)) {
+    // exit with probably still valid result.
+    return protoConstructor;
+  } else {
+    /** @type {Function|undefined} */
+    const protoCreator = protoConstructor?.constructor;
+
+    if (isFunction(protoCreator)) {
+      // exit with probably still valid result.
+      return protoCreator;
+    }
+  }
+  // implicitly return the `undefined` value.
 }
 
 /**
