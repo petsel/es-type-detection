@@ -34,7 +34,7 @@
     "preview:docs": "npm run build:docs && vitepress preview docs"
   },
   "dependencies": {
-    "vite": "6.2.5",
+    "vite": "6.2.6",
     "vitepress": "^1.6.3",
     "vitest": "^3.0.9"
   },
