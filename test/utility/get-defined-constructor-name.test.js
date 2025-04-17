@@ -68,6 +68,8 @@ describe("`getDefinedConstructorName` - retrieves, if available, the passed valu
   const asyncNonArrowFunctionExpression = async function () {};
   // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
+  const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
+
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
     // all objects - instances of built-in constructor functions
 
@@ -177,6 +179,7 @@ describe("`getDefinedConstructorName` - retrieves, if available, the passed valu
   runTestCases('🔧 Functions - other than Built-in and Class constructors', [
     [function () {}, 'function () {}', 'Function'],
     [(_) => _, '(_) => _', 'Function'],
+    [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })', 'Function'],
     [asyncArrowFunctionExpression, 'async (_) => _', 'AsyncFunction'],
     [asyncNonArrowFunctionExpression, '(async function () {})', 'AsyncFunction'],
     [
@@ -188,6 +191,11 @@ describe("`getDefinedConstructorName` - retrieves, if available, the passed valu
 
     [function () {}.constructor, '(function () {}).constructor', 'Function'],
     [((_) => _).constructor, '((_) => _).constructor', 'Function'],
+    [
+      spoofedArrowFunction.constructor,
+      'Object.assign(() => {}, { prototype: {} }).constructor',
+      'Function'
+    ],
     [asyncArrowFunctionExpression.constructor, '(async (_) => _).constructor', 'Function'],
     [asyncNonArrowFunctionExpression.constructor, '(async function () {}).constructor', 'Function'],
     [

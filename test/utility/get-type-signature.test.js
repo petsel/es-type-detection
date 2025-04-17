@@ -68,6 +68,8 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
   const asyncNonArrowFunctionExpression = async function () {};
   // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
+  const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
+
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
     // all objects - instances of built-in constructor functions
 
@@ -168,6 +170,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
   runTestCases('🔧 Functions - other than Built-in and Class constructors', [
     [function () {}, 'function () {}', '[object Function]'],
     [(_) => _, '(_) => _', '[object Function]'],
+    [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })', '[object Function]'],
     [asyncArrowFunctionExpression, 'async (_) => _', '[object AsyncFunction]'],
     [asyncNonArrowFunctionExpression, '(async function () {})', '[object AsyncFunction]'],
     [
@@ -179,6 +182,11 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
 
     [function () {}.constructor, '(function () {}).constructor', '[object Function]'],
     [((_) => _).constructor, '((_) => _).constructor', '[object Function]'],
+    [
+      spoofedArrowFunction.constructor,
+      'Object.assign(() => {}, { prototype: {} }).constructor',
+      '[object Function]'
+    ],
     [asyncArrowFunctionExpression.constructor, '(async (_) => _).constructor', '[object Function]'],
     [
       asyncNonArrowFunctionExpression.constructor,

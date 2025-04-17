@@ -14,6 +14,8 @@ const asyncArrowFunctionExpression = async (_) => _;
 const asyncNonArrowFunctionExpression = async function () {};
 // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
+const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
+
 class MyClass {}
 class MySubclass extends MyClass {}
 
@@ -127,6 +129,9 @@ const introspectionList = [
 
   [function () {}, '(function () {})'], // Function
   [(_) => _, '(_ => _)'], // Function
+
+  [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })'], // Function
+
   [asyncArrowFunctionExpression, '(async _ => _)'], // AsyncFunction
   [asyncNonArrowFunctionExpression, '(async function () {})'], // AsyncFunction
   [asyncGeneratorFunctionExpression, '(async function* () { yield 1; })'], // AsyncGeneratorFunction
