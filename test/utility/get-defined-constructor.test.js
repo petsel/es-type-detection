@@ -2,6 +2,26 @@ import { describe, it, expect } from 'vitest';
 
 import { getDefinedConstructor } from '../../src/utility';
 
+import {
+  asyncGeneratorFunctionExpression,
+  AsyncGeneratorFunction,
+  asyncGeneratorInstance,
+  asyncGeneratorPrototype,
+  generatorFunctionExpression,
+  GeneratorFunction,
+  generatorInstance,
+  generatorPrototype,
+  asyncArrowFunctionExpression,
+  asyncNonArrowFunctionExpression,
+  AsyncFunction,
+  spoofedArrowFunction,
+  MyClass,
+  MySubclass,
+  TaggedClass,
+  ImplicitlyTaggedSubclass,
+  ExplicitlyTaggedSubclass
+} from './__config';
+
 function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
@@ -16,7 +36,7 @@ function runTestCases(label, cases) {
   });
 }
 
-describe("`getDefinedConstructor` - retrieves, if available, the passed value's constructor-function", () => {
+describe("`getDefinedConstructor` - retrieves, if available, the passed value's constructor-function.", () => {
   it('returns `undefined` when no argument is passed.', () => {
     expect(getDefinedConstructor()).toBeUndefined();
   });
@@ -24,7 +44,7 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
   it('returns `undefined` for an object that was created via `Object.create(null)`.', () => {
     expect(getDefinedConstructor(Object.create(null))).toBeUndefined();
   });
-  it('returns `undefined` when no constructor-function can be resolved otherwise.', () => {
+  it('returns `undefined` when no constructor-function can be resolved at all.', () => {
     expect(getDefinedConstructor(undefined)).toBeUndefined();
     expect(getDefinedConstructor(void 0)).toBeUndefined();
     expect(getDefinedConstructor(null)).toBeUndefined();
@@ -50,28 +70,8 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [Object(Symbol('sym')), "Object(Symbol('sym'))", Symbol]
   ]);
 
-  const asyncGeneratorFunctionExpression = async function* () {
-    yield 1;
-  };
-  const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
-  const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
-  const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
-
-  const generatorFunctionExpression = function* () {
-    yield 1;
-  };
-  const GeneratorFunction = generatorFunctionExpression.constructor;
-  const generatorInstance = generatorFunctionExpression();
-  const generatorPrototype = Object.getPrototypeOf(generatorInstance);
-
-  const asyncArrowFunctionExpression = async (_) => _;
-  const asyncNonArrowFunctionExpression = async function () {};
-  const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
-
-  const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
-
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
-    // all objects - instances of built-in constructor functions
+    // all objects - instances of built-in constructor functions.
 
     [new Date(), 'new Date', Date],
     [/regex/, '/regex/', RegExp],
@@ -98,7 +98,7 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [new RangeError(), 'new RangeError', RangeError],
     [new AggregateError([]), 'new AggregateError([])', AggregateError],
 
-    // all objects - utility/api namespaces
+    // all objects - utility/api namespaces.
 
     // - Since all four test candidates are just tagged namespaces, hence objects, each object's
     //   constructor of cause is `Object` and not some function which by its name related to each
@@ -200,9 +200,6 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [Function.prototype, 'Function.prototype', Function]
   ]);
 
-  class MyClass {}
-  class MySubclass extends MyClass {}
-
   runTestCases('🏛️ Classes & Subclasses and their instances', [
     [MyClass, 'class MyClass {}', Function],
     [new MyClass(), 'new MyClass', MyClass],
@@ -211,18 +208,6 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [new MySubclass(), 'new MySubclass', MySubclass]
   ]);
 
-  class TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'TaggedClass';
-    }
-  }
-  class ImplicitlyTaggedSubclass extends TaggedClass {}
-
-  class ExplicitlyTaggedSubclass extends TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'ExplicitlyTaggedSubclass';
-    }
-  }
   runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {

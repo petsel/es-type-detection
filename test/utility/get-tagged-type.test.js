@@ -2,6 +2,26 @@ import { describe, it, expect } from 'vitest';
 
 import { getTaggedType } from '../../src/utility';
 
+import {
+  asyncGeneratorFunctionExpression,
+  // AsyncGeneratorFunction,
+  asyncGeneratorInstance,
+  asyncGeneratorPrototype,
+  generatorFunctionExpression,
+  // GeneratorFunction,
+  generatorInstance,
+  generatorPrototype,
+  asyncArrowFunctionExpression,
+  asyncNonArrowFunctionExpression,
+  // AsyncFunction,
+  spoofedArrowFunction,
+  MyClass,
+  MySubclass,
+  TaggedClass,
+  ImplicitlyTaggedSubclass,
+  ExplicitlyTaggedSubclass
+} from './__config';
+
 function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
@@ -17,17 +37,21 @@ function runTestCases(label, cases) {
 }
 
 describe("`getTaggedType` - retrieves the tagged type-name from the passed value's internal type signature.", () => {
-  it('returns `undefined` when no argument is passed', () => {
+  it('returns `undefined` when no argument is passed.', () => {
     expect(getTaggedType()).toBeUndefined();
   });
 
-  it('returns "Undefined" when the `undefined` value is passed explicitly', () => {
+  it('returns "Undefined" when the `undefined` value is passed explicitly.', () => {
     expect(getTaggedType(undefined)).toStrictEqual('Undefined');
     expect(getTaggedType(void 0)).toStrictEqual('Undefined');
   });
 
-  it('returns "Null" when the `null` value is passed explicitly', () => {
+  it('returns "Null" when the `null` value is passed explicitly.', () => {
     expect(getTaggedType(null)).toStrictEqual('Null');
+  });
+
+  it('returns "Object" for an object that was created via `Object.create(null)`.', () => {
+    expect(getTaggedType(Object.create(null))).toStrictEqual('Object');
   });
 
   runTestCases('🧱 Primitives & Boxed Primitives', [
@@ -50,28 +74,8 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
     [Object(Symbol('sym')), "Object(Symbol('sym'))", 'Symbol']
   ]);
 
-  const asyncGeneratorFunctionExpression = async function* () {
-    yield 1;
-  };
-  // const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
-  const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
-  const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
-
-  const generatorFunctionExpression = function* () {
-    yield 1;
-  };
-  // const GeneratorFunction = generatorFunctionExpression.constructor;
-  const generatorInstance = generatorFunctionExpression();
-  const generatorPrototype = Object.getPrototypeOf(generatorInstance);
-
-  const asyncArrowFunctionExpression = async (_) => _;
-  const asyncNonArrowFunctionExpression = async function () {};
-  // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
-
-  const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
-
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
-    // all objects - instances of built-in constructor functions
+    // all objects - instances of built-in constructor functions.
 
     [new Date(), 'new Date', 'Date'],
     [/regex/, '/regex/', 'RegExp'],
@@ -98,7 +102,7 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
     [new RangeError(), 'new RangeError', 'Error'], // not 'RangeError'
     [new AggregateError([]), 'new AggregateError([])', 'Error'], // not 'AggregateError'
 
-    // tagged utility/api namespaces
+    // tagged utility/api namespaces.
 
     [Math, 'Math', 'Math'],
     [JSON, 'JSON', 'JSON'],
@@ -111,7 +115,7 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
     [asyncArrowFunctionExpression(), '(async (_) => _)()', 'Promise'],
     [asyncNonArrowFunctionExpression(), '(async function () {})()', 'Promise'],
 
-    // built-in constructor-functions
+    // built-in constructor-functions.
 
     [Boolean, 'Boolean', 'Function'],
     [Number, 'Number', 'Function'],
@@ -146,7 +150,7 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
 
     [Promise, 'Promise', 'Function'],
 
-    // generators
+    // generators.
 
     [
       asyncGeneratorInstance, // an async generator.
@@ -199,9 +203,6 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
     [Function.prototype, 'Function.prototype', 'Function']
   ]);
 
-  class MyClass {}
-  class MySubclass extends MyClass {}
-
   runTestCases('🏛️ Classes & Subclasses and their instances', [
     [MyClass, 'class MyClass {}', 'Function'],
     [new MyClass(), 'new MyClass', 'Object'],
@@ -210,18 +211,6 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
     [new MySubclass(), 'new MySubclass', 'Object']
   ]);
 
-  class TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'TaggedClass';
-    }
-  }
-  class ImplicitlyTaggedSubclass extends TaggedClass {}
-
-  class ExplicitlyTaggedSubclass extends TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'ExplicitlyTaggedSubclass';
-    }
-  }
   runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {

@@ -2,6 +2,26 @@ import { describe, it, expect } from 'vitest';
 
 import { getTypeSignature } from '../../src/utility';
 
+import {
+  asyncGeneratorFunctionExpression,
+  // AsyncGeneratorFunction,
+  asyncGeneratorInstance,
+  asyncGeneratorPrototype,
+  generatorFunctionExpression,
+  // GeneratorFunction,
+  generatorInstance,
+  generatorPrototype,
+  asyncArrowFunctionExpression,
+  asyncNonArrowFunctionExpression,
+  // AsyncFunction,
+  spoofedArrowFunction,
+  MyClass,
+  MySubclass,
+  TaggedClass,
+  ImplicitlyTaggedSubclass,
+  ExplicitlyTaggedSubclass
+} from './__config';
+
 function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
@@ -17,17 +37,21 @@ function runTestCases(label, cases) {
 }
 
 describe('`getTypeSignature` - gets the internal type signature of any passed value.', () => {
-  it('returns `undefined` when no argument is passed', () => {
+  it('returns `undefined` when no argument is passed.', () => {
     expect(getTypeSignature()).toBeUndefined();
   });
 
-  it('returns "[object Undefined]" when the `undefined` value is passed explicitly', () => {
+  it('returns "[object Undefined]" when the `undefined` value is passed explicitly.', () => {
     expect(getTypeSignature(undefined)).toStrictEqual('[object Undefined]');
     expect(getTypeSignature(void 0)).toStrictEqual('[object Undefined]');
   });
 
-  it('returns "[object Null]" when the `null` value is passed explicitly', () => {
+  it('returns "[object Null]" when the `null` value is passed explicitly.', () => {
     expect(getTypeSignature(null)).toStrictEqual('[object Null]');
+  });
+
+  it('returns "[object Object]" for an object that was created via `Object.create(null)`.', () => {
+    expect(getTypeSignature(Object.create(null))).toStrictEqual('[object Object]');
   });
 
   runTestCases('🧱 Primitives & Boxed Primitives', [
@@ -50,28 +74,8 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [Object(Symbol('sym')), "Object(Symbol('sym'))", '[object Symbol]']
   ]);
 
-  const asyncGeneratorFunctionExpression = async function* () {
-    yield 1;
-  };
-  // const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
-  const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
-  const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
-
-  const generatorFunctionExpression = function* () {
-    yield 1;
-  };
-  // const GeneratorFunction = generatorFunctionExpression.constructor;
-  const generatorInstance = generatorFunctionExpression();
-  const generatorPrototype = Object.getPrototypeOf(generatorInstance);
-
-  const asyncArrowFunctionExpression = async (_) => _;
-  const asyncNonArrowFunctionExpression = async function () {};
-  // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
-
-  const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
-
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
-    // all objects - instances of built-in constructor functions
+    // all objects - instances of built-in constructor functions.
 
     [new Date(), 'new Date', '[object Date]'],
     [/regex/, '/regex/', '[object RegExp]'],
@@ -98,7 +102,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [new RangeError(), 'new RangeError', '[object Error]'], // not '[object RangeError]'
     [new AggregateError([]), 'new AggregateError([])', '[object Error]'], // not '[object AggregateError]'
 
-    // tagged utility/api namespaces
+    // tagged utility/api namespaces.
 
     [Math, 'Math', '[object Math]'],
     [JSON, 'JSON', '[object JSON]'],
@@ -111,7 +115,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [asyncArrowFunctionExpression(), '(async (_) => _)()', '[object Promise]'],
     [asyncNonArrowFunctionExpression(), '(async function () {})()', '[object Promise]'],
 
-    // built-in constructor-functions
+    // built-in constructor-functions.
 
     [Boolean, 'Boolean', '[object Function]'],
     [Number, 'Number', '[object Function]'],
@@ -146,7 +150,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
 
     [Promise, 'Promise', '[object Function]'],
 
-    // generators
+    // generators.
 
     [
       asyncGeneratorInstance, // an async generator.
@@ -207,9 +211,6 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [Function.prototype, 'Function.prototype', '[object Function]']
   ]);
 
-  class MyClass {}
-  class MySubclass extends MyClass {}
-
   runTestCases('🏛️ Classes & Subclasses and their instances', [
     [MyClass, 'class MyClass {}', '[object Function]'],
     [new MyClass(), 'new MyClass', '[object Object]'],
@@ -218,18 +219,6 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [new MySubclass(), 'new MySubclass', '[object Object]']
   ]);
 
-  class TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'TaggedClass';
-    }
-  }
-  class ImplicitlyTaggedSubclass extends TaggedClass {}
-
-  class ExplicitlyTaggedSubclass extends TaggedClass {
-    get [Symbol.toStringTag]() {
-      return 'ExplicitlyTaggedSubclass';
-    }
-  }
   runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {
