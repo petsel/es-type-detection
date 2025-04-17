@@ -73,7 +73,7 @@ export function isObjectObject(value) {
  * Such objects remain unaffected to changes of `Object.prototype`.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is PlainObject}
+ * @returns {value is DictionaryObject}
  *  Whether the passed value can be described as _"Null-prototype object"_
  *  or _"Prototype-less object"_.
  */
@@ -102,11 +102,11 @@ export function isDictionaryObject(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is StringType}
- *  Whether the passed value is a string, either a primitive string value or a boxed `String` object type.
+ * @returns {value is StringValue}
+ *  Whether the passed value is a primitive string value.
  */
-export function isString(value) {
-  return getTypeSignature(value) === '[object String]';
+export function isStringValue(value) {
+  return typeof value === 'string';
 }
 /**
  * @param {any} [value]
@@ -115,16 +115,20 @@ export function isString(value) {
  *  Whether the passed value is a boxed `String` object type.
  */
 export function isStringObject(value) {
-  return isString(value) && typeof value === 'object';
+  return (
+    getTypeSignature(value) === '[object String]' &&
+    getDefinedConstructorName(value) === 'String' &&
+    typeof value === 'object'
+  );
 }
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is StringValue}
- *  Whether the passed value is a primitive string value.
+ * @returns {value is StringType}
+ *  Whether the passed value is a string, either a primitive string value or a boxed `String` object type.
  */
-export function isStringValue(value) {
-  return typeof value === 'string';
+export function isString(value) {
+  return isStringValue(value) || isStringObject(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -136,11 +140,11 @@ export function isStringValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is NumberType}
- *  Whether the passed value is a number, either a primitive number value or a boxed `Number` object type.
+ * @returns {value is NumberValue}
+ *  Whether the passed value is a primitive number value.
  */
-export function isNumber(value) {
-  return getTypeSignature(value) === '[object Number]';
+export function isNumberValue(value) {
+  return typeof value === 'number';
 }
 /**
  * @param {any} [value]
@@ -149,16 +153,20 @@ export function isNumber(value) {
  *  Whether the passed value is a boxed `Number` object type.
  */
 export function isNumberObject(value) {
-  return isNumber(value) && typeof value === 'object';
+  return (
+    getTypeSignature(value) === '[object Number]' &&
+    getDefinedConstructorName(value) === 'Number' &&
+    typeof value === 'object'
+  );
 }
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is NumberValue}
- *  Whether the passed value is a primitive number value.
+ * @returns {value is NumberType}
+ *  Whether the passed value is a number, either a primitive number value or a boxed `Number` object type.
  */
-export function isNumberValue(value) {
-  return typeof value === 'number';
+export function isNumber(value) {
+  return isNumberValue(value) || isNumberObject(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -170,11 +178,11 @@ export function isNumberValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BooleanType}
- *  Whether the passed value is boolean, either a primitive boolean value or a boxed `Boolean` object type.
+ * @returns {value is BooleanValue}
+ *  Whether the passed value is a primitive boolean value.
  */
-export function isBoolean(value) {
-  return getTypeSignature(value) === '[object Boolean]';
+export function isBooleanValue(value) {
+  return typeof value === 'boolean';
 }
 /**
  * @param {any} [value]
@@ -183,16 +191,20 @@ export function isBoolean(value) {
  *  Whether the passed value is a boxed `Boolean` object type.
  */
 export function isBooleanObject(value) {
-  return isBoolean(value) && typeof value === 'object';
+  return (
+    getTypeSignature(value) === '[object Boolean]' &&
+    getDefinedConstructorName(value) === 'Boolean' &&
+    typeof value === 'object'
+  );
 }
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BooleanValue}
- *  Whether the passed value is a primitive boolean value.
+ * @returns {value is BooleanType}
+ *  Whether the passed value is boolean, either a primitive boolean value or a boxed `Boolean` object type.
  */
-export function isBooleanValue(value) {
-  return typeof value === 'boolean';
+export function isBoolean(value) {
+  return isBooleanValue(value) || isBooleanObject(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -204,11 +216,11 @@ export function isBooleanValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is SymbolType}
- *  Whether the passed value is a symbol, either a primitive symbol value or a purposely boxed `Symbol` object type.
+ * @returns {value is SymbolValue}
+ *  Whether the passed value is a primitive symbol value.
  */
-export function isSymbol(value) {
-  return getTypeSignature(value) === '[object Symbol]';
+export function isSymbolValue(value) {
+  return typeof value === 'symbol';
 }
 /**
  * @param {any} [value]
@@ -217,16 +229,20 @@ export function isSymbol(value) {
  *  Whether the passed value is a purposely boxed `Symbol` object type.
  */
 export function isSymbolObject(value) {
-  return isSymbol(value) && typeof value === 'object';
+  return (
+    getTypeSignature(value) === '[object Symbol]' &&
+    getDefinedConstructorName(value) === 'Symbol' &&
+    typeof value === 'object'
+  );
 }
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is SymbolValue}
- *  Whether the passed value is a primitive symbol value.
+ * @returns {value is SymbolType}
+ *  Whether the passed value is a symbol, either a primitive symbol value or a purposely boxed `Symbol` object type.
  */
-export function isSymbolValue(value) {
-  return typeof value === 'symbol';
+export function isSymbol(value) {
+  return isSymbolValue(value) || isSymbolObject(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -238,11 +254,11 @@ export function isSymbolValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BigIntType}
- *  Whether the passed value is a bigint, either a primitive bigint value or a purposely boxed `BigInt` object type.
+ * @returns {value is BigIntValue}
+ *  Whether the passed value is a primitive bigint value.
  */
-export function isBigInt(value) {
-  return getTypeSignature(value) === '[object BigInt]';
+export function isBigIntValue(value) {
+  return typeof value === 'bigint';
 }
 /**
  * @param {any} [value]
@@ -251,16 +267,20 @@ export function isBigInt(value) {
  *  Whether the passed value is a purposely boxed `BigInt` object type.
  */
 export function isBigIntObject(value) {
-  return isBigInt(value) && typeof value === 'object';
+  return (
+    getTypeSignature(value) === '[object BigInt]' &&
+    getDefinedConstructorName(value) === 'BigInt' &&
+    typeof value === 'object'
+  );
 }
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BigIntValue}
- *  Whether the passed value is a primitive bigint value.
+ * @returns {value is BigIntType}
+ *  Whether the passed value is a bigint, either a primitive bigint value or a purposely boxed `BigInt` object type.
  */
-export function isBigIntValue(value) {
-  return typeof value === 'bigint';
+export function isBigInt(value) {
+  return isBigIntValue(value) || isBigIntObject(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
