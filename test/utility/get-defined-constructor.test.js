@@ -96,9 +96,9 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [new RangeError(), 'new RangeError', RangeError],
     [new AggregateError([]), 'new AggregateError([])', AggregateError],
 
-    // all objects - utility/api name-spaces
+    // all objects - utility/api namespaces
 
-    // - Since all for test candidates are just tagged namespaces, hence objects, each object's
+    // - Since all four test candidates are just tagged namespaces, hence objects, each object's
     //   constructor of cause is `Object` and not some function which by its name related to each
     //   object's/namespace's name like `Math`, `JSON`, `Reflect`, `Atomics`.
     [Math, 'Math', Object],

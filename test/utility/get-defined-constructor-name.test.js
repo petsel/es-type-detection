@@ -6,7 +6,7 @@ function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
       // console.log({ input, expected, display, label });
-      it(`returns \`${expected}\` for \`${display}\``, () => {
+      it(`returns "${expected}" for \`${display}\``, () => {
         expect(
           getDefinedConstructorName(input),
           `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
@@ -96,9 +96,9 @@ describe("`getDefinedConstructorName` - retrieves, if available, the passed valu
     [new RangeError(), 'new RangeError', 'RangeError'],
     [new AggregateError([]), 'new AggregateError([])', 'AggregateError'],
 
-    // all objects - utility/api name-spaces
+    // all objects - utility/api namespaces
 
-    // - Since all for test candidates are just tagged namespaces, hence objects, each object's
+    // - Since all four test candidates are just tagged namespaces, hence objects, each object's
     //   constructor of cause is `Object` and not some function which by its name related to each
     //   object's/namespace's name like `Math`, `JSON`, `Reflect`, `Atomics`.
     [Math, 'Math', 'Object'],

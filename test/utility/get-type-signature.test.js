@@ -5,8 +5,12 @@ import { getTypeSignature } from '../../src/utility';
 function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
+      // console.log({ input, expected, display, label });
       it(`returns "${expected}" for \`${display}\``, () => {
-        expect(getTypeSignature(input)).toStrictEqual(expected);
+        expect(
+          getTypeSignature(input),
+          `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
+        ).toStrictEqual(expected);
       });
     }
   });
@@ -17,63 +21,61 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     expect(getTypeSignature()).toBeUndefined();
   });
 
-  it('returns "[object Undefined]" when undefined is passed explicitly', () => {
+  it('returns "[object Undefined]" when the `undefined` value is passed explicitly', () => {
     expect(getTypeSignature(undefined)).toStrictEqual('[object Undefined]');
     expect(getTypeSignature(void 0)).toStrictEqual('[object Undefined]');
   });
 
+  it('returns "[object Null]" when the `null` value is passed explicitly', () => {
+    expect(getTypeSignature(null)).toStrictEqual('[object Null]');
+  });
+
   runTestCases('🧱 Primitives & Boxed Primitives', [
-    [null, 'null', '[object Null]'],
     [true, 'true', '[object Boolean]'],
-    [100, '100', '[object Number]'],
-    ['', '', '[object String]'],
-    [Object(true), 'Object(true)', '[object Boolean]'],
-    [Object(100), 'Object(100)', '[object Number]'],
-    [Object(''), "Object('')", '[object String]'],
-    [Symbol(), 'Symbol()', '[object Symbol]'],
-    [BigInt(42), 'BigInt(42)', '[object BigInt]'],
-    [Object(Symbol()), 'Object(Symbol())', '[object Symbol]'],
-    [Object(BigInt(42)), 'Object(BigInt(42))', '[object BigInt]']
+    [1_234_567, '1_234_567', '[object Number]'],
+    ['string', "'string'", '[object String]'],
+
+    [BigInt(0), 'BigInt(0)', '[object BigInt]'],
+    [Symbol('sym'), "Symbol('sym')", '[object Symbol]'],
+
+    [new Boolean(true), 'new Boolean(true)', '[object Boolean]'],
+    [new Number(1_234_567), 'new Number(1_234_567)', '[object Number]'],
+    [new String('string'), "new String('string')", '[object String]'],
+
+    [Object(new Boolean(true)), 'Object(new Boolean(true))', '[object Boolean]'],
+    [Object(new Number(1_234_567)), 'Object(new Number(1_234_567))', '[object Number]'],
+    [Object(new String('string')), "Object(new String('string'))", '[object String]'],
+
+    [Object(BigInt(0)), 'Object(BigInt(0))', '[object BigInt]'],
+    [Object(Symbol('sym')), "Object(Symbol('sym'))", '[object Symbol]']
   ]);
 
-  runTestCases('⚙️ Built-ins and Objects', [
-    [Function, 'Function', '[object Function]'],
+  const asyncGeneratorFunctionExpression = async function* () {
+    yield 1;
+  };
+  // const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
+  const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
+  const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
 
-    [Object, 'Object', '[object Function]'],
-    [Array, 'Function', '[object Function]'],
+  const generatorFunctionExpression = function* () {
+    yield 1;
+  };
+  // const GeneratorFunction = generatorFunctionExpression.constructor;
+  const generatorInstance = generatorFunctionExpression();
+  const generatorPrototype = Object.getPrototypeOf(generatorInstance);
 
-    [{}, '{}', '[object Object]'],
-    [[], '[]', '[object Array]'],
-    [/regex/, '/regex/', '[object RegExp]'],
+  const asyncArrowFunctionExpression = async (_) => _;
+  const asyncNonArrowFunctionExpression = async function () {};
+  // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
+
+  runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
+    // all objects - instances of built-in constructor functions
+
     [new Date(), 'new Date', '[object Date]'],
+    [/regex/, '/regex/', '[object RegExp]'],
 
-    [new Error(), 'new Error', '[object Error]'],
-    [new SyntaxError(), 'new SyntaxError', '[object Error]'],
-    [new TypeError(), 'new TypeError', '[object Error]'],
-    [new ReferenceError(), 'new ReferenceError', '[object Error]'],
-    [new URIError(), 'new URIError', '[object Error]'],
-    [new EvalError(), 'new EvalError', '[object Error]'],
-    [new RangeError(), 'new RangeError', '[object Error]'],
-    [new AggregateError([]), 'new AggregateError([])', '[object Error]'],
-
-    [Promise.resolve(), 'Promise.resolve()', '[object Promise]'],
-    [(async (_) => _)(), '(async _ => _)()', '[object Promise]'],
-    [(async function () {})(), '(async function () {})()', '[object Promise]'],
-
-    [
-      (async function* () {
-        yield 1;
-      })(),
-      '(async function* () { yield 1; })()',
-      '[object AsyncGenerator]'
-    ],
-    [
-      (function* () {
-        yield 1;
-      })(),
-      '(function* () { yield 1; })()',
-      '[object Generator]'
-    ],
+    [[], '[]', '[object Array]'],
+    [{}, '{}', '[object Object]'],
 
     [new Map(), 'new Map', '[object Map]'],
     [new Set(), 'new Set', '[object Set]'],
@@ -85,68 +87,127 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
     [new Float32Array(0), 'new Float32Array(0)', '[object Float32Array]'],
     [new ArrayBuffer(0), 'new ArrayBuffer(0)', '[object ArrayBuffer]'],
 
+    [new Error(), 'new Error', '[object Error]'],
+    [new SyntaxError(), 'new SyntaxError', '[object Error]'], // not '[object SyntaxError]'
+    [new TypeError(), 'new TypeError', '[object Error]'], // not '[object TypeError]'
+    [new ReferenceError(), 'new ReferenceError', '[object Error]'], // not '[object ReferenceError]'
+    [new URIError(), 'new URIError', '[object Error]'], // not '[object URIError]'
+    [new EvalError(), 'new EvalError', '[object Error]'], // not '[object EvalError]'
+    [new RangeError(), 'new RangeError', '[object Error]'], // not '[object RangeError]'
+    [new AggregateError([]), 'new AggregateError([])', '[object Error]'], // not '[object AggregateError]'
+
+    // tagged utility/api namespaces
+
     [Math, 'Math', '[object Math]'],
     [JSON, 'JSON', '[object JSON]'],
     [Reflect, 'Reflect', '[object Reflect]'],
-    [Atomics, 'Atomics', '[object Atomics]']
+    [Atomics, 'Atomics', '[object Atomics]'],
+
+    // promise.
+
+    [Promise.resolve(), 'Promise.resolve()', '[object Promise]'],
+    [asyncArrowFunctionExpression(), '(async (_) => _)()', '[object Promise]'],
+    [asyncNonArrowFunctionExpression(), '(async function () {})()', '[object Promise]'],
+
+    // built-in constructor-functions
+
+    [Boolean, 'Boolean', '[object Function]'],
+    [Number, 'Number', '[object Function]'],
+    [String, 'String', '[object Function]'],
+    [BigInt, 'BigInt', '[object Function]'],
+    [Symbol, 'Symbol', '[object Function]'],
+
+    [Date, 'Date', '[object Function]'],
+    [RegExp, 'RegExp', '[object Function]'],
+
+    [Array, 'Array', '[object Function]'],
+    [Object, 'Object', '[object Function]'],
+
+    [Map, 'Map', '[object Function]'],
+    [Set, 'Set', '[object Function]'],
+    [WeakMap, 'WeakMap', '[object Function]'],
+    [WeakSet, 'WeakSet', '[object Function]'],
+
+    [Int8Array, 'Int8Array', '[object Function]'],
+    [Uint8Array, 'Uint8Array', '[object Function]'],
+    [Float32Array, 'Float32Array', '[object Function]'],
+    [ArrayBuffer, 'ArrayBuffer', '[object Function]'],
+
+    [Error, 'Error', '[object Function]'],
+    [SyntaxError, 'SyntaxError', '[object Function]'],
+    [TypeError, 'TypeError', '[object Function]'],
+    [ReferenceError, 'ReferenceError', '[object Function]'],
+    [URIError, 'URIError', '[object Function]'],
+    [EvalError, 'EvalError', '[object Function]'],
+    [RangeError, 'RangeError', '[object Function]'],
+    [AggregateError, 'AggregateError', '[object Function]'],
+
+    [Promise, 'Promise', '[object Function]'],
+
+    // generators
+
+    [
+      asyncGeneratorInstance, // an async generator.
+      '(async function* () { yield 1; })()',
+      '[object AsyncGenerator]'
+    ],
+    [
+      asyncGeneratorPrototype, // an async generator.
+      'Object.getPrototypeOf((async function* () { yield 1; })())',
+      '[object AsyncGenerator]'
+    ],
+
+    [generatorInstance, '(function* () { yield 1; })()', '[object Generator]'],
+    [
+      generatorPrototype,
+      'Object.getPrototypeOf((function* () { yield 1; })())',
+      '[object Generator]'
+    ]
   ]);
 
-  runTestCases('🔧 Functions', [
-    [Function.prototype, 'Function.prototype', '[object Function]'],
-
-    [function () {}.constructor, '(function () {}).constructor', '[object Function]'],
-    [((_) => _).constructor, '(_ => _).constructor', '[object Function]'],
-
-    [(async (_) => _).constructor, '(async _ => _).constructor', '[object Function]'],
-    [async function () {}.constructor, '(async function () {}).constructor', '[object Function]'],
-
-    [
-      async function* () {
-        yield 1;
-      }.constructor,
-      '(async function* () {}).constructor',
-      '[object Function]'
-    ],
-    [
-      function* () {
-        yield 1;
-      }.constructor,
-      '(function* () {}).constructor',
-      '[object Function]'
-    ],
-
+  runTestCases('🔧 Functions - other than Built-in and Class constructors', [
     [function () {}, 'function () {}', '[object Function]'],
-    [(_) => _, '(_ => _)', '[object Function]'],
-
-    [async (_) => _, '(async _ => _)', '[object AsyncFunction]'],
-    [async function () {}, 'async function () {}', '[object AsyncFunction]'],
-
+    [(_) => _, '(_) => _', '[object Function]'],
+    [asyncArrowFunctionExpression, 'async (_) => _', '[object AsyncFunction]'],
+    [asyncNonArrowFunctionExpression, '(async function () {})', '[object AsyncFunction]'],
     [
-      async function* () {
-        yield 1;
-      },
-      'async function* () {}',
+      asyncGeneratorFunctionExpression,
+      '(async function* () { yield 1; })',
       '[object AsyncGeneratorFunction]'
     ],
+    [generatorFunctionExpression, '(function* () { yield 1; })', '[object GeneratorFunction]'],
+
+    [function () {}.constructor, '(function () {}).constructor', '[object Function]'],
+    [((_) => _).constructor, '((_) => _).constructor', '[object Function]'],
+    [asyncArrowFunctionExpression.constructor, '(async (_) => _).constructor', '[object Function]'],
     [
-      function* () {
-        yield 1;
-      },
-      'function* () {}',
-      '[object GeneratorFunction]'
-    ]
+      asyncNonArrowFunctionExpression.constructor,
+      '(async function () {}).constructor',
+      '[object Function]'
+    ],
+    [
+      asyncGeneratorFunctionExpression.constructor,
+      '(async function* () { yield 1; }).constructor',
+      '[object Function]'
+    ],
+    [
+      generatorFunctionExpression.constructor,
+      '(function* () { yield 1; }).constructor',
+      '[object Function]'
+    ],
+
+    [Function.prototype, 'Function.prototype', '[object Function]']
   ]);
 
-  runTestCases('🏛️ Classes & Subclasses and theirs instances', [
-    [class MyClass {}, 'class MyClass {}', '[object Function]'],
-    [new (class MyClass {})(), 'new class MyClass {}', '[object Object]'],
+  class MyClass {}
+  class MySubclass extends MyClass {}
 
-    [class MySubclass extends class MyClass {} {}, 'class MyClass {}', '[object Function]'],
-    [
-      new (class MySubclass extends class MyClass {} {})(),
-      'new class MySubclass extends (class MyClass {}) {}',
-      '[object Object]'
-    ]
+  runTestCases('🏛️ Classes & Subclasses and their instances', [
+    [MyClass, 'class MyClass {}', '[object Function]'],
+    [new MyClass(), 'new MyClass', '[object Object]'],
+
+    [MySubclass, 'class MySubclass extends MyClass {}', '[object Function]'],
+    [new MySubclass(), 'new MySubclass', '[object Object]']
   ]);
 
   class TaggedClass {
@@ -161,7 +222,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
       return 'ExplicitlyTaggedSubclass';
     }
   }
-  runTestCases('🧪 Special & Symbol.toStringTag spoofed/tagged objects', [
+  runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {
         return arguments;
