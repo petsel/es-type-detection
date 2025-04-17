@@ -119,11 +119,11 @@ const introspectionList = [
 
   [Promise, 'Promise'], // Function
 
-  [asyncGeneratorFunctionExpression(), '(async function* () { yield 1; })()'], // AsyncGenerator
-  [generatorFunctionExpression(), '(function* () { yield 1; })()'], // Generator
+  [asyncGeneratorFunctionExpression(), '(async function* () { yield 1; })()'], // AsyncGeneratorFunction
+  [generatorFunctionExpression(), '(function* () { yield 1; })()'], // GeneratorFunction
 
-  [AsyncGenerator, 'AsyncGenerator'], // AsyncGenerator
-  [Generator, 'Generator'], // Generator
+  [AsyncGenerator, 'AsyncGenerator'], // AsyncGeneratorFunction
+  [Generator, 'Generator'], // GeneratorFunction
 
   [function () {}, '(function () {})'], // Function
   [(_) => _, '(_ => _)'], // Function

@@ -4,9 +4,9 @@ import { getDefinedConstructor } from '../../src/utility';
 
 function runTestCases(label, cases) {
   describe(label, () => {
-    for (const [input, display /*, expectedInWord*/, expected] of cases) {
+    for (const [input, display, expected] of cases) {
       // console.log({ input, expected, display, label });
-      it(`returns "${expected}" for \`${display}\``, () => {
+      it(`returns \`${expected}\` for \`${display}\``, () => {
         expect(
           getDefinedConstructor(input),
           `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
@@ -21,7 +21,10 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     expect(getDefinedConstructor()).toBeUndefined();
   });
 
-  it('returns "Undefined" when no constructor-function can be resolved.', () => {
+  it('returns `undefined` for an object that was created via `Object.create(null)`.', () => {
+    expect(getDefinedConstructor(Object.create(null))).toBeUndefined();
+  });
+  it('returns `undefined` when no constructor-function can be resolved otherwise.', () => {
     expect(getDefinedConstructor(undefined)).toBeUndefined();
     expect(getDefinedConstructor(void 0)).toBeUndefined();
     expect(getDefinedConstructor(null)).toBeUndefined();
@@ -29,70 +32,50 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
 
   runTestCases('🧱 Primitives & Boxed Primitives', [
     [true, 'true', Boolean],
-    [100, '100', Number],
-    ['', '', String],
-    [Object(true), 'Object(true)', Boolean],
-    [Object(100), 'Object(100)', Number],
-    [Object(''), "Object('')", String],
-    [Symbol(), 'Symbol()', Symbol],
-    [BigInt(42), 'BigInt(42)', BigInt],
-    [Object(Symbol()), 'Object(Symbol())', Symbol],
-    [Object(BigInt(42)), 'Object(BigInt(42))', BigInt]
+    [1_234_567, '1_234_567', Number],
+    ['string', "'string'", String],
+
+    [BigInt(0), 'BigInt(0)', BigInt],
+    [Symbol('sym'), "Symbol('sym')", Symbol],
+
+    [new Boolean(true), 'new Boolean(true)', Boolean],
+    [new Number(1_234_567), 'new Number(1_234_567)', Number],
+    [new String('string'), "new String('string')", String],
+
+    [Object(new Boolean(true)), 'Object(new Boolean(true))', Boolean],
+    [Object(new Number(1_234_567)), 'Object(new Number(1_234_567))', Number],
+    [Object(new String('string')), "Object(new String('string'))", String],
+
+    [Object(BigInt(0)), 'Object(BigInt(0))', BigInt],
+    [Object(Symbol('sym')), "Object(Symbol('sym'))", Symbol]
   ]);
 
   const asyncGeneratorFunctionExpression = async function* () {
     yield 1;
   };
   const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
-  // const AsyncGenerator = Object.getPrototypeOf(asyncGeneratorFunctionExpression());
+  const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
+  const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
 
   const generatorFunctionExpression = function* () {
     yield 1;
   };
   const GeneratorFunction = generatorFunctionExpression.constructor;
-  // const Generator = Object.getPrototypeOf(generatorFunctionExpression());
+  const generatorInstance = generatorFunctionExpression();
+  const generatorPrototype = Object.getPrototypeOf(generatorInstance);
 
   const asyncArrowFunctionExpression = async (_) => _;
   const asyncNonArrowFunctionExpression = async function () {};
   const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
-  runTestCases('⚙️ Built-ins and Objects', [
-    [Function, 'Function', Function],
+  runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
+    // all objects - instances of built-in constructor functions
 
-    [Object, 'Object', Function],
-    [Array, 'Function', Function],
-
-    [{}, '{}', Object],
-    [[], '[]', Array],
-    [/regex/, '/regex/', RegExp],
     [new Date(), 'new Date', Date],
+    [/regex/, '/regex/', RegExp],
 
-    [new Error(), 'new Error', Error],
-    [new SyntaxError(), 'new SyntaxError', SyntaxError],
-    [new TypeError(), 'new TypeError', TypeError],
-    [new ReferenceError(), 'new ReferenceError', ReferenceError],
-    [new URIError(), 'new URIError', URIError],
-    [new EvalError(), 'new EvalError', EvalError],
-    [new RangeError(), 'new RangeError', RangeError],
-    [new AggregateError([]), 'new AggregateError([])', AggregateError],
-
-    [Promise.resolve(), 'Promise.resolve()', Promise],
-    [asyncArrowFunctionExpression(0), '(async _ => _)()', Promise],
-    [asyncNonArrowFunctionExpression(), '(async function () {})()', Promise],
-
-    // - `AsyncGeneratorFunction` instead of `AsyncGenerator` since the latter
-    //   - despite being the intuitively expected correct result - is an object
-    //   (and a prototype) but not a constructor function like the former.
-    [
-      asyncGeneratorFunctionExpression(),
-      '(async function* () { yield 1; })()',
-      AsyncGeneratorFunction
-    ],
-
-    // - `GeneratorFunction` instead of `Generator` since the latter - despite
-    //   being the intuitively expected correct result - is an object (and a
-    //   prototype) but not a constructor function like the former.
-    [generatorFunctionExpression(), '(function* () { yield 1; })()', GeneratorFunction],
+    [[], '[]', Array],
+    [{}, '{}', Object],
 
     [new Map(), 'new Map', Map],
     [new Set(), 'new Set', Set],
@@ -104,24 +87,101 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     [new Float32Array(0), 'new Float32Array(0)', Float32Array],
     [new ArrayBuffer(0), 'new ArrayBuffer(0)', ArrayBuffer],
 
+    [new Error(), 'new Error', Error],
+    [new SyntaxError(), 'new SyntaxError', SyntaxError],
+    [new TypeError(), 'new TypeError', TypeError],
+    [new ReferenceError(), 'new ReferenceError', ReferenceError],
+    [new URIError(), 'new URIError', URIError],
+    [new EvalError(), 'new EvalError', EvalError],
+    [new RangeError(), 'new RangeError', RangeError],
+    [new AggregateError([]), 'new AggregateError([])', AggregateError],
+
+    // all objects - utility/api name-spaces
+
     // - Since all for test candidates are just tagged namespaces, hence objects, each object's
     //   constructor of cause is `Object` and not some function which by its name related to each
     //   object's/namespace's name like `Math`, `JSON`, `Reflect`, `Atomics`.
     [Math, 'Math', Object],
     [JSON, 'JSON', Object],
     [Reflect, 'Reflect', Object],
-    [Atomics, 'Atomics', Object]
+    [Atomics, 'Atomics', Object],
+
+    // promise.
+
+    [Promise.resolve(), 'Promise.resolve()', Promise],
+    [asyncArrowFunctionExpression(), '(async (_) => _)()', Promise],
+    [asyncNonArrowFunctionExpression(), '(async function () {})()', Promise],
+
+    // built-in constructor-functions
+
+    [Boolean, 'Boolean', Function],
+    [Number, 'Number', Function],
+    [String, 'String', Function],
+    [BigInt, 'BigInt', Function],
+    [Symbol, 'Symbol', Function],
+
+    [Date, 'Date', Function],
+    [RegExp, 'RegExp', Function],
+
+    [Array, 'Array', Function],
+    [Object, 'Object', Function],
+
+    [Map, 'Map', Function],
+    [Set, 'Set', Function],
+    [WeakMap, 'WeakMap', Function],
+    [WeakSet, 'WeakSet', Function],
+
+    [Int8Array, 'Int8Array', Function],
+    [Uint8Array, 'Uint8Array', Function],
+    [Float32Array, 'Float32Array', Function],
+    [ArrayBuffer, 'ArrayBuffer', Function],
+
+    [Error, 'Error', Function],
+    [SyntaxError, 'SyntaxError', Function],
+    [TypeError, 'TypeError', Function],
+    [ReferenceError, 'ReferenceError', Function],
+    [URIError, 'URIError', Function],
+    [EvalError, 'EvalError', Function],
+    [RangeError, 'RangeError', Function],
+    [AggregateError, 'AggregateError', Function],
+
+    [Promise, 'Promise', Function],
+
+    // generators / generator-functions - special constructor-function handling.
+
+    // - `AsyncGeneratorFunction` instead of `AsyncGenerator` since the latter
+    //   - despite being the intuitively expected correct result - is an object
+    //   (and a prototype) but not a constructor function like the former.
+    [
+      asyncGeneratorInstance, // an async generator.
+      '(async function* () { yield 1; })()',
+      AsyncGeneratorFunction
+    ],
+    [
+      asyncGeneratorPrototype, // an async generator.
+      'Object.getPrototypeOf((async function* () { yield 1; })())',
+      AsyncGeneratorFunction
+    ],
+
+    // - `GeneratorFunction` instead of `Generator` since the latter - despite
+    //   being the intuitively expected correct result - is an object (and a
+    //   prototype) but not a constructor function like the former.
+    [generatorInstance, '(function* () { yield 1; })()', GeneratorFunction],
+    [generatorPrototype, 'Object.getPrototypeOf((function* () { yield 1; })())', GeneratorFunction]
   ]);
 
-  runTestCases('🔧 Functions', [
-    [Function.prototype, 'Function.prototype', Function],
+  runTestCases('🔧 Functions - other than Built-in and Class constructors', [
+    [function () {}, 'function () {}', Function],
+    [(_) => _, '(_) => _', Function],
+    [asyncArrowFunctionExpression, 'async (_) => _', AsyncFunction],
+    [asyncNonArrowFunctionExpression, '(async function () {})', AsyncFunction],
+    [asyncGeneratorFunctionExpression, '(async function* () { yield 1; })', AsyncGeneratorFunction],
+    [generatorFunctionExpression, '(function* () { yield 1; })', GeneratorFunction],
 
     [function () {}.constructor, '(function () {}).constructor', Function],
-    [((_) => _).constructor, '(_ => _).constructor', Function],
-
-    [asyncArrowFunctionExpression.constructor, '(async _ => _).constructor', Function],
+    [((_) => _).constructor, '((_) => _).constructor', Function],
+    [asyncArrowFunctionExpression.constructor, '(async (_) => _).constructor', Function],
     [asyncNonArrowFunctionExpression.constructor, '(async function () {}).constructor', Function],
-
     [
       asyncGeneratorFunctionExpression.constructor,
       '(async function* () { yield 1; }).constructor',
@@ -129,20 +189,13 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
     ],
     [generatorFunctionExpression.constructor, '(function* () { yield 1; }).constructor', Function],
 
-    [function () {}, 'function () {}', Function],
-    [(_) => _, '(_ => _)', Function],
-
-    [asyncArrowFunctionExpression, '(async _ => _)', AsyncFunction],
-    [asyncNonArrowFunctionExpression, 'async function () {}', AsyncFunction],
-
-    [asyncGeneratorFunctionExpression, 'async function* () { yield 1; }', AsyncGeneratorFunction],
-    [generatorFunctionExpression, 'function* () { yield 1; }', GeneratorFunction]
+    [Function.prototype, 'Function.prototype', Function]
   ]);
 
   class MyClass {}
   class MySubclass extends MyClass {}
 
-  runTestCases('🏛️ Classes & Subclasses and theirs instances', [
+  runTestCases('🏛️ Classes & Subclasses and their instances', [
     [MyClass, 'class MyClass {}', Function],
     [new MyClass(), 'new MyClass', MyClass],
 
@@ -162,7 +215,7 @@ describe("`getDefinedConstructor` - retrieves, if available, the passed value's 
       return 'ExplicitlyTaggedSubclass';
     }
   }
-  runTestCases('🧪 Special & Symbol.toStringTag spoofed/tagged objects', [
+  runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {
         return arguments;
