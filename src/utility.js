@@ -201,7 +201,9 @@ export function getDefinedConstructor(value = null) {
  *  Any unnamed function refers to the empty string value/`''` as its name.
  */
 export function getDefinedConstructorName(value) {
+  /** @type {Function | null} */
   const constructor = getDefinedConstructor(value) ?? null;
+
   // guard.
   if (constructor === null) {
     return;
@@ -231,35 +233,91 @@ export function getFunctionSource(value) {
 }
 
 /**
- * Resolves the passed value's type through a combined approach of either retrieving
- * the passed values `toString` tag, or - in case of dealing with non-branded custom
- * constructors (both ES6 class and ES3 constructor-functions) - by retrieving the
- * constructor-function name of the passed type's prototype.
- * @param {any} value
- * @returns {string}
- *  A `'string'` value which either corresponds with the passed value's tagged type
- *  or its related constructor-function's name.
+ * Resolves the passed value's type-name through a combined, balanced approach of
+ * retrieving either the value's constructor-function name, or its `toString` tag.
+ *
+ * This works for every built-in type.
+ *
+ * In order to assure stable type identity of custom type systems, based
+ * on both class- and ES3- constructor functions, that remain unaffected
+ * by code minification processes, one has to apply a utility function
+ * which does permanently brand such types by writing and freezing both
+ * of a constructor-function's property-descriptors - the function's `name`
+ * property and its `Symbol.toStringTag` slot.
+ * @param {...any} args
+ *  A variadic argument list. The first argument (`args[0]`) is the optional
+ *  `value` parameter. Its **presence** is detected via `args.length`, allowing
+ *  the function to distinguish between an explicitly passed `undefined` value
+ *  and a completely omitted argument.
+ * @returns {string|undefined}
+ *  A `'string'` value which either corresponds with the passed value's
+ *  constructor-function's name or its tagged type; or the `undefined`
+ *  value if no argument was passed.
  */
-export function resolveType(value) {
-  let name = getTaggedType(value);
+export function resolveType(...args) {
+  /** @type {any} */
+  const value = args[0];
 
-  if (name === 'Object') {
-    const constructor = getDefinedConstructor(value) ?? null;
-    if (constructor !== null && getFunctionSource(constructor).startsWith('class')) {
-      name = getOwnPropertyDescriptor(constructor, 'name').value;
-    }
-  } else if (name === 'Error') {
-    name = getDefinedConstructorName(value);
+  // guard.
+  if (args.length === 0) {
+    return;
   }
-  return name;
+  const resolvedType = getDefinedConstructorName(value) ?? null;
+
+  // guard.
+  if (resolvedType === null) {
+    // - covers the `undefined` and the `null` value as well as
+    //   objects that were created via `Object.create(null)`.
+    return getTaggedType(value);
+  }
+  // - The following block provides a more generic solution ...
+
+  /** @type {Function|Object} */
+  const constructor = getOwnPropertyDescriptor(value, 'constructor')?.value ?? value.constructor;
+
+  // guard.
+  if (!isFunction(constructor)) {
+    return getTaggedType(value);
+  }
+  return resolvedType;
+
+  // ... to special cases like the one of ...
+  //
+  // // - `Generator` and `AsyncGenerator` instances (objects) as well as
+  // //   `GeneratorFunction` and `AsyncGeneratorFunction` types (functions)
+  // //   need to be handled separately, in order to distinguish them.
+  // ((
+  //
+  //   (resolvedType === 'GeneratorFunction' || resolvedType === 'AsyncGeneratorFunction') &&
+  //   getTaggedType(value)
+  //
+  // ) || resolvedType);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+// // - more generic
+// /**
+//  * @template T
+//  * @param {T} taggedType
+//  * @returns {() => T}
+//  */
+//
+//- more specific
+/**
+ * @param {string} taggedType
+ * @returns {function(): string}
+ */
 function createToStringTagGetter(taggedType) {
   return () => taggedType;
 }
 
+/**
+ * @template {ClassConstructor | ES3Function} T
+ * @param {T} constructor
+ * @param {string} taggedType
+ * @returns {T}
+ */
 export function defineStableType(constructor, taggedType) {
   // guard
   if (!isFunction(constructor)) {
