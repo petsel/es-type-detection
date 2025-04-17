@@ -53,20 +53,20 @@ describe("`getDefinedConstructorName` - retrieves, if available, the passed valu
   const asyncGeneratorFunctionExpression = async function* () {
     yield 1;
   };
-  const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
+  // const AsyncGeneratorFunction = asyncGeneratorFunctionExpression.constructor;
   const asyncGeneratorInstance = asyncGeneratorFunctionExpression();
   const asyncGeneratorPrototype = Object.getPrototypeOf(asyncGeneratorInstance);
 
   const generatorFunctionExpression = function* () {
     yield 1;
   };
-  const GeneratorFunction = generatorFunctionExpression.constructor;
+  // const GeneratorFunction = generatorFunctionExpression.constructor;
   const generatorInstance = generatorFunctionExpression();
   const generatorPrototype = Object.getPrototypeOf(generatorInstance);
 
   const asyncArrowFunctionExpression = async (_) => _;
   const asyncNonArrowFunctionExpression = async function () {};
-  const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
+  // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
   runTestCases('⚙️ Built-ins - objects/instances and their constructors', [
     // all objects - instances of built-in constructor functions
