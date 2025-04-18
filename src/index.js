@@ -33,9 +33,9 @@ import {
 import { hasOwnPrototype, hasOwnWritablePrototype } from './function/utility';
 import {
   isClass,
-  isNonAsyncGenerator,
-  isAsyncGenerator,
-  isGenerator,
+  isGeneratorFunction,
+  isAsyncGeneratorFunction,
+  isAnyGeneratorFunction,
   isAsyncFunction,
   isAsyncNonArrow,
   isAsyncArrow,
@@ -93,9 +93,9 @@ export default {
   },
   function: {
     isClass,
-    isNonAsyncGenerator,
-    isAsyncGenerator,
-    isGenerator,
+    isGeneratorFunction,
+    isAsyncGeneratorFunction,
+    isAnyGeneratorFunction,
     isAsyncFunction,
     isAsyncNonArrow,
     isAsyncArrow,

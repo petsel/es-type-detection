@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest';
 import { isFunction } from '../../src/base';
 import {
   isClass,
-  isNonAsyncGenerator,
-  isAsyncGenerator,
-  isGenerator,
+  isGeneratorFunction,
+  isAsyncGeneratorFunction,
+  isAnyGeneratorFunction,
   isAsyncFunction,
   isAsyncNonArrow,
   isAsyncArrow,
@@ -111,11 +111,11 @@ describe('Testing all `Function` introspection methods related to function types
     });
   });
 
-  describe('The introspection method `isNonAsyncGenerator` ...', () => {
+  describe('The introspection method `isGeneratorFunction` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
       expect(
         allTestEntries.filter(([key /* , spec */]) =>
-          isNonAsyncGenerator(getTestCandidateBySpecificationKey(key))
+          isGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
       ).toBe(
         allTestEntries
@@ -131,7 +131,7 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ✅ ${spec.description} is explicitly a \`GeneratorFunction\` type.`, () => {
-            expect(isNonAsyncGenerator(candidate)).toBe(true);
+            expect(isGeneratorFunction(candidate)).toBe(true);
           });
         });
       allTestEntries
@@ -140,24 +140,24 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ❌ ${spec.description} is **not** explicitly a \`GeneratorFunction\` type.`, () => {
-            expect(isNonAsyncGenerator(candidate)).toBe(false);
+            expect(isGeneratorFunction(candidate)).toBe(false);
           });
         });
 
       it('- ❌ an `Array` instance is **not** explicitly a `GeneratorFunction` type.', () => {
-        expect(isNonAsyncGenerator([])).toBe(false);
+        expect(isGeneratorFunction([])).toBe(false);
       });
       it('- ❌ an `Object` instance is **not** explicitly a `GeneratorFunction` type.', () => {
-        expect(isNonAsyncGenerator({})).toBe(false);
+        expect(isGeneratorFunction({})).toBe(false);
       });
     });
   });
 
-  describe('The introspection method `isAsyncGenerator` ...', () => {
+  describe('The introspection method `isAsyncGeneratorFunction` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
       expect(
         allTestEntries.filter(([key /* , spec */]) =>
-          isAsyncGenerator(getTestCandidateBySpecificationKey(key))
+          isAsyncGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
       ).toBe(
         allTestEntries
@@ -173,7 +173,7 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ✅ ${spec.description} is explicitly an \`AsyncGeneratorFunction\` type.`, () => {
-            expect(isAsyncGenerator(candidate)).toBe(true);
+            expect(isAsyncGeneratorFunction(candidate)).toBe(true);
           });
         });
       allTestEntries
@@ -182,24 +182,24 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ❌ ${spec.description} is **not** explicitly an \`AsyncGeneratorFunction\` type.`, () => {
-            expect(isAsyncGenerator(candidate)).toBe(false);
+            expect(isAsyncGeneratorFunction(candidate)).toBe(false);
           });
         });
 
       it('- ❌ an `Array` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
-        expect(isAsyncGenerator([])).toBe(false);
+        expect(isAsyncGeneratorFunction([])).toBe(false);
       });
       it('- ❌ an `Object` instance is **not** explicitly an `AsyncGeneratorFunction` type.', () => {
-        expect(isAsyncGenerator({})).toBe(false);
+        expect(isAsyncGeneratorFunction({})).toBe(false);
       });
     });
   });
 
-  describe('The introspection method `isGenerator` ...', () => {
+  describe('The introspection method `isAnyGeneratorFunction` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
       expect(
         allTestEntries.filter(([key /* , spec */]) =>
-          isGenerator(getTestCandidateBySpecificationKey(key))
+          isAnyGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
       ).toBe(
         allTestEntries
@@ -215,7 +215,7 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ✅ ${spec.description} is either kind of generator function, async or not.`, () => {
-            expect(isGenerator(candidate)).toBe(true);
+            expect(isAnyGeneratorFunction(candidate)).toBe(true);
           });
         });
       allTestEntries
@@ -224,15 +224,15 @@ describe('Testing all `Function` introspection methods related to function types
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
           it(`- ❌ ${spec.description} is **not** any kind of generator function.`, () => {
-            expect(isGenerator(candidate)).toBe(false);
+            expect(isAnyGeneratorFunction(candidate)).toBe(false);
           });
         });
 
       it('- ❌ an `Array` instance is **not** any kind of generator function.', () => {
-        expect(isGenerator([])).toBe(false);
+        expect(isAnyGeneratorFunction([])).toBe(false);
       });
       it('- ❌ an `Object` instance is **not** any kind of generator function.', () => {
-        expect(isGenerator({})).toBe(false);
+        expect(isAnyGeneratorFunction({})).toBe(false);
       });
     });
   });

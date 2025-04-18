@@ -352,13 +352,13 @@ export const testIndex = {
     SubclassExpression,
     // SubclassedFunction,
 
-    // isGenerator,
+    // isAnyGeneratorFunction,
 
-    // isNonAsyncGenerator,
+    // isGeneratorFunction,
     generatorStatement,
     namedGeneratorExpression: function* namedGeneratorExpression() {},
 
-    // isAsyncGenerator,
+    // isAsyncGeneratorFunction,
     asyncGeneratorStatement,
     namedAsyncGeneratorExpression: async function* namedAsyncGeneratorExpression() {},
 

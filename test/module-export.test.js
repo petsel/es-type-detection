@@ -35,9 +35,9 @@ import {
 import { hasOwnPrototype, hasOwnWritablePrototype } from '../src/function/utility';
 import {
   isClass,
-  isNonAsyncGenerator,
-  isAsyncGenerator,
-  isGenerator,
+  isGeneratorFunction,
+  isAsyncGeneratorFunction,
+  isAnyGeneratorFunction,
   isAsyncFunction,
   isAsyncNonArrow,
   isAsyncArrow,
@@ -152,9 +152,9 @@ describe('The top most exported module ...', () => {
       runTestCases(module.function, [
         ['isClass', isClass],
 
-        ['isNonAsyncGenerator', isNonAsyncGenerator],
-        ['isAsyncGenerator', isAsyncGenerator],
-        ['isGenerator', isGenerator],
+        ['isGeneratorFunction', isGeneratorFunction],
+        ['isAsyncGeneratorFunction', isAsyncGeneratorFunction],
+        ['isAnyGeneratorFunction', isAnyGeneratorFunction],
 
         ['isAsyncFunction', isAsyncFunction],
         ['isAsyncNonArrow', isAsyncNonArrow],

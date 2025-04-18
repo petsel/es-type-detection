@@ -6,9 +6,9 @@ export {};
 
 /**
  * @typedef {Function & {
- *   __brand: 'AnyGenerator',
+ *   __brand: 'AnyGeneratorFunction',
  *   __constructor: GeneratorFunction | AsyncGeneratorFunction,
- * }} AnyGenerator
+ * }} AnyGeneratorFunction
  *
  * Any generator function - created as:
  *  - either `GeneratorFunction`

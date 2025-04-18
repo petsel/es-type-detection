@@ -3,9 +3,11 @@
 import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
 import {
   getOwnPropertyDescriptor,
-  getTypeSignature,
-  getDefinedConstructor,
   getFunctionSource,
+  getDefinedConstructor,
+  getDefinedConstructorName,
+  getTypeSignature,
+  getTaggedType,
   resolveType
 } from '../utility';
 
@@ -64,8 +66,12 @@ export function isClass(value) {
  *  A boolean value which indicates whether the tested value is explicitly a
  *  `GeneratorFunction` type.
  */
-export function isNonAsyncGenerator(value) {
-  return isFunction(value) && getTypeSignature(value) === '[object GeneratorFunction]';
+export function isGeneratorFunction(value) {
+  return (
+    isFunction(value) &&
+    getTypeSignature(value) === '[object GeneratorFunction]' &&
+    resolveType(value) === 'GeneratorFunction'
+  );
 }
 
 /**
@@ -76,27 +82,34 @@ export function isNonAsyncGenerator(value) {
  *  A boolean value which indicates whether the tested value is explicitly a
  *  `AsyncGeneratorFunction` type.
  */
-export function isAsyncGenerator(value) {
-  return isFunction(value) && getTypeSignature(value) === '[object AsyncGeneratorFunction]';
+export function isAsyncGeneratorFunction(value) {
+  return (
+    isFunction(value) &&
+    getTypeSignature(value) === '[object AsyncGeneratorFunction]' &&
+    resolveType(value) === 'AsyncGeneratorFunction'
+  );
 }
 
-/** @typedef {import('./typedef.js').AnyGenerator} AnyGenerator */
+/** @typedef {import('./typedef.js').AnyGeneratorFunction} AnyGeneratorFunction */
 
 /**
  * Detects whether the passed `value` is either kind of generator function,
  * async or non-async.
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is AnyGenerator}
+ * @returns {value is AnyGeneratorFunction}
  *  A boolean value which indicates whether the tested value is either
  *  an async or a non-async generator function.
  */
-export function isGenerator(value) {
+export function isAnyGeneratorFunction(value) {
   if (isFunction(value)) {
     const typeName = resolveType(value);
+    const taggedType = getTaggedType(value);
 
     return (
-      !!typeName && (typeName === 'GeneratorFunction' || typeName === 'AsyncGeneratorFunction')
+      !!typeName &&
+      typeName === taggedType &&
+      (typeName === 'GeneratorFunction' || typeName === 'AsyncGeneratorFunction')
     );
   }
   return false;
@@ -112,14 +125,19 @@ export function isGenerator(value) {
  * or an async function statement.
  * It does not detect an async generator function since the latter is not
  * an async function itself but the factory function of an async generator.
+ * Async functions do return promises, but do not return async generators.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is AsyncFunction}
- *  A boolean value which indicates whether the
- *  tested value is a(n) (non-generator) async function.
+ *  A boolean value which indicates whether
+ *  the tested value is an async function.
  */
 export function isAsyncFunction(value) {
-  return isFunction(value) && getTypeSignature(value) === '[object AsyncFunction]';
+  return (
+    isFunction(value) &&
+    getTypeSignature(value) === '[object AsyncFunction]' &&
+    getDefinedConstructorName(value) === 'AsyncFunction'
+  );
 }
 
 /**
@@ -167,12 +185,18 @@ export function isAsyncArrow(value) {
  *  a non-async arrow function.
  */
 export function isNonAsyncArrow(value) {
-  return (
-    isFunction(value) &&
-    !hasOwnPrototype(value) &&
-    getTypeSignature(value) !== '[object AsyncFunction]'
-  );
-  // return isArrow(value) && !isAsyncFunction(value);
+  // - more elegant due to its slightly better deterministic approach.
+  //
+  // return (
+  //   isFunction(value) &&
+  //   !hasOwnPrototype(value) &&
+  //   getTypeSignature(value) === '[object Function]' &&
+  //   getDefinedConstructorName(value) === 'Function'
+  // );
+  //
+  // - not that elegant but spoof proof against an
+  //   additionally/artificially added onw prototype.
+  return isArrow(value) && !isAsyncFunction(value);
 }
 
 /** @typedef {import('./typedef.js').AnyArrow} AnyArrow */
@@ -212,7 +236,7 @@ export function isES3Function(value) {
   return (
     isFunction(value) &&
     hasOwnWritablePrototype(value) &&
-    !isGenerator(value) &&
+    !isAnyGeneratorFunction(value) &&
     !getFunctionSource(getDefinedConstructor(value)).startsWith('class')
 
     // (/^class(\s+[^{]+)?\s*{/).test(getFunctionSource(getDefinedConstructor(value)))
