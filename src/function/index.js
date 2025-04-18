@@ -1,6 +1,6 @@
 // @ts-check
 
-import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
+import { hasOwnWritablePrototype } from './utility';
 import {
   getOwnPropertyDescriptor,
   getFunctionSource,
