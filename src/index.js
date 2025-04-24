@@ -58,6 +58,15 @@ import {
   isAggregateError
 } from './error';
 
+import {
+  isGenerator,
+  isAsyncGenerator,
+  isAnyGenerator,
+  doesMatchThenable,
+  doesMatchSafeThenable,
+  isPromise
+} from './flow';
+
 export default {
   utility: {
     getTypeSignature,
@@ -115,5 +124,13 @@ export default {
     isTypeError,
     isURIError,
     isAggregateError
+  },
+  flow: {
+    isGenerator,
+    isAsyncGenerator,
+    isAnyGenerator,
+    doesMatchThenable,
+    doesMatchSafeThenable,
+    isPromise
   }
 };
