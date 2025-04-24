@@ -4,10 +4,42 @@ export {};
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+/** @typedef {import('../flow/typedef.js').Generator} Generator */
+
 /**
  * @typedef {Function & {
+ *   prototype: Generator,
+ *   [Symbol.toStringTag]: 'GeneratorFunction',
+ *   __brand: 'GeneratorFunction',
+ * }} GeneratorFunction
+ *
+ * The constructor/factory function for `Generator` instances, i.e.:
+ * ```js
+ * /** @type {GeneratorFunction} *\/
+ * const generatorFunction = (function* () { yield 1; }).constructor;
+ * ```
+ */
+
+/** @typedef {import('../flow/typedef.js').AsyncGenerator} AsyncGenerator */
+
+/**
+ * @typedef {Function & {
+ *   prototype: AsyncGenerator,
+ *   [Symbol.toStringTag]: 'AsyncGeneratorFunction',
+ *   __brand: 'AsyncGeneratorFunction',
+ * }} AsyncGeneratorFunction
+ *
+ * The constructor function for `AsyncGenerator` instances, i.e.:
+ * ```js
+ * /** @type {AsyncGeneratorFunction} *\/
+ * const AsyncGeneratorCtor = (async function* () {}).constructor;
+ * ```
+ */
+
+/**
+ * @typedef {Function & {
+ *   constructor: GeneratorFunction | AsyncGeneratorFunction,
  *   __brand: 'AnyGeneratorFunction',
- *   __constructor: GeneratorFunction | AsyncGeneratorFunction,
  * }} AnyGeneratorFunction
  *
  * Any generator function - created as:
@@ -17,10 +49,10 @@ export {};
 
 /**
  * @typedef {Function & {
- *   __brand: 'AsyncFunction',
- *   __constructorName: 'AsyncFunction',
+ *   prototype: undefined,
  *   [Symbol.toStringTag]: 'AsyncFunction',
- *   __prototype: undefined,
+ *   __constructorName: 'AsyncFunction',
+ *   __brand: 'AsyncFunction',
  * }} AsyncFunction
  *
  * An `AsyncFunction` type that misses its own `prototype` slot - created
@@ -37,9 +69,9 @@ export {};
 
 /**
  * @typedef {Function & {
+ *   constructor: Function,
+ *   prototype: undefined,
  *   __brand: 'NonAsyncArrow',
- *   __constructor: Function,
- *   __prototype: undefined,
  * }} NonAsyncArrow
  *
  * A `Function` type that misses its own `prototype` slot - created
@@ -48,9 +80,9 @@ export {};
 
 /**
  * @typedef {Function & {
+ *   prototype: undefined,
  *   __brand: 'AnyArrow',
  *   __constructorName: 'Function' | 'AsyncFunction',
- *   __prototype: undefined,
  * }} AnyArrow
  *
  * Any variant of an arrow function expression - created as:
@@ -60,9 +92,9 @@ export {};
 
 /**
  * @typedef {Function & {
+ *   constructor: Function,
+ *   prototype: { writable: true },
  *   __brand: 'ES3Function',
- *   __constructor: Function,
- *   __prototype: { writable: true },
  * }} ES3Function
  *
  * The only available/known function type back at ES3.
@@ -125,9 +157,9 @@ export {};
 // /**
 //  * @template T
 //  * @typedef { ClassConstructor<Function> & {
+//  *   constructor: SubclassedConstructor<typeof Function>,
+//  *   __produces: T,
 //  *   __brand: 'SubclassedFunctionConstructor',
-//  *   __constructor: SubclassedConstructor<typeof Function>,
-//  *   __produces: T
 //  * }} SubclassedFunctionConstructor
 //  *
 //  * A branded subclass constructor that extends the built-in `Function` class.
@@ -155,8 +187,8 @@ export {};
 // /**
 //  * @template T
 //  * @typedef {Function & {
+//  *   constructor: SubclassedFunctionConstructor<T>,
 //  *   __brand: 'FunctionSubtype',
-//  *   __constructor: SubclassedFunctionConstructor<T>
 //  * }} FunctionSubtype
 //  *
 //  * A branded structural type for subclass instances where
@@ -188,8 +220,8 @@ export {};
 
 /**
  * @typedef {Function & {
+ *   name: '',
  *   __brand: 'UnnamedFunction',
- *   __name: ''
  * }} UnnamedFunction
  *
  * A branded type representing any function whose `name` value

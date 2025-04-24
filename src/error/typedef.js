@@ -6,8 +6,8 @@ export {};
 
 /**
  * @typedef {Error & {
+ *   constructor: Function,
  *   __brand: 'AnyError',
- *   __constructor: Function
  * }} AnyError
  *
  * Any error instance - including:
@@ -20,8 +20,8 @@ export {};
 
 /**
  * @typedef {Error & {
+ *   constructor: Error,
  *   __brand: 'PlainError',
- *   __constructor: Error
  * }} PlainError
  *
  * A plain `Error` instance - created exclusively via the base `Error` constructor:

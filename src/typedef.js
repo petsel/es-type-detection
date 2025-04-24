@@ -6,8 +6,8 @@ export {};
 
 /**
  * @typedef {Object & {
+ *   constructor: Function,
  *   __brand: 'AnyObject',
- *   __constructor: Function
  * }} AnyObject
  *
  * Any non-null object value - including:
@@ -21,8 +21,8 @@ export {};
 
 /**
  * @typedef {Object & {
+ *   constructor: Object,
  *   __brand: 'PlainObject',
- *   __constructor: Object
  * }} PlainObject
  *
  * A plain, prototype-bearing object - created via:
@@ -38,9 +38,9 @@ export {};
  * @typedef {{
  *   [key: string | symbol]: unknown
  * } & {
+ *   constructor: undefined,
+ *   prototype: null,
  *   __brand: 'DictionaryObject',
- *   __constructor: undefined
- *   __prototype: null,
  * }} DictionaryObject
  *
  * A prototype-less object - created via `Object.create(null)`.
