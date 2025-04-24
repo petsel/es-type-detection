@@ -60,6 +60,15 @@ import {
   isAggregateError
 } from '../src/error';
 
+import {
+  isGenerator,
+  isAsyncGenerator,
+  isAnyGenerator,
+  doesMatchThenable,
+  doesMatchSafeThenable,
+  isPromise
+} from '../src/flow';
+
 import module from '../src';
 
 function runTestCases(namespace, cases) {
@@ -75,10 +84,11 @@ describe('The top most exported module ...', () => {
   it('... is expected to be a plain object (that)...', () => {
     expect(isObjectObject(module)).toStrictEqual(true);
   });
-  it('... features exactly 4 own property keys.', () => {
-    expect(Object.keys(module).length).toStrictEqual(4);
+  it('... features exactly 5 own property keys.', () => {
+    expect(Object.keys(module).length).toStrictEqual(5);
   });
-  describe('... should feature the `utility` property ...', () => {
+
+  describe('... 🛠️ should feature the `utility` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.utility)).toStrictEqual(true);
     });
@@ -104,7 +114,8 @@ describe('The top most exported module ...', () => {
       ]);
     });
   });
-  describe('... should feature the `base` property ...', () => {
+
+  describe('... 🧬 should feature the `base` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.base)).toStrictEqual(true);
     });
@@ -141,7 +152,8 @@ describe('The top most exported module ...', () => {
       ]);
     });
   });
-  describe('... should feature the `function` property ...', () => {
+
+  describe('... 🧠 should feature the `function` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.function)).toStrictEqual(true);
     });
@@ -170,7 +182,8 @@ describe('The top most exported module ...', () => {
       ]);
     });
   });
-  describe('... should feature the `error` property ...', () => {
+
+  describe('... 💣 should feature the `error` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.error)).toStrictEqual(true);
     });
@@ -189,6 +202,27 @@ describe('The top most exported module ...', () => {
         ['isTypeError', isTypeError],
         ['isURIError', isURIError],
         ['isAggregateError', isAggregateError]
+      ]);
+    });
+  });
+
+  describe('... 🌊 should feature the `flow` property ...', () => {
+    it('... which itself refers a plain object too ...', () => {
+      expect(isObjectObject(module.flow)).toStrictEqual(true);
+    });
+    it('... that again features exactly 6 own property keys.', () => {
+      expect(Object.keys(module.flow).length).toStrictEqual(6);
+    });
+    describe('The `flow` namespace should feature following error-type detection methods ...', () => {
+      runTestCases(module.flow, [
+        ['isGenerator', isGenerator],
+        ['isAsyncGenerator', isAsyncGenerator],
+        ['isAnyGenerator', isAnyGenerator],
+
+        ['doesMatchThenable', doesMatchThenable],
+        ['doesMatchSafeThenable', doesMatchSafeThenable],
+
+        ['isPromise', isPromise]
       ]);
     });
   });
