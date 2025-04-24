@@ -1,6 +1,6 @@
 // @ts-check
 
-import { hasOwnWritablePrototype } from './utility';
+import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
 import {
   getOwnPropertyDescriptor,
   getFunctionSource,
@@ -58,12 +58,14 @@ export function isClass(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+/** @typedef {import('./typedef.js').GeneratorFunction} GeneratorFunction */
+
 /**
- * Detects whether the passed `value` is explicitly a `GeneratorFunction` type.
+ * Detects whether the passed `value` is exclusively a `GeneratorFunction` type.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is GeneratorFunction}
- *  A boolean value which indicates whether the tested value is explicitly a
+ *  A boolean value which indicates whether the tested value is exclusively a
  *  `GeneratorFunction` type.
  */
 export function isGeneratorFunction(value) {
@@ -74,12 +76,14 @@ export function isGeneratorFunction(value) {
   );
 }
 
+/** @typedef {import('./typedef.js').AsyncGeneratorFunction} AsyncGeneratorFunction */
+
 /**
- * Detects whether the passed `value` is explicitly an `AsyncGeneratorFunction` type.
+ * Detects whether the passed `value` is exclusively an `AsyncGeneratorFunction` type.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is AsyncGeneratorFunction}
- *  A boolean value which indicates whether the tested value is explicitly a
+ *  A boolean value which indicates whether the tested value is exclusively an
  *  `AsyncGeneratorFunction` type.
  */
 export function isAsyncGeneratorFunction(value) {
@@ -246,6 +250,8 @@ export function isES3Function(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+// @TODO adapt both tests and the type definition for `GenericFunction` since in addition
+//  to `NonAsyncArrow` and `ES3Function` one also has to cover shorthand/concise methods.
 /**
  * Detects whether the passed `value` is a generic (unspecific/non-specific)
  * function ...
@@ -268,7 +274,39 @@ export function isES3Function(value) {
  *  a good old ES3 function or a non-async arrow function expression.
  */
 export function isGenericFunction(value) {
-  return isNonAsyncArrow(value) || isES3Function(value);
+  return (
+    isFunction(value) &&
+    // non-async arrow-functions and shorthand methods (aka concise methods)
+    (!hasOwnPrototype(value)
+      ? getTypeSignature(value) === '[object Function]' &&
+        getDefinedConstructorName(value) === 'Function'
+      : // ES3 function
+        hasOwnWritablePrototype(value) &&
+        !isAnyGeneratorFunction(value) &&
+        !getFunctionSource(getDefinedConstructor(value)).startsWith('class'))
+  );
+  // // ... was ...
+  //
+  // return isNonAsyncArrow(value) || isES3Function(value);
+  //
+  // // ... but is too strict due to methods that are written like ...
+  // //
+  // // const idealThenable = {
+  // //   // Concise Method Syntax aka "Shorthand Method Definitions"
+  // //   then(onFulfilled, onRejected) {
+  // //     try {
+  // //       const result = 'fulfilled from thenable';
+  // //       if (typeof onFulfilled === 'function') {
+  // //         onFulfilled(result);
+  // //       }
+  // //     } catch (err) {
+  // //       if (typeof onRejected === 'function') {
+  // //         onRejected(err);
+  // //       }
+  // //     }
+  // //   }
+  // // };
+  // // ... where `then` is a function which does not have an own `prototype` descriptor slot.
 }
 
 // // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

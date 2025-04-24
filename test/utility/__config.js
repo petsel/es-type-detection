@@ -16,6 +16,11 @@ export const asyncArrowFunctionExpression = async (_) => _;
 export const asyncNonArrowFunctionExpression = async function () {};
 export const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
+export const conciseMethod = {
+  concise(...args) {
+    return args;
+  }
+}.concise;
 export const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
 
 export class MyClass {}

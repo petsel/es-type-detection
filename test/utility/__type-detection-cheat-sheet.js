@@ -1,3 +1,5 @@
+import { getDefinedConstructor } from '../../src/utility';
+
 const asyncGeneratorFunctionExpression = async function* () {
   yield 1;
 };
@@ -14,6 +16,11 @@ const asyncArrowFunctionExpression = async (_) => _;
 const asyncNonArrowFunctionExpression = async function () {};
 // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
+const conciseMethod = {
+  concise(...args) {
+    return args;
+  }
+}.concise;
 const spoofedArrowFunction = Object.assign(() => {}, { prototype: {} });
 
 class MyClass {}
@@ -129,6 +136,7 @@ const introspectionList = [
 
   [function () {}, '(function () {})'], // Function
   [(_) => _, '(_ => _)'], // Function
+  [conciseMethod, '({ concise(...args) { return args; }}).concise'], // Function
 
   [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })'], // Function
 
@@ -194,6 +202,13 @@ console.table(
         ? prototype
         : Object.getOwnPropertyDescriptor(prototype, 'constructor')?.value;
 
+    // // const confirmed_constructor = getDefinedConstructor(value);
+    // const constructor_tst_descriptor = Object.getOwnPropertyDescriptor(
+    //   confirmed_constructor,
+    //   Symbol.toStringTag
+    // );
+    const prototype_tst_descriptor = Object.getOwnPropertyDescriptor(prototype, Symbol.toStringTag);
+
     dictionary[description] = {
       type,
       prototype:
@@ -217,7 +232,15 @@ console.table(
       // direct_access_constr_name: !constructor ? constructor : Object.getOwnPropertyDescriptor(constructor, 'name')?.value ?? (constructor.name ?? void 0),
       direct_access_constr_name: !constructor
         ? constructor
-        : Object.getOwnPropertyDescriptor(constructor, 'name')?.value || constructor.name
+        : Object.getOwnPropertyDescriptor(constructor, 'name')?.value || constructor.name,
+
+      // confirmed_constructor:
+      //   (typeof confirmed_constructor === 'function' &&
+      //     Function.prototype.toString.call(confirmed_constructor)) ||
+      //   confirmed_constructor,
+      //
+      // constructor_tst_descriptor,
+      prototype_tst_descriptor
     };
     return dictionary;
   }, Object.create(null))

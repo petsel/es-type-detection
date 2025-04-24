@@ -14,6 +14,7 @@ import {
   asyncArrowFunctionExpression,
   asyncNonArrowFunctionExpression,
   // AsyncFunction,
+  conciseMethod,
   spoofedArrowFunction,
   MyClass,
   MySubclass,
@@ -174,6 +175,7 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
   runTestCases('🔧 Functions - other than Built-in and Class constructors', [
     [function () {}, 'function () {}', '[object Function]'],
     [(_) => _, '(_) => _', '[object Function]'],
+    [conciseMethod, '({ concise(...args) { return args; }}).concise', '[object Function]'],
     [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })', '[object Function]'],
     [asyncArrowFunctionExpression, 'async (_) => _', '[object AsyncFunction]'],
     [asyncNonArrowFunctionExpression, '(async function () {})', '[object AsyncFunction]'],
@@ -186,6 +188,11 @@ describe('`getTypeSignature` - gets the internal type signature of any passed va
 
     [function () {}.constructor, '(function () {}).constructor', '[object Function]'],
     [((_) => _).constructor, '((_) => _).constructor', '[object Function]'],
+    [
+      conciseMethod.constructor,
+      '({ concise(...args) { return args; }}).concise',
+      '[object Function]'
+    ],
     [
       spoofedArrowFunction.constructor,
       'Object.assign(() => {}, { prototype: {} }).constructor',

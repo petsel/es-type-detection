@@ -123,6 +123,16 @@ export const testIndex = {
           has_writable_prototype: true
         },
 
+        conciseMethod: {
+          description: 'a concise method or a shorthand method',
+          // callable: true,
+          // constructable: false,
+          // constructableWithNew: false,
+          // constructableWithoutNew: false,
+          has_no_construct_slot: true,
+          is_generic_function: true
+        },
+
         namedFunctionExpression: {
           description: 'a named function expression',
           // callable: true,
@@ -379,9 +389,14 @@ export const testIndex = {
 
     // isES3Function,
     functionStatement,
-    namedFunctionExpression: function namedFunctionExpression() {}
+    namedFunctionExpression: function namedFunctionExpression() {},
 
     // isGenericFunction,
+    conciseMethod: {
+      concise(...args) {
+        return args;
+      }
+    }.concise
 
     // // isFunctionSubtype,
     // subtypedFunction,

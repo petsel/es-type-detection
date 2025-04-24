@@ -14,6 +14,7 @@ import {
   asyncArrowFunctionExpression,
   asyncNonArrowFunctionExpression,
   // AsyncFunction,
+  conciseMethod,
   spoofedArrowFunction,
   MyClass,
   MySubclass,
@@ -170,6 +171,7 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
   runTestCases('🔧 Functions - other than Built-in and Class constructors', [
     [function () {}, 'function () {}', 'Function'],
     [(_) => _, '(_) => _', 'Function'],
+    [conciseMethod, '({ concise(...args) { return args; }}).concise', 'Function'],
     [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })', 'Function'],
     [asyncArrowFunctionExpression, 'async (_) => _', 'AsyncFunction'],
     [asyncNonArrowFunctionExpression, '(async function () {})', 'AsyncFunction'],
@@ -182,6 +184,7 @@ describe("`getTaggedType` - retrieves the tagged type-name from the passed value
 
     [function () {}.constructor, '(function () {}).constructor', 'Function'],
     [((_) => _).constructor, '((_) => _).constructor', 'Function'],
+    [conciseMethod.constructor, '({ concise(...args) { return args; }}).concise', 'Function'],
     [
       spoofedArrowFunction.constructor,
       'Object.assign(() => {}, { prototype: {} }).constructor',
