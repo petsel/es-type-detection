@@ -144,7 +144,7 @@ describe('From the "generator" kind of flow/control types ...', () => {
     );
 
     runTestCases(
-      '❌ Rejects any object that is neither a non-async nor an async generator instance.',
+      '❌ Rejects any value that is neither a non-async nor an async generator instance.',
       isAnyGenerator,
       false,
       [
@@ -164,7 +164,18 @@ describe('From the "generator" kind of flow/control types ...', () => {
           "{ async then(resolve) { resolve('this will confuse resolution'); } }"
         ],
 
-        [awaitedType, 'Promise.resolve()']
+        [awaitedType, 'Promise.resolve()'],
+
+        ['string', "'string'"],
+        [12_345, '12_345'],
+        [true, 'true'],
+
+        ['', "''"],
+        [0, '0'],
+        [false, 'false'],
+
+        [null, 'null'],
+        [void 0, '(void 0)']
       ]
     );
   });
