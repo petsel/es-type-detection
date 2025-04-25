@@ -16,7 +16,7 @@ const asyncArrowFunctionExpression = async (_) => _;
 const asyncNonArrowFunctionExpression = async function () {};
 // const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
-const conciseMethod = {
+const conciseGenericMethod = {
   concise(...args) {
     return args;
   }
@@ -136,7 +136,7 @@ const introspectionList = [
 
   [function () {}, '(function () {})'], // Function
   [(_) => _, '(_ => _)'], // Function
-  [conciseMethod, '({ concise(...args) { return args; }}).concise'], // Function
+  [conciseGenericMethod, '({ concise(...args) { return args; }}).concise'], // Function
 
   [spoofedArrowFunction, 'Object.assign(() => {}, { prototype: {} })'], // Function
 

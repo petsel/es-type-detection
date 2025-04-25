@@ -16,7 +16,7 @@ export const asyncArrowFunctionExpression = async (_) => _;
 export const asyncNonArrowFunctionExpression = async function () {};
 export const AsyncFunction = asyncNonArrowFunctionExpression.constructor;
 
-export const conciseMethod = {
+export const conciseGenericMethod = {
   concise(...args) {
     return args;
   }

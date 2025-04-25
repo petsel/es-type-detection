@@ -16,7 +16,7 @@ export {};
  * - Instances of custom classes or constructor functions
  *
  * The `null` value is explicitly excluded, even though `typeof null === 'object'`.
- * The `__constructor` refers to the actual constructor function that created the object.
+ * The `constructor` refers to the actual constructor function that created the object.
  */
 
 /**
