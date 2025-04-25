@@ -9,7 +9,6 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: Generator,
- *   [Symbol.toStringTag]: 'GeneratorFunction',
  *   __brand: 'GeneratorFunction',
  * }} GeneratorFunction
  *
@@ -18,6 +17,8 @@ export {};
  * /** @type {GeneratorFunction} *\/
  * const generatorFunction = (function* () { yield 1; }).constructor;
  * ```
+ * @property {'GeneratorFunction'} [Symbol.toStringTag]
+ *  Defines the `Symbol.toStringTag` property as `"GeneratorFunction"`.
  */
 
 /** @typedef {import('../flow/typedef.js').AsyncGenerator} AsyncGenerator */
@@ -25,7 +26,6 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: AsyncGenerator,
- *   [Symbol.toStringTag]: 'AsyncGeneratorFunction',
  *   __brand: 'AsyncGeneratorFunction',
  * }} AsyncGeneratorFunction
  *
@@ -34,6 +34,8 @@ export {};
  * /** @type {AsyncGeneratorFunction} *\/
  * const AsyncGeneratorCtor = (async function* () {}).constructor;
  * ```
+ * @property {'AsyncGeneratorFunction'} [Symbol.toStringTag]
+ *  Defines the `Symbol.toStringTag` property as `"AsyncGeneratorFunction"`.
  */
 
 /**
@@ -50,7 +52,6 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: undefined,
- *   [Symbol.toStringTag]: 'AsyncFunction',
  *   __constructorName: 'AsyncFunction',
  *   __brand: 'AsyncFunction',
  * }} AsyncFunction
@@ -59,6 +60,8 @@ export {};
  * either by an async arrow function expression or by either of both async
  * non-arrow function variants, an async function expression or an async
  * function statement.
+ * @property {'AsyncFunction'} [Symbol.toStringTag]
+ *  Defines the `Symbol.toStringTag` property as `"AsyncFunction"`.
  *
  * Within an TypeScript environment (hence `.ts` instead of `.js` files)
  * one can annotate `AsyncFunction` like that ...

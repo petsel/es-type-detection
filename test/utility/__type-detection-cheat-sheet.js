@@ -1,4 +1,4 @@
-import { getDefinedConstructor } from '../../src/utility';
+// import { getDefinedConstructor } from '../../src/utility';
 
 const asyncGeneratorFunctionExpression = async function* () {
   yield 1;

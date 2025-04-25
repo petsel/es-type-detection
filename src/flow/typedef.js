@@ -26,7 +26,6 @@ export {};
  *   next: (value?: any) => IteratorResult<any>,
  *   return?: (value?: any) => IteratorResult<any>,
  *   throw?: (error?: any) => IteratorResult<any>,
- *   [Symbol.toStringTag]: 'Generator',
  *   __brand: 'Generator',
  * }} Generator
  *
@@ -35,6 +34,8 @@ export {};
  * /** @type {Generator} *\/
  * const generatorType = (function* () { yield 1; })();
  * ```
+ * @property {'Generator'} [Symbol.toStringTag]
+ *  Defines the `Symbol.toStringTag` property as `"Generator"`.
  */
 
 /** @typedef {import('../function/typedef.js').AsyncGeneratorFunction} AsyncGeneratorFunction */
@@ -45,7 +46,6 @@ export {};
  *   next: (value?: any) => Promise<IteratorResult<any>>,
  *   return?: (value?: any) => Promise<IteratorResult<any>>,
  *   throw?: (error?: any) => Promise<IteratorResult<any>>,
- *   [Symbol.toStringTag]: 'AsyncGenerator',
  *   __brand: 'AsyncGenerator',
  * }} AsyncGenerator
  *
@@ -56,6 +56,8 @@ export {};
  *   yield await Promise.resolve(1);
  * })();
  * ```
+ * @property {'AsyncGenerator'} [Symbol.toStringTag]
+ *  Defines the `Symbol.toStringTag` property as `"AsyncGenerator"`.
  */
 
 /**
