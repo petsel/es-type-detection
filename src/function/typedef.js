@@ -93,6 +93,19 @@ export {};
 /**
  * @typedef {Function & {
  *   constructor: Function,
+ *   prototype: undefined,
+ *   __brand: 'ConciseGenericMethod',
+ * }} ConciseGenericMethod
+ *
+ * A `Function` type that misses its own `prototype` slot. Thus, it does share
+ * some of the characteristics of a `NonAsyncArrow` function type - but it gets
+ * created exclusively by a non-async and non-generator shorthand method definition.
+ * (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions#description).
+ */
+
+/**
+ * @typedef {Function & {
+ *   constructor: Function,
  *   prototype: { writable: true },
  *   __brand: 'ES3Function',
  * }} ES3Function

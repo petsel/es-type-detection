@@ -12,6 +12,7 @@ import {
   isNonAsyncArrow,
   isArrow,
   isES3Function,
+  isConciseGenericMethod,
   isGenericFunction,
   isUnnamedFunction
 } from '../../src/function';
@@ -125,12 +126,12 @@ describe('Testing all `Function` introspection methods related to function types
       );
 
       it('- ❌ a `Generator` instance is **not** a `class` constructor function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isClass(nonAsyncGenerator_1)).toBe(false);
+        expect(isClass(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** a `class` constructor function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isClass(asyncGenerator_1)).toBe(false);
+        expect(isClass(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** a `class` constructor function.', () => {
@@ -176,12 +177,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** exclusively a `GeneratorFunction` type.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isGeneratorFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isGeneratorFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** exclusively a `GeneratorFunction` type.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isGeneratorFunction(asyncGenerator_1)).toBe(false);
+        expect(isGeneratorFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** exclusively a `GeneratorFunction` type.', () => {
@@ -227,12 +228,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** exclusively an `AsyncGeneratorFunction` type.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isAsyncGeneratorFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isAsyncGeneratorFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** exclusively an `AsyncGeneratorFunction` type.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isAsyncGeneratorFunction(asyncGenerator_1)).toBe(false);
+        expect(isAsyncGeneratorFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** exclusively an `AsyncGeneratorFunction` type.', () => {
@@ -278,12 +279,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** any kind of generator function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isAnyGeneratorFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isAnyGeneratorFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** any kind of generator function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isAnyGeneratorFunction(asyncGenerator_1)).toBe(false);
+        expect(isAnyGeneratorFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** any kind of generator function.', () => {
@@ -329,12 +330,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** any kind of async function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isAsyncFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isAsyncFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** any kind of async function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isAsyncFunction(asyncGenerator_1)).toBe(false);
+        expect(isAsyncFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** any kind of async function.', () => {
@@ -380,12 +381,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** a kind of **non generator** async function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isAsyncNonArrow(nonAsyncGenerator_1)).toBe(false);
+        expect(isAsyncNonArrow(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** a kind of **non generator** async function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isAsyncNonArrow(asyncGenerator_1)).toBe(false);
+        expect(isAsyncNonArrow(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** a kind of **non generator** async function.', () => {
@@ -431,12 +432,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** exclusively an async arrow function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isAsyncArrow(nonAsyncGenerator_1)).toBe(false);
+        expect(isAsyncArrow(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** exclusively an async arrow function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isAsyncArrow(asyncGenerator_1)).toBe(false);
+        expect(isAsyncArrow(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** exclusively an async arrow function.', () => {
@@ -482,12 +483,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** exclusively a non async arrow function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isNonAsyncArrow(nonAsyncGenerator_1)).toBe(false);
+        expect(isNonAsyncArrow(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** exclusively a non async arrow function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isNonAsyncArrow(asyncGenerator_1)).toBe(false);
+        expect(isNonAsyncArrow(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** exclusively a non async arrow function.', () => {
@@ -533,12 +534,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** any kind of arrow function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isArrow(nonAsyncGenerator_1)).toBe(false);
+        expect(isArrow(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** any kind of arrow function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isArrow(asyncGenerator_1)).toBe(false);
+        expect(isArrow(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** any kind of arrow function.', () => {
@@ -584,12 +585,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **not** exclusively the only known function type back at ES3 (in addition to all the built-in constructor functions).', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isES3Function(nonAsyncGenerator_1)).toBe(false);
+        expect(isES3Function(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** exclusively the only known function type back at ES3 (in addition to all the built-in constructor functions).', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isES3Function(asyncGenerator_1)).toBe(false);
+        expect(isES3Function(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** exclusively the only known function type back at ES3 (in addition to all the built-in constructor functions).', () => {
@@ -597,6 +598,57 @@ describe('Testing all `Function` introspection methods related to function types
       });
       it('- ❌ an `Object` instance is **not** exclusively the only known function type back at ES3 (in addition to all the built-in constructor functions).', () => {
         expect(isES3Function({})).toBe(false);
+      });
+    });
+  });
+
+  describe('The introspection method `isConciseGenericMethod` ...', () => {
+    it('- filters the correct amount of items from a given array of mixed function types.', () => {
+      expect(
+        allTestEntries.filter(([key /* , spec */]) =>
+          isConciseGenericMethod(getTestCandidateBySpecificationKey(key))
+        ).length
+      ).toBe(
+        allTestEntries
+          // eslint-disable-next-line no-unused-vars
+          .filter(([_, spec]) => !!spec.is_concise_generic_method).length
+      );
+    });
+
+    describe('... verifies whether ...', () => {
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !!spec.is_concise_generic_method)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} is exclusively a concise generic method.`, () => {
+            expect(isConciseGenericMethod(candidate)).toBe(true);
+          });
+        });
+      allTestEntries
+        // eslint-disable-next-line no-unused-vars
+        .filter(([_, spec]) => !spec.is_concise_generic_method)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ❌ ${spec.description} is **not** a concise generic method.`, () => {
+            expect(isConciseGenericMethod(candidate)).toBe(false);
+          });
+        });
+
+      it('- ❌ a `Generator` instance is **not** a concise generic method.', () => {
+        expect(isConciseGenericMethod(nonAsyncGenerator_1)).toBe(false);
+        expect(isConciseGenericMethod(nonAsyncGenerator_2)).toBe(false);
+      });
+      it('- ❌ an `AsyncGenerator` instance is **not** a concise generic method.', () => {
+        expect(isConciseGenericMethod(asyncGenerator_1)).toBe(false);
+        expect(isConciseGenericMethod(asyncGenerator_2)).toBe(false);
+      });
+
+      it('- ❌ an `Array` instance is **not** a concise generic method.', () => {
+        expect(isConciseGenericMethod([])).toBe(false);
+      });
+      it('- ❌ an `Object` instance is **not** a concise generic method.', () => {
+        expect(isConciseGenericMethod({})).toBe(false);
       });
     });
   });
@@ -635,12 +687,12 @@ describe('Testing all `Function` introspection methods related to function types
         });
 
       it('- ❌ a `Generator` instance is **neither** a non async arrow function **nor** a good old ES3 function.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isGenericFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isGenericFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **neither** a non async arrow function **nor** a good old ES3 function.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isGenericFunction(asyncGenerator_1)).toBe(false);
+        expect(isGenericFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **neither** a non async arrow function **nor** a good old ES3 function.', () => {
@@ -734,12 +786,12 @@ describe('Testing all `Function` introspection methods related to function types
       });
 
       it('- ❌ a `Generator` instance is **not** a unnamed function type.', () => {
-        expect(isFunction(nonAsyncGenerator_1)).toBe(false);
-        expect(isFunction(nonAsyncGenerator_2)).toBe(false);
+        expect(isUnnamedFunction(nonAsyncGenerator_1)).toBe(false);
+        expect(isUnnamedFunction(nonAsyncGenerator_2)).toBe(false);
       });
       it('- ❌ an `AsyncGenerator` instance is **not** a unnamed function type.', () => {
-        expect(isFunction(asyncGenerator_1)).toBe(false);
-        expect(isFunction(asyncGenerator_2)).toBe(false);
+        expect(isUnnamedFunction(asyncGenerator_1)).toBe(false);
+        expect(isUnnamedFunction(asyncGenerator_2)).toBe(false);
       });
 
       it('- ❌ an `Array` instance is **not** a unnamed function type.', () => {

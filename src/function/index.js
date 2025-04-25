@@ -189,17 +189,6 @@ export function isAsyncArrow(value) {
  *  a non-async arrow function.
  */
 export function isNonAsyncArrow(value) {
-  // - more elegant due to its slightly better deterministic approach.
-  //
-  // return (
-  //   isFunction(value) &&
-  //   !hasOwnPrototype(value) &&
-  //   getTypeSignature(value) === '[object Function]' &&
-  //   getDefinedConstructorName(value) === 'Function'
-  // );
-  //
-  // - not that elegant but spoof proof against an
-  //   additionally/artificially added onw prototype.
   return isArrow(value) && !isAsyncFunction(value);
 }
 
@@ -250,14 +239,41 @@ export function isES3Function(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-// @TODO adapt both tests and the type definition for `GenericFunction` since in addition
-//  to `NonAsyncArrow` and `ES3Function` one also has to cover shorthand/concise methods.
+/** @typedef {import('./typedef.js').ConciseGenericMethod} ConciseGenericMethod */
+
+/**
+ * Detects whether the passed `value` is a concise generic method, a function
+ * which has been created exclusively by a non-async and non-generator shorthand
+ * method definition.
+ * @param {any} [value]
+ *  An optionally passed value of any type.
+ * @returns {value is ConciseGenericMethod}
+ *  A boolean value which indicates whether the tested value is exclusively a
+ *  concise generic method, a function created by a non-async and non-generator
+ *  shorthand method definition.
+ */
+export function isConciseGenericMethod(value) {
+  return (
+    isFunction(value) &&
+    !hasOwnPrototype(value) &&
+    getTypeSignature(value) === '[object Function]' &&
+    getDefinedConstructorName(value) === 'Function' &&
+    // - until here all of the above steps do
+    //   apply for non-async arrow functions too.
+
+    !isArrow(value)
+  );
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
 /**
  * Detects whether the passed `value` is a generic (unspecific/non-specific)
  * function ...
  *
  * - either a good old ES3 function,
  * - or a non-async arrow function expression.
+ * - or either a non-async and non-generator concise method (shorthand function definition).
  *
  * Thus following specific (non-generic) function types are excluded ...
  *

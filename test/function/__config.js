@@ -123,14 +123,16 @@ export const testIndex = {
           has_writable_prototype: true
         },
 
-        conciseMethod: {
-          description: 'a concise method or a shorthand method',
+        conciseGenericMethod: {
+          description:
+            'a concise generic method created by a non-async and non-generator shorthand method definition',
           // callable: true,
           // constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
-          is_generic_function: true
+          is_generic_function: true,
+          is_concise_generic_method: true
         },
 
         namedFunctionExpression: {
@@ -392,7 +394,7 @@ export const testIndex = {
     namedFunctionExpression: function namedFunctionExpression() {},
 
     // isGenericFunction,
-    conciseMethod: {
+    conciseGenericMethod: {
       concise(...args) {
         return args;
       }
