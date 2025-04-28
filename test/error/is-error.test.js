@@ -12,6 +12,28 @@ import {
   isAggregateError
 } from '../../src/error';
 
+class CustomError extends Error {
+  constructor(msg) {
+    super(msg);
+  }
+}
+class CustomSubError extends CustomError {
+  constructor(msg) {
+    super(msg);
+  }
+}
+
+class CustomSyntaxError extends SyntaxError {
+  constructor(msg) {
+    super(msg);
+  }
+}
+class CustomSubSyntaxError extends CustomSyntaxError {
+  constructor(msg) {
+    super(msg);
+  }
+}
+
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
     for (const [input, display] of cases) {
@@ -25,6 +47,7 @@ function runTestCases(label, testFct, expected, cases) {
 describe('`isError` - detects any `Error` instance (built-in or custom).', () => {
   runTestCases('✅ Matches any built-in or custom error instance.', isError, true, [
     [new Error(), 'new Error()'],
+
     [new EvalError(), 'new EvalError()'],
     [new RangeError(), 'new RangeError()'],
     [new ReferenceError(), 'new ReferenceError()'],
@@ -32,7 +55,11 @@ describe('`isError` - detects any `Error` instance (built-in or custom).', () =>
     [new TypeError(), 'new TypeError()'],
     [new URIError(), 'new URIError()'],
     [new AggregateError([]), 'new AggregateError([])'],
-    [new (class CustomError extends Error {})(), 'CustomError extends Error']
+
+    [new CustomError(), 'new (class CustomError extends Error {})()'],
+    [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+    [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+    [new CustomSubSyntaxError(), 'new (class CustomSubSyntaxError extends CustomSyntaxError {})()']
   ]);
 
   runTestCases('❌ Rejects non-error values', isError, false, [
@@ -56,6 +83,7 @@ describe('`isErrorError` - matches exclusively direct instances of `Error`.', ()
     false,
     [
       // [new Error(), 'new Error()'],
+
       [new EvalError(), 'new EvalError()'],
       [new RangeError(), 'new RangeError()'],
       [new ReferenceError(), 'new ReferenceError()'],
@@ -63,7 +91,14 @@ describe('`isErrorError` - matches exclusively direct instances of `Error`.', ()
       [new TypeError(), 'new TypeError()'],
       [new URIError(), 'new URIError()'],
       [new AggregateError([]), 'new AggregateError([])'],
-      [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+      [new CustomError(), 'new (class CustomError extends Error {})()'],
+      [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+      [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+      [
+        new CustomSubSyntaxError(),
+        'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+      ],
 
       [undefined, 'undefined'],
       [null, 'null'],
@@ -84,11 +119,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `EvalError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `EvalError` (subtypes excluded as well) and other non-error types.',
       isEvalError,
       false,
       [
         [new Error(), 'new Error()'],
+
         // [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -96,7 +132,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -115,11 +158,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `RangeError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `RangeError` (subtypes excluded as well) and other non-error types.',
       isRangeError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         // [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -127,7 +171,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -146,11 +197,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `ReferenceError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `ReferenceError` (subtypes excluded as well) and other non-error types.',
       isReferenceError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         // [new ReferenceError(), 'new ReferenceError()'],
@@ -158,7 +210,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -177,11 +236,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `SyntaxError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `SyntaxError` (subtypes excluded as well) and other non-error types.',
       isSyntaxError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -189,7 +249,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -208,11 +275,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `TypeError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `TypeError` (subtypes excluded as well) and other non-error types.',
       isTypeError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -220,7 +288,14 @@ describe('Built-in subclass error type detection', () => {
         // [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -239,11 +314,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `URIError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `URIError` (subtypes excluded as well) and other non-error types.',
       isURIError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -251,7 +327,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         // [new URIError(), 'new URIError()'],
         [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
@@ -270,11 +353,12 @@ describe('Built-in subclass error type detection', () => {
     ]);
 
     runTestCases(
-      '❌ Rejects instances of any error class other than `AggregateError` and other non-error types.',
+      '❌ Rejects instances of any error class other than `AggregateError` (subtypes excluded as well) and other non-error types.',
       isAggregateError,
       false,
       [
         [new Error(), 'new Error()'],
+
         [new EvalError(), 'new EvalError()'],
         [new RangeError(), 'new RangeError()'],
         [new ReferenceError(), 'new ReferenceError()'],
@@ -282,7 +366,14 @@ describe('Built-in subclass error type detection', () => {
         [new TypeError(), 'new TypeError()'],
         [new URIError(), 'new URIError()'],
         // [new AggregateError([]), 'new AggregateError([])'],
-        [new (class CustomError extends Error {})(), 'CustomError extends Error'],
+
+        [new CustomError(), 'new (class CustomError extends Error {})()'],
+        [new CustomSubError(), 'new (class CustomSubError extends CustomError {})()'],
+        [new CustomSyntaxError(), 'new (class CustomSyntaxError extends SyntaxError {})()'],
+        [
+          new CustomSubSyntaxError(),
+          'new (class CustomSubSyntaxError extends CustomSyntaxError {})()'
+        ],
 
         [undefined, 'undefined'],
         [null, 'null'],
