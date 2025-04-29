@@ -382,24 +382,28 @@ const builtInToStringTagTypes = new Set(['Math', 'JSON', 'Reflect', 'Atomics']);
  *  against a built-in type-identity.
  */
 export function hasCustomTypeIdentity(...args) {
-  let isConfirmed = !hasBuiltinTypeIdentity(...args);
+  let isConfirmed = args.length >= 1 && !hasBuiltinTypeIdentity(...args);
 
   // - no built-in type-identity and available argument(s).
-  if (isConfirmed && args.length >= 1) {
+  if (isConfirmed) {
     /** @type {any} */
     const value = args[0];
 
     const toStringTagSymbol = Symbol.toStringTag;
 
     /** @type {Object|undefined} */
-    const prototype = getPrototypeOf(value);
+    let prototype = getPrototypeOf(value);
 
     /** @type {PropertyDescriptor|undefined} */
     const valueDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
     /** @type {PropertyDescriptor|undefined} */
-    const protoDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+    let protoDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
 
     isConfirmed = !!valueDescriptor || !!protoDescriptor;
+
+    while (!isConfirmed && (prototype = getPrototypeOf(prototype))) {
+      isConfirmed = !!getOwnPropertyDescriptor(prototype, toStringTagSymbol);
+    }
   }
   return isConfirmed;
 }
