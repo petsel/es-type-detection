@@ -5,7 +5,9 @@ import {
   getDefinedConstructorName,
   resolveType,
   defineStableType,
-  hasStableTypeIdentity
+  hasStableTypeIdentity,
+  hasCustomTypeIdentity,
+  hasBuiltinTypeIdentity
 } from './utility';
 
 import {
@@ -30,7 +32,7 @@ import {
   isBigIntObject
 } from './base';
 
-import { hasOwnPrototype, hasOwnWritablePrototype } from './function/utility';
+import { hasOwnWritablePrototype, hasOwnPrototype } from './function/utility';
 import {
   isClass,
   isGeneratorFunction,
@@ -67,6 +69,7 @@ import {
   isPromise
 } from './flow';
 
+/* eslint-disable sort-keys */
 export default {
   utility: {
     getTypeSignature,
@@ -76,8 +79,10 @@ export default {
     resolveType,
     defineStableType,
     hasStableTypeIdentity,
-    hasOwnPrototype,
-    hasOwnWritablePrototype
+    hasCustomTypeIdentity,
+    hasBuiltinTypeIdentity,
+    hasOwnWritablePrototype,
+    hasOwnPrototype
   },
   base: {
     isFunction,
@@ -134,3 +139,4 @@ export default {
     isPromise
   }
 };
+/* eslint-enable sort-keys */

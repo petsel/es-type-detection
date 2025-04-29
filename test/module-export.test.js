@@ -7,7 +7,9 @@ import {
   getDefinedConstructorName,
   resolveType,
   defineStableType,
-  hasStableTypeIdentity
+  hasStableTypeIdentity,
+  hasCustomTypeIdentity,
+  hasBuiltinTypeIdentity
 } from '../src/utility';
 
 import {
@@ -32,7 +34,7 @@ import {
   isBigIntObject
 } from '../src/base';
 
-import { hasOwnPrototype, hasOwnWritablePrototype } from '../src/function/utility';
+import { hasOwnWritablePrototype, hasOwnPrototype } from '../src/function/utility';
 import {
   isClass,
   isGeneratorFunction,
@@ -92,8 +94,8 @@ describe('The top most exported module ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.utility)).toStrictEqual(true);
     });
-    it('... that again features exactly 9 own property keys.', () => {
-      expect(Object.keys(module.utility).length).toStrictEqual(9);
+    it('... that again features exactly 11 own property keys.', () => {
+      expect(Object.keys(module.utility).length).toStrictEqual(11);
     });
     describe('The `utility` namespace should feature following utility methods ...', () => {
       runTestCases(module.utility, [
@@ -108,9 +110,11 @@ describe('The top most exported module ...', () => {
         ['defineStableType', defineStableType],
 
         ['hasStableTypeIdentity', hasStableTypeIdentity],
+        ['hasCustomTypeIdentity', hasCustomTypeIdentity],
+        ['hasBuiltinTypeIdentity', hasBuiltinTypeIdentity],
 
-        ['hasOwnPrototype', hasOwnPrototype],
-        ['hasOwnWritablePrototype', hasOwnWritablePrototype]
+        ['hasOwnWritablePrototype', hasOwnWritablePrototype],
+        ['hasOwnPrototype', hasOwnPrototype]
       ]);
     });
   });

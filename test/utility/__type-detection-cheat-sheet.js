@@ -245,3 +245,31 @@ console.table(
     return dictionary;
   }, Object.create(null))
 );
+console.table(
+  introspectionList.reduce((dictionary, [value, description]) => {
+    const type = typeof value;
+    const prototype = Object.getPrototypeOf(value);
+
+    const prop_descriptors_value = Object.getOwnPropertyDescriptors(value);
+    const prop_descriptors_proto = Object.getOwnPropertyDescriptors(prototype);
+
+    const tst_prop_descriptor_value = Object.getOwnPropertyDescriptor(value, Symbol.toStringTag);
+    const tst_prop_descriptor_proto = Object.getOwnPropertyDescriptor(
+      prototype,
+      Symbol.toStringTag
+    );
+
+    dictionary[description] = {
+      type,
+      prototype:
+        (typeof prototype === 'function' && Function.prototype.toString.call(prototype)) ||
+        prototype,
+
+      prop_descriptors_value: JSON.stringify(Object.keys(prop_descriptors_value)),
+      prop_descriptors_proto: JSON.stringify(Object.keys(prop_descriptors_proto)),
+      tst_prop_descriptor_value: JSON.stringify(tst_prop_descriptor_value),
+      tst_prop_descriptor_proto: JSON.stringify(tst_prop_descriptor_proto)
+    };
+    return dictionary;
+  }, Object.create(null))
+);
