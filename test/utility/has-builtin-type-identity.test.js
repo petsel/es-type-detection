@@ -27,7 +27,7 @@ function runTestCases(label, cases) {
   describe(label, () => {
     for (const [input, display, expected] of cases) {
       // console.log({ input, expected, display, label });
-      it(`returns "${expected}" for \`${display}\``, () => {
+      it(`returns ${(expected === true && '✅') || '❌'} \`${expected}\` for \`${display}\``, () => {
         expect(
           hasBuiltinTypeIdentity(input),
           `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
@@ -38,20 +38,20 @@ function runTestCases(label, cases) {
 }
 
 describe('`hasBuiltinTypeIdentity` - returns a string value similar to `getTaggedTyped` and `getConstructorName` by balancing the approaches of both methods.', () => {
-  it('returns `false` when no argument is passed.', () => {
+  it('returns ❌ `false` when no argument is passed.', () => {
     expect(hasBuiltinTypeIdentity()).toStrictEqual(false);
   });
 
-  it('returns `true` when the `undefined` value is passed explicitly.', () => {
+  it('returns ✅ `true` when the `undefined` value is passed explicitly.', () => {
     expect(hasBuiltinTypeIdentity(undefined)).toStrictEqual(true);
     expect(hasBuiltinTypeIdentity(void 0)).toStrictEqual(true);
   });
 
-  it('returns `true` when the `null` value is passed explicitly.', () => {
+  it('returns ✅ `true` when the `null` value is passed explicitly.', () => {
     expect(hasBuiltinTypeIdentity(null)).toStrictEqual(true);
   });
 
-  it('returns `true` for an object that was created via `Object.create(null)`.', () => {
+  it('returns ✅ `true` for an object that was created via `Object.create(null)`.', () => {
     expect(hasBuiltinTypeIdentity(Object.create(null))).toStrictEqual(true);
   });
 
