@@ -347,7 +347,7 @@ export function hasBuiltinTypeIdentity(...args) {
         (isValidDefaultDescriptor &&
           (protoDescriptor
             ? builtInToStringTagPrototypes.has(resolveType(value))
-            : builtInToStringTagTypes.has(resolveType(value))));
+            : builtInToStringTagTypes.has(getTaggedType(value))));
     }
   }
   return isConfirmed;
