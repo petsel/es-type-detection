@@ -1,6 +1,7 @@
 // @ts-check
 
 import { isFunction, isString } from './base';
+import { isConstructable } from './function/utility';
 import { isClass } from './function';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -509,8 +510,10 @@ function getTrustedType(type) {
  */
 export function defineStableType(constructor, constructorName, taggedType) {
   // guard.
-  if (!isFunction(constructor)) {
-    throw new TypeError('The provided "constructor" parameter has to be a function type.');
+  if (!isConstructable(constructor)) {
+    throw new TypeError(
+      'The provided "constructor" parameter has to be a constructable function type.'
+    );
   }
   // guard.
   if (!isString(constructorName)) {

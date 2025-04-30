@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { hasStableTypeIdentity /*, defineStableType */ } from '../../src/utility';
+import { hasStableTypeIdentity, defineStableType } from '../../src/utility';
 
 import {
   asyncGeneratorFunctionExpression,
@@ -15,13 +15,29 @@ import {
   asyncNonArrowFunctionExpression,
   // AsyncFunction,
   conciseGenericMethod,
-  spoofedArrowFunction,
-  MyClass,
-  MySubclass,
-  TaggedClass,
-  ImplicitlyTaggedSubclass,
-  ExplicitlyTaggedSubclass
+  spoofedArrowFunction
+  // MyClass,
+  // MySubclass,
+  // TaggedClass,
+  // ImplicitlyTaggedSubclass,
+  // ExplicitlyTaggedSubclass
 } from './__config';
+
+export class MyClass {}
+export class MySubclass extends MyClass {}
+
+export class TaggedClass {
+  get [Symbol.toStringTag]() {
+    return 'TaggedClass';
+  }
+}
+export class ImplicitlyTaggedSubclass extends TaggedClass {}
+
+export class ExplicitlyTaggedSubclass extends TaggedClass {
+  get [Symbol.toStringTag]() {
+    return 'ExplicitlyTaggedSubclass';
+  }
+}
 
 function runTestCases(label, cases) {
   describe(label, () => {
