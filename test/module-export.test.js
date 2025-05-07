@@ -34,7 +34,13 @@ import {
   isBigIntObject
 } from '../src/base';
 
-import { hasOwnWritablePrototype, hasOwnPrototype } from '../src/function/utility';
+import {
+  hasOwnWritablePrototype,
+  hasOwnPrototype,
+  hasConstructSlot,
+  isConstructable
+} from '../src/function/utility';
+
 import {
   isClass,
   isGeneratorFunction,
@@ -161,8 +167,8 @@ describe('The top most exported module ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.function)).toStrictEqual(true);
     });
-    it('... that again features exactly 12 own property keys.', () => {
-      expect(Object.keys(module.function).length).toStrictEqual(12);
+    it('... that again features exactly 14 own property keys.', () => {
+      expect(Object.keys(module.function).length).toStrictEqual(14);
     });
     describe('The `function` namespace should feature following function-type detection methods ...', () => {
       runTestCases(module.function, [
@@ -181,6 +187,9 @@ describe('The top most exported module ...', () => {
 
         ['isES3Function', isES3Function],
         ['isGenericFunction', isGenericFunction],
+
+        ['hasConstructSlot', hasConstructSlot],
+        ['isConstructable', isConstructable],
 
         ['isUnnamedFunction', isUnnamedFunction]
       ]);

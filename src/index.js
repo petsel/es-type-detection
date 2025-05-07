@@ -32,7 +32,13 @@ import {
   isBigIntObject
 } from './base';
 
-import { hasOwnWritablePrototype, hasOwnPrototype } from './function/utility';
+import {
+  hasOwnWritablePrototype,
+  hasOwnPrototype,
+  hasConstructSlot,
+  isConstructable
+} from './function/utility';
+
 import {
   isClass,
   isGeneratorFunction,
@@ -117,6 +123,8 @@ export default {
     isArrow,
     isES3Function,
     isGenericFunction,
+    hasConstructSlot,
+    isConstructable,
     isUnnamedFunction
   },
   error: {
