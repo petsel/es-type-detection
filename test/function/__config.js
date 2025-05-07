@@ -30,7 +30,7 @@ export const testIndex = {
         namedArrowFunctionExpression: {
           description: 'a named arrow function expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -41,7 +41,7 @@ export const testIndex = {
         namedAsyncArrowFunctionExpression: {
           description: 'a named async arrow function expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -52,7 +52,7 @@ export const testIndex = {
         namedAsyncFunctionExpression: {
           description: 'a named async function expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -62,7 +62,7 @@ export const testIndex = {
         asyncFunctionStatement: {
           description: 'an async function statement',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -74,7 +74,7 @@ export const testIndex = {
           description: 'a named async generator expression',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -87,7 +87,7 @@ export const testIndex = {
           description: 'an async generator statement',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -100,7 +100,7 @@ export const testIndex = {
           description: 'a named generator expression',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -113,7 +113,7 @@ export const testIndex = {
           description: 'a generator statement',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -127,7 +127,7 @@ export const testIndex = {
           description:
             'a concise generic method created by a non-async and non-generator shorthand method definition',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -138,7 +138,7 @@ export const testIndex = {
         namedFunctionExpression: {
           description: 'a named function expression',
           // callable: true,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_generic_function: true,
@@ -148,7 +148,7 @@ export const testIndex = {
         functionStatement: {
           description: 'a function statement',
           // callable: true,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_generic_function: true,
@@ -161,7 +161,7 @@ export const testIndex = {
         //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
         //   // callable: true,
         //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
-        //   // constructable: true,
+        //   is_constructable: true,
         //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
         //   // constructableWithNew: true,
         //   // // - due to any `SubclassedFunction` instance inheriting from `Function` as well.
@@ -175,7 +175,7 @@ export const testIndex = {
         unnamedArrowFunctionExpression: {
           description: 'an unnamed arrow function (lambda) expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -186,7 +186,7 @@ export const testIndex = {
         unnamedAsyncArrowFunctionExpression: {
           description: 'an unnamed async arrow function (lambda) expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -197,7 +197,7 @@ export const testIndex = {
         unnamedAsyncFunctionExpression: {
           description: 'an unnamed async function (lambda) expression',
           // callable: true,
-          // constructable: false,
+          is_constructable: false,
           // constructableWithNew: false,
           // constructableWithoutNew: false,
           has_no_construct_slot: true,
@@ -209,7 +209,7 @@ export const testIndex = {
           description: 'an unnamed async generator (lambda) expression',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -222,7 +222,7 @@ export const testIndex = {
           description: 'an unnamed generator (lambda) expression',
           // callable: true,
           // // despite the [[construct]] slot indicating the `false` value
-          // constructable: true,
+          is_constructable: false,
           // constructableWithNew: false,
           // // despite the [[construct]] slot indicating the `false` value
           // constructableWithoutNew: true,
@@ -240,7 +240,7 @@ export const testIndex = {
           //   }
           // },
           // callable: true,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_generic_function: true,
@@ -255,7 +255,7 @@ export const testIndex = {
         ClassExpression: {
           description: 'a named class expression',
           // callable: false,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_class: true
@@ -263,7 +263,7 @@ export const testIndex = {
         SubclassExpression: {
           description: 'a named class expression which extends another class',
           // callable: false,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_class: true,
@@ -272,7 +272,7 @@ export const testIndex = {
         // SubclassedFunction: {
         //   description: 'a custom `SubclassedFunction` class which extends `Function`',
         //   // callable: false,
-        //   // constructable: true,
+        //   is_constructable: true,
         //   // constructableWithNew: true,
         //   // constructableWithoutNew: false,
         //   is_class: true,
@@ -288,7 +288,7 @@ export const testIndex = {
           //   }
           // },
           // callable: false,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_class: true
@@ -302,7 +302,7 @@ export const testIndex = {
           //   }
           // },
           // callable: false,
-          // constructable: true,
+          is_constructable: true,
           // constructableWithNew: true,
           // constructableWithoutNew: false,
           is_class: true
@@ -312,17 +312,17 @@ export const testIndex = {
     },
     other: {
       EventTarget: {
-        description: 'the Web API `EventTarget` type'
+        description: 'the Web API `EventTarget` type',
         // callable: false,
-        // constructable: true,
+        is_constructable: true
         // constructableWithNew: true,
         // constructableWithoutNew: false,
       },
       URL: {
         description: 'the Web API `URL` type',
-        args: ['http://xyz.ab']
+        args: ['http://xyz.ab'],
         // callable: false,
-        // constructable: true,
+        is_constructable: true
         // constructableWithNew: true,
         // constructableWithoutNew: false,
       }
@@ -330,14 +330,14 @@ export const testIndex = {
       // BigInt: {
       //   description: 'the built-in `BigInt` type',
       //   // callable: true,
-      //   // constructable: true,
+      //   is_constructable: true,
       //   // constructableWithNew: false,
       //   // constructableWithoutNew: true,
       // },
       // Symbol: {
       //   description: 'the built-in `Symbol` type',
       //   // callable: true,
-      //   // constructable: true,
+      //   is_constructable: true,
       //   // constructableWithNew: false,
       //   // constructableWithoutNew: true,
       // },
@@ -345,14 +345,14 @@ export const testIndex = {
       // String: {
       //   description: 'the built-in `String` type',
       //   // callable: true,
-      //   // constructable: true,
+      //   is_constructable: true,
       //   // constructableWithNew: true,
       //   // constructableWithoutNew: false,
       // },
       // Array: {
       //   description: 'the built-in `Object` type',
       //   // callable: true,
-      //   // constructable: true,
+      //   is_constructable: true,
       //   // constructableWithNew: true,
       //   // constructableWithoutNew: true,
       // },

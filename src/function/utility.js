@@ -36,13 +36,12 @@ export function hasOwnWritablePrototype(value) {
 /**
  * Checks whether a passed `value` is possibly constructable.
  *
- * It does so by testing the passed value's `[[construct]]`
- * slot without trying the value's invocation.
+ * It does so by just probing the passed value's `[[construct]]`
+ * slot; it does never invoke the passed value itself.
  *
- * The `construct` proxy handler is allowed to overwrite
- * the `[[construct]]` slot of a proxyfied/proxied value,
- * but it can not turn something non constructable into
- * a constructable type.
+ * The `construct` proxy handler is allowed to overwrite the
+ * `[[construct]]` slot of a proxied value, but it can not turn
+ * something non constructable into a constructable type.
  *
  * - see ... [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/construct]
  * > "The `handler.construct` method is a trap for the `[[Construct]]`
@@ -50,11 +49,7 @@ export function hasOwnWritablePrototype(value) {
  * > `new` operator. In order for the `new` operation to be valid on
  * > the resulting `Proxy` object, the `target` used to initialize
  * > the proxy must itself be a valid constructor."
- *
- * - Thus it is feasibly enough to let the construct trap
- * return an object instance.
- * @param value{any}
- * @param value
+ * @param {any} value
  * @returns {boolean}
  *  A boolean value which indicates whether the tested
  *  type could possibly serve as constructor function.
@@ -72,17 +67,14 @@ export function hasConstructSlot(value) {
 }
 
 /**
- * Detects whether the passed `value` is a constructable
- * function type.
+ * Detects whether the passed `value` is a constructable function type.
  *
- * It does so by testing the `[[construct]]` slot of the
- * passed possibly constructable type, but it does not
- * invoke it.
+ * It does so by just probing the `[[construct]]` slot of the passed
+ * possibly constructable type; it does never invoke the passed type.
  *
- * The `construct` proxy handler is allowed to overwrite
- * the `[[construct]]` slot of a proxyfied/proxied value,
- * but it can not turn something non constructable into
- * a constructable type.
+ * The `construct` proxy handler is allowed to overwrite the
+ * `[[construct]]` slot of a proxied value, but it can not turn
+ * something non constructable into a constructable type.
  *
  * - see ... [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/construct]
  * > "The `handler.construct` method is a trap for the `[[Construct]]`
@@ -90,11 +82,7 @@ export function hasConstructSlot(value) {
  * > `new` operator. In order for the `new` operation to be valid on
  * > the resulting `Proxy` object, the `target` used to initialize
  * > the proxy must itself be a valid constructor."
- *
- * - Thus it is feasibly enough to let the construct trap
- * return an object instance.
- * @param value{any}
- * @param value
+ * @param {any} value
  * @returns {boolean}
  *  A boolean value which indicates whether the
  *  tested type can serve as constructor function.

@@ -17,6 +17,8 @@ import {
   isUnnamedFunction
 } from '../../src/function';
 
+import { hasConstructSlot, isConstructable } from '../../src/function/utility';
+
 import { testIndex, getTestCandidateBySpecificationKey } from './__config';
 
 const {
@@ -95,11 +97,7 @@ describe('Testing all `Function` introspection methods related to function types
       expect(
         testEntries.filter(([key /* , spec */]) => isClass(getTestCandidateBySpecificationKey(key)))
           .length
-      ).toBe(
-        testEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_class).length
-      );
+      ).toBe(testEntries.filter(([_, spec]) => !!spec.is_class).length);
     });
 
     describe('... verifies whether ...', () => {
@@ -149,16 +147,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_non_async_generator).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_non_async_generator).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_non_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -167,7 +160,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_non_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -200,16 +192,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isAsyncGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_async_generator).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_async_generator).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -218,7 +205,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_async_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -251,16 +237,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isAnyGeneratorFunction(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_generator).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_generator).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -269,7 +250,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_generator)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -302,16 +282,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isAsyncFunction(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_async_function).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_async_function).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_async_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -320,7 +295,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_async_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -353,16 +327,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isAsyncNonArrow(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_async_non_arrow).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_async_non_arrow).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_async_non_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -371,7 +340,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_async_non_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -404,16 +372,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isAsyncArrow(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_async_arrow).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_async_arrow).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_async_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -422,7 +385,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_async_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -455,16 +417,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isNonAsyncArrow(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_non_async_arrow).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_non_async_arrow).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_non_async_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -473,7 +430,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_non_async_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -506,16 +462,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isArrow(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_arrow).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_arrow).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -524,7 +475,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_arrow)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -557,16 +507,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isES3Function(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_es3_function).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_es3_function).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_es3_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -575,7 +520,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_es3_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -608,16 +552,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isConciseGenericMethod(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_concise_generic_method).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_concise_generic_method).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_concise_generic_method)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -626,7 +565,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_concise_generic_method)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -659,16 +597,11 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isGenericFunction(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toBe(
-        allTestEntries
-          // eslint-disable-next-line no-unused-vars
-          .filter(([_, spec]) => !!spec.is_generic_function).length
-      );
+      ).toBe(allTestEntries.filter(([_, spec]) => !!spec.is_generic_function).length);
     });
 
     describe('... verifies whether ...', () => {
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !!spec.is_generic_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -677,7 +610,6 @@ describe('Testing all `Function` introspection methods related to function types
           });
         });
       allTestEntries
-        // eslint-disable-next-line no-unused-vars
         .filter(([_, spec]) => !spec.is_generic_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);
@@ -712,14 +644,12 @@ describe('Testing all `Function` introspection methods related to function types
   //       ).length
   //     ).toBe(
   //       allTestEntries
-  //         // eslint-disable-next-line no-unused-vars
   //         .filter(([_, spec]) => !!spec.is_function_subtype).length
   //     );
   //   });
   //
   //   describe('... verifies whether ...', () => {
   //     allTestEntries
-  //       // eslint-disable-next-line no-unused-vars
   //       .filter(([_, spec]) => !!spec.is_function_subtype)
   //       .forEach(([key, spec]) => {
   //         const candidate = getTestCandidateBySpecificationKey(key);
@@ -728,7 +658,6 @@ describe('Testing all `Function` introspection methods related to function types
   //         });
   //       });
   //     allTestEntries
-  //       // eslint-disable-next-line no-unused-vars
   //       .filter(([_, spec]) => !spec.is_function_subtype)
   //       .forEach(([key, spec]) => {
   //         const candidate = getTestCandidateBySpecificationKey(key);
@@ -754,6 +683,86 @@ describe('Testing all `Function` introspection methods related to function types
   //     });
   //   });
   // });
+
+  describe('The introspection method `hasConstructSlot` ...', () => {
+    it('- filters the correct amount of items from a given array of mixed function types.', () => {
+      expect(
+        allTestEntries.filter(([key /* , spec */]) =>
+          hasConstructSlot(getTestCandidateBySpecificationKey(key))
+        ).length
+      ).toBe(allTestEntries.filter(([_, spec]) => !spec.has_no_construct_slot).length);
+
+      // counter check on the test configuration.
+      expect(
+        allTestEntries.filter(([_, spec]) => !!spec.has_no_construct_slot).length
+      ).toStrictEqual(14);
+    });
+
+    describe('... verifies whether ...', () => {
+      allTestEntries
+        .filter(([_, spec]) => !spec.has_no_construct_slot)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} does feature a \`[[construct]]\` slot.`, () => {
+            expect(hasConstructSlot(candidate)).toStrictEqual(true);
+          });
+        });
+      allTestEntries
+        .filter(([_, spec]) => !!spec.has_no_construct_slot)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ❌ ${spec.description} does **not** feature a \`[[construct]]\` slot.`, () => {
+            expect(hasConstructSlot(candidate)).toStrictEqual(false);
+          });
+        });
+
+      it('- ❌ an `Array` instance does **not** feature a `[[construct]]` slot.', () => {
+        expect(hasConstructSlot([])).toBe(false);
+      });
+      it('- ❌ an `Object` instance does **not** feature a `[[construct]]` slot.', () => {
+        expect(hasConstructSlot({})).toBe(false);
+      });
+    });
+  });
+
+  describe('The introspection method `isConstructable` ...', () => {
+    it('- filters the correct amount of items from a given array of mixed function types.', () => {
+      expect(
+        allTestEntries.filter(([key /* , spec */]) =>
+          isConstructable(getTestCandidateBySpecificationKey(key))
+        ).length
+      ).toStrictEqual(allTestEntries.filter(([_, spec]) => spec.is_constructable).length);
+
+      // counter check on the test configuration.
+      expect(allTestEntries.filter(([_, spec]) => spec.is_constructable).length).toStrictEqual(9);
+    });
+
+    describe('... verifies whether ...', () => {
+      allTestEntries
+        .filter(([_, spec]) => !spec.has_no_construct_slot)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} is **constructable**.`, () => {
+            expect(isConstructable(candidate)).toStrictEqual(true);
+          });
+        });
+      allTestEntries
+        .filter(([_, spec]) => !!spec.has_no_construct_slot)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ❌ ${spec.description} is **not constructable**.`, () => {
+            expect(isConstructable(candidate)).toStrictEqual(false);
+          });
+        });
+
+      it('- ❌ an `Array` instance is **not constructable**.', () => {
+        expect(isConstructable([])).toBe(false);
+      });
+      it('- ❌ an `Object` instance is **not constructable**.', () => {
+        expect(isConstructable({})).toBe(false);
+      });
+    });
+  });
 
   describe('The introspection method `isUnnamedFunction` ...', () => {
     it('- filters the correct amount of items from a given array of mixed function types.', () => {
