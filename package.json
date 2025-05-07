@@ -15,7 +15,7 @@
     "dist"
   ],
   "scripts": {
-    "prepare": "husky install && chmod +x .husky/*",
+    "prepare": "git config core.hooksPath .husky && chmod +x .husky/* && chmod +x .husky/pre-commit",
     "release:mock": "npm run lint && npm run format && npm run test && npm run coverage && npm run docs && npm run build",
     "rollup:build": "rollup -c",
     "build": "vite build",
