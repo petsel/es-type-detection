@@ -298,16 +298,17 @@ export function resolveType(...args) {
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**
+ * Does approve whether the passed value features the type-identity of any built-in type
+ * which is ...the passed value is an instance of one of the language core's built-in
+ * types and either does not have any `Symbol.toStringTag` related slots or features
+ * just the type's standard-conform default `Symbol.toStringTag` property-descriptor.
  * @param {...any} args
  *  A variadic argument list. The first argument (`args[0]`) is the optional
  *  `value` parameter. Its **presence** is detected via `args.length`, allowing
  *  the function to distinguish between an explicitly passed `undefined` value
  *  and a completely omitted argument.
  * @returns {boolean}
- *  Whether the passed value has been approved of featuring the built-in type-identity,
- *  which is ...the passed value is an instance of one of the language core's built-in
- *  types and either does not have any `Symbol.toStringTag` related slots or features
- *  just the type's standard-conform default `Symbol.toStringTag` property-descriptor.
+ *  Whether the passed value features the built-in type-identity.
  */
 export function hasBuiltinTypeIdentity(...args) {
   let isConfirmed = args.length >= 1;
@@ -371,16 +372,17 @@ const builtInToStringTagPrototypes = new Set([
 const builtInToStringTagTypes = new Set(['Math', 'JSON', 'Reflect', 'Atomics']);
 
 /**
+ * Does approve whether the passed value features a custom applied type-identity,
+ * which is ... there are `Symbol.toStringTag` related slots available, directly
+ * owned either by the passed value itself or by its prototype, and none of it
+ * can be matched against a built-in type-identity.
  * @param {...any} args
  *  A variadic argument list. The first argument (`args[0]`) is the optional
  *  `value` parameter. Its **presence** is detected via `args.length`, allowing
  *  the function to distinguish between an explicitly passed `undefined` value
  *  and a completely omitted argument.
  * @returns {boolean}
- *  Whether the passed value features a custom applied type-identity, which is ...
- *  there are `Symbol.toStringTag` related slots available, directly owned either
- *  by the passed value itself or by its prototype, and none of it can be matched
- *  against a built-in type-identity.
+ *  Whether the passed value features a custom applied type-identity.
  */
 export function hasCustomTypeIdentity(...args) {
   let isConfirmed = args.length >= 1 && !hasBuiltinTypeIdentity(...args);
@@ -410,17 +412,18 @@ export function hasCustomTypeIdentity(...args) {
 }
 
 /**
+ * Does approve whether the passed value features a stable type-identity, which
+ * is ... either the value comes with the built-in type-identity of one of the
+ * core language's types, or the value has been processed via `defineStableType`,
+ * or it features property-descriptors which are in line with the result of the
+ * latter process.
  * @param {...any} args
  *  A variadic argument list. The first argument (`args[0]`) is the optional
  *  `value` parameter. Its **presence** is detected via `args.length`, allowing
  *  the function to distinguish between an explicitly passed `undefined` value
  *  and a completely omitted argument.
  * @returns {boolean}
- *  Whether the passed value has been approved of featuring a stable type-identity;
- *  which is, either the value comes with the built-in type-identity of one of the
- *  core language's types, or the value has been processed via `defineStableType`,
- *  or it features property-descriptors which are in line with the latter process'
- *  result.
+ *  Whether the passed value features a stable type-identity.
  */
 export function hasStableTypeIdentity(...args) {
   let isConfirmed = hasBuiltinTypeIdentity(...args);
