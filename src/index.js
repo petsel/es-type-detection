@@ -3,12 +3,15 @@ import {
   getTaggedType,
   getDefinedConstructor,
   getDefinedConstructorName,
-  resolveType,
-  defineStableType,
+  resolveType
+} from './utility';
+
+import {
+  defineStableTypeIdentity,
   hasStableTypeIdentity,
   hasCustomTypeIdentity,
   hasBuiltinTypeIdentity
-} from './utility';
+} from './type-identity';
 
 import {
   isFunction,
@@ -83,7 +86,7 @@ export default {
     getDefinedConstructor,
     getDefinedConstructorName,
     resolveType,
-    defineStableType,
+    defineStableTypeIdentity,
     hasStableTypeIdentity,
     hasCustomTypeIdentity,
     hasBuiltinTypeIdentity,

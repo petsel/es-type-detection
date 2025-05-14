@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { hasBuiltinTypeIdentity } from '../../src/utility';
+import { hasStableTypeIdentity } from '../../src/type-identity';
 
 import {
   asyncGeneratorFunctionExpression,
@@ -15,13 +15,29 @@ import {
   asyncNonArrowFunctionExpression,
   // AsyncFunction,
   conciseGenericMethod,
-  spoofedArrowFunction,
-  MyClass,
-  MySubclass,
-  TaggedClass,
-  ImplicitlyTaggedSubclass,
-  ExplicitlyTaggedSubclass
-} from './__config';
+  spoofedArrowFunction
+  // MyClass,
+  // MySubclass,
+  // TaggedClass,
+  // ImplicitlyTaggedSubclass,
+  // ExplicitlyTaggedSubclass
+} from '../utility/__config';
+
+export class MyClass {}
+export class MySubclass extends MyClass {}
+
+export class TaggedClass {
+  get [Symbol.toStringTag]() {
+    return 'TaggedClass';
+  }
+}
+export class ImplicitlyTaggedSubclass extends TaggedClass {}
+
+export class ExplicitlyTaggedSubclass extends TaggedClass {
+  get [Symbol.toStringTag]() {
+    return 'ExplicitlyTaggedSubclass';
+  }
+}
 
 function runTestCases(label, cases) {
   describe(label, () => {
@@ -29,7 +45,7 @@ function runTestCases(label, cases) {
       // console.log({ input, expected, display, label });
       it(`returns ${(expected === true && '✅') || '❌'} \`${expected}\` for \`${display}\``, () => {
         expect(
-          hasBuiltinTypeIdentity(input),
+          hasStableTypeIdentity(input),
           `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
         ).toStrictEqual(expected);
       });
@@ -38,26 +54,26 @@ function runTestCases(label, cases) {
 }
 
 describe(
-  '`hasBuiltinTypeIdentity` - does approve whether the passed value features the type-identity of any' +
-    " built-in type, which is ...the passed value is an instance of one of the language core's built-in" +
-    " types and either does not have any `Symbol.toStringTag` related slots or features just the type's" +
-    ' standard-conform default `Symbol.toStringTag` property-descriptor.',
+  '`hasStableTypeIdentity` - does approve whether the passed value features a stable type-identity,' +
+    " which is ... either the value comes with the built-in type-identity of one of the core language's" +
+    ' types, or the value has been processed via `defineStableTypeIdentity`, or it features' +
+    ' property-descriptors which are in line with the result of the latter process.',
   () => {
     it('returns ❌ `false` when no argument is passed.', () => {
-      expect(hasBuiltinTypeIdentity()).toStrictEqual(false);
+      expect(hasStableTypeIdentity()).toStrictEqual(false);
     });
 
     it('returns ✅ `true` when the `undefined` value is passed explicitly.', () => {
-      expect(hasBuiltinTypeIdentity(undefined)).toStrictEqual(true);
-      expect(hasBuiltinTypeIdentity(void 0)).toStrictEqual(true);
+      expect(hasStableTypeIdentity(undefined)).toStrictEqual(true);
+      expect(hasStableTypeIdentity(void 0)).toStrictEqual(true);
     });
 
     it('returns ✅ `true` when the `null` value is passed explicitly.', () => {
-      expect(hasBuiltinTypeIdentity(null)).toStrictEqual(true);
+      expect(hasStableTypeIdentity(null)).toStrictEqual(true);
     });
 
     it('returns ✅ `true` for an object that was created via `Object.create(null)`.', () => {
-      expect(hasBuiltinTypeIdentity(Object.create(null))).toStrictEqual(true);
+      expect(hasStableTypeIdentity(Object.create(null))).toStrictEqual(true);
     });
 
     runTestCases('🧱 Primitives & Boxed Primitives', [

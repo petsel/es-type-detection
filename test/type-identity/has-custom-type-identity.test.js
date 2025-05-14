@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { hasCustomTypeIdentity } from '../../src/utility';
+import { hasCustomTypeIdentity } from '../../src/type-identity';
 
 import {
   asyncGeneratorFunctionExpression,
@@ -21,7 +21,7 @@ import {
   TaggedClass,
   ImplicitlyTaggedSubclass,
   ExplicitlyTaggedSubclass
-} from './__config';
+} from '../utility/__config';
 
 function runTestCases(label, cases) {
   describe(label, () => {

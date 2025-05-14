@@ -5,12 +5,15 @@ import {
   getTaggedType,
   getDefinedConstructor,
   getDefinedConstructorName,
-  resolveType,
-  defineStableType,
+  resolveType
+} from '../src/utility';
+
+import {
+  defineStableTypeIdentity,
   hasStableTypeIdentity,
   hasCustomTypeIdentity,
   hasBuiltinTypeIdentity
-} from '../src/utility';
+} from '../src/type-identity';
 
 import {
   isFunction,
@@ -113,7 +116,7 @@ describe('The top most exported module ...', () => {
 
         ['resolveType', resolveType],
 
-        ['defineStableType', defineStableType],
+        ['defineStableTypeIdentity', defineStableTypeIdentity],
 
         ['hasStableTypeIdentity', hasStableTypeIdentity],
         ['hasCustomTypeIdentity', hasCustomTypeIdentity],
