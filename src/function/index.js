@@ -2,7 +2,6 @@
 
 import { hasOwnPrototype, hasOwnWritablePrototype } from './utility';
 import {
-  getOwnPropertyDescriptor,
   getFunctionSource,
   getDefinedConstructor,
   getDefinedConstructorName,
@@ -375,7 +374,7 @@ export function isGenericFunction(value) {
  *  the tested type is an unnamed function.
  */
 export function isUnnamedFunction(value) {
-  return isFunction(value) && getOwnPropertyDescriptor(value, 'name').value === '';
+  return isFunction(value) && value.name === '';
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
