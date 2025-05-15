@@ -22,7 +22,9 @@ export function hasMatchingErrorPrototype(value) {
   if (prototype === null) {
     return false;
   }
-  /** @type {PropertyDescriptorMap | Object} */
+  /* eslint-disable jsdoc/no-undefined-types */
+
+  /** @type {PropertyDescriptor | Object} */
   const descriptors = getOwnPropertyDescriptors(prototype) ?? {};
 
   /** @type {PropertyDescriptor | null} */
@@ -33,6 +35,8 @@ export function hasMatchingErrorPrototype(value) {
   const nameDesc = descriptors.name ?? null;
   /** @type {PropertyDescriptor | null} */
   const toStringDesc = descriptors.toString ?? null;
+
+  /* eslint-enable jsdoc/no-undefined-types */
 
   return (
     (isFunction(constrDesc?.value) &&

@@ -16,6 +16,7 @@ import { isFunction, isStringValue } from '../base';
 /**
  * Does approve whether the passed value matches the
  * default form of a function-name property-descriptor.
+ * @internal
  * @param {any} value
  * @returns {boolean}
  *  Whether the passed value matches the default
@@ -32,6 +33,7 @@ export function doesMatchDefaultFunctionNameDescriptor(value) {
 /**
  * Does approve whether the passed value matches the stable form of a function-name
  * property-descriptor that can be reliably used for type-identity detection.
+ * @internal
  * @param {any} value
  * @returns {boolean}
  *  Whether the passed value matches the stable form of a function-name
