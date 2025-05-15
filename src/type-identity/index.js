@@ -9,7 +9,7 @@ import {
 } from '../utility';
 
 import { isFunction, isString } from '../base';
-import { isClass } from '../function';
+import { isClass, isES3Function } from '../function';
 
 import { isConstructable } from '../function/utility';
 import { doesMatchStableFunctionNameDescriptor } from './utility';
@@ -51,22 +51,25 @@ export function hasBuiltinTypeIdentity(...args) {
     if (value !== null && (isConfirmed = !isClass(value.constructor))) {
       const toStringTagSymbol = Symbol.toStringTag;
 
-      /** @type {Object|undefined} */
+      /** @type {Object | undefined} */
       const prototype = getPrototypeOf(value);
 
-      /** @type {PropertyDescriptor|undefined} */
-      const valueDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
-      /** @type {PropertyDescriptor|undefined} */
-      const protoDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+      // eslint-disable-next-line jsdoc/no-undefined-types
+      /** @type {PropertyDescriptor | undefined} */
+      const typeTagDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
 
-      const descriptor = valueDescriptor || protoDescriptor;
+      // eslint-disable-next-line jsdoc/no-undefined-types
+      /** @type {PropertyDescriptor | undefined} */
+      const prototypeTagDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+
+      const descriptor = typeTagDescriptor || prototypeTagDescriptor;
 
       // - valid only in case ...
       const isValidDefaultDescriptor =
         // ... a descriptor does exist at all ... and/but ...
         !!descriptor &&
         // ... it does exist exclusively ...
-        !(valueDescriptor && protoDescriptor) &&
+        !(typeTagDescriptor && prototypeTagDescriptor) &&
         // ... and does match the built-in default as well.
         descriptor.configurable === true &&
         descriptor.writable === false &&
@@ -75,7 +78,7 @@ export function hasBuiltinTypeIdentity(...args) {
       isConfirmed =
         !descriptor ||
         (isValidDefaultDescriptor &&
-          (protoDescriptor
+          (prototypeTagDescriptor
             ? builtInToStringTagPrototypes.has(resolveType(value))
             : builtInToStringTagTypes.has(getTaggedType(value))));
     }
@@ -122,15 +125,18 @@ export function hasCustomTypeIdentity(...args) {
 
     const toStringTagSymbol = Symbol.toStringTag;
 
-    /** @type {Object|undefined} */
+    /** @type {Object | undefined} */
     let prototype = getPrototypeOf(value);
 
-    /** @type {PropertyDescriptor|undefined} */
-    const valueDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
-    /** @type {PropertyDescriptor|undefined} */
-    let protoDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+    // eslint-disable-next-line jsdoc/no-undefined-types
+    /** @type {PropertyDescriptor | undefined} */
+    const typeTagDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
 
-    isConfirmed = !!valueDescriptor || !!protoDescriptor;
+    // eslint-disable-next-line jsdoc/no-undefined-types
+    /** @type {PropertyDescriptor | undefined} */
+    let prototypeTagDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+
+    isConfirmed = !!typeTagDescriptor || !!prototypeTagDescriptor;
 
     while (!isConfirmed && (prototype = getPrototypeOf(prototype))) {
       isConfirmed = !!getOwnPropertyDescriptor(prototype, toStringTagSymbol);
@@ -166,35 +172,38 @@ export function hasStableTypeIdentity(...args) {
 
     const toStringTagSymbol = Symbol.toStringTag;
 
-    /** @type {Object|undefined} */
+    /** @type {Object | undefined} */
     const prototype = getPrototypeOf(value);
 
-    /** @type {PropertyDescriptor} */
-    const valueDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
-    /** @type {PropertyDescriptor} */
-    const protoDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
+    // eslint-disable-next-line jsdoc/no-undefined-types
+    /** @type {PropertyDescriptor | undefined} */
+    const typeTagDescriptor = getOwnPropertyDescriptor(value, toStringTagSymbol);
 
-    const descriptor = valueDescriptor || protoDescriptor;
+    // eslint-disable-next-line jsdoc/no-undefined-types
+    /** @type {PropertyDescriptor | undefined} */
+    const prototypeTagDescriptor = getOwnPropertyDescriptor(prototype ?? {}, toStringTagSymbol);
 
+    const descriptor = typeTagDescriptor || prototypeTagDescriptor;
+
+    // @IMPORTANT ... never change the inverse but explicitly excluding logic
+    //                for the  `writable` property. This is due to how the
+    //                prototypal `[Symbol.toStringTag]` getter function of
+    //                any class based implementation does create its related
+    //                property-descriptor.
+    //  ```
+    //  get [Symbol.toStringTag]() {
+    //    return 'ExplicitlyTaggedType';
+    //  }
+    //  ```
+    //                The above code generates following property-descriptor:
+    //  ```
+    //  { configurable: true, enumerable: false, get: ([Symbol.toStringTag]() { return 'ExplicitlyTaggedType'; }), set: undefined }
+    //  ```
+    //                The beneath check will be true for both an omitted `writable`
+    //                property and one which has been set explicitly to `false`.
     const isStableTagDescriptor =
       !!descriptor &&
       descriptor.configurable === false &&
-      // @IMPORTANT ... never change the inverse but explicitly excluding logic
-      //                for the  `writable` property. This is due to how the
-      //                prototypal `[Symbol.toStringTag]` getter function of
-      //                any class based implementation does create its related
-      //                property-descriptor.
-      //  ```
-      //  get [Symbol.toStringTag]() {
-      //    return 'ExplicitlyTaggedType';
-      //  }
-      //  ```
-      //                The above code generates following property-descriptor:
-      //  ```
-      //  { configurable: true, enumerable: false, get: ([Symbol.toStringTag]() { return 'ExplicitlyTaggedType'; }), set: undefined }
-      //  ```
-      //                The beneath check will be true for both an omitted `writable`
-      //                property and one which has been set explicitly to `false`.
       descriptor.writable !== true &&
       descriptor.enumerable === false;
 
@@ -205,8 +214,8 @@ export function hasStableTypeIdentity(...args) {
       isStableTagDescriptor &&
       isFunction(constructor) &&
       (isClass(constructor)
-        ? !!protoDescriptor && !valueDescriptor
-        : !!valueDescriptor && !protoDescriptor);
+        ? !!prototypeTagDescriptor && !typeTagDescriptor
+        : !!typeTagDescriptor && !prototypeTagDescriptor);
 
     isConfirmed =
       isStableTaggedType &&
@@ -229,10 +238,11 @@ export function hasStableTypeIdentity(...args) {
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**
+ * @internal
  * @param {string} type
  * @returns {string}
  */
-function getTrustedType(type) {
+export function getTrustedType(type) {
   return type;
 }
 
@@ -244,24 +254,38 @@ function getTrustedType(type) {
 //  * @returns {T}
 //  */
 /**
+ * Takes a constructor function, changes some of the function's related property
+ * descriptors according to additionally passed name and tagged type parameters,
+ * and returns a boolean value which indicates whether the "Stable Type Identity"
+ * could be established successfully.
  * @param {ClassConstructor | ES3Function} constructor
  * @param {string} constructorName
  * @param {string} [taggedType]
- * @returns {ClassConstructor | ES3Function}
- * // @ returns {boolean}
+ * @returns {boolean}
+ *  Whether the "Stable Type Identity" could be
+ *  successfully applied upon the passed constructor.
  */
 export function defineStableTypeIdentity(constructor, constructorName, taggedType) {
   // guard.
   if (!isConstructable(constructor)) {
     throw new TypeError(
-      'The provided "constructor" parameter has to be a constructable function type.'
+      'The provided "constructor" parameter has to be at least a constructable function-type.'
     );
   }
+  // guard.
+  if (!(isClass(constructor) || isES3Function(constructor))) {
+    throw new TypeError(
+      'Built-in constructors are not supported. The "Stable Type Identity" feature anyhow is useful for just ES5 class-constructors and ES3 constructor functions.'
+    );
+  }
+
   // guard.
   if (!isString(constructorName)) {
     throw new TypeError('The provided "constructorName" parameter needs to be a string.');
   }
-  constructorName = constructorName.trim();
+  // - assure a string value primitive because that is what a name-descriptor will be checked
+  //   for in order to pass as stable descriptor for a reliably type-identity verification.
+  constructorName = String(constructorName).trim();
 
   // guard.
   if (constructorName === '') {
@@ -270,7 +294,9 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
   if (!isString(taggedType)) {
     taggedType = constructorName;
   } else {
-    taggedType = taggedType.trim();
+    // - assure a string value primitive because that is what a `Symbol.toStringTag`-descriptor will
+    //   be checked for in order to pass as stable descriptor for a reliably type-identity verification.
+    taggedType = String(taggedType).trim();
   }
 
   // guard.
@@ -285,19 +311,23 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
   //   );
   // }
 
-  defineProperty(constructor, 'name', {
-    // enumerable: false,
-    // writable: false,
-    configurable: false,
-    get: getTrustedType.bind(constructor, constructorName)
-  });
-  defineProperty(constructor.prototype, Symbol.toStringTag, {
-    // enumerable: false,
-    // writable: false,
-    configurable: false,
-    get: getTrustedType.bind(constructor.prototype, taggedType)
-  });
-  return constructor;
+  const nameDescriptor = getOwnPropertyDescriptor(constructor, 'name');
+  const canBeDefined = nameDescriptor.configurable !== false;
+
+  if (canBeDefined) {
+    defineProperty(constructor, 'name', {
+      // get: getTrustedType.bind(constructor, constructorName),
+      value: constructorName,
+      enumerable: false,
+      configurable: false
+    });
+    defineProperty(constructor.prototype, Symbol.toStringTag, {
+      get: getTrustedType.bind(constructor.prototype, taggedType),
+      enumerable: false,
+      configurable: false
+    });
+  }
+  return canBeDefined;
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
