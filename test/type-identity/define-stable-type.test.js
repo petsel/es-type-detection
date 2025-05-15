@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { defineStableTypeIdentity } from '../../src/type-identity';
+import { defineStableTypeIdentity, getTrustedType } from '../../src/type-identity';
 
 import {
   asyncGeneratorFunctionExpression,
@@ -51,20 +51,30 @@ function runTestCases(label, cases) {
 }
 */
 
+describe('`getTrustedType`', () => {
+  const getTrustedFooType = getTrustedType.bind(null, 'Foo');
+  const getTrustedBarType = getTrustedType.bind(null, 'Bar');
+
+  it('is a helper function which returns the first one of its bound arguments.', () => {
+    expect(getTrustedFooType()).toStrictEqual('Foo');
+    expect(getTrustedBarType()).toStrictEqual('Bar');
+  });
+});
+
 describe(
-  '`defineStableTypeIdentity` - takes a constructor function, changes some of the' +
-    " function's related property descriptors according to additionally passed name and" +
-    ' tagged type parameters and returns whether the definition has been applied successfully.',
+  "`defineStableTypeIdentity` - takes a constructor function, changes some of the function's related" +
+    ' property descriptors according to additionally passed name and tagged type parameters, and returns' +
+    ' a boolean value which indicates whether the "Stable Type Identity" could be established successfully.',
   () => {
-    it('throws 💣 a `TypeError` in case its 1st `constructor` parameter is not a constructable function type.', () => {
+    it('throws 💣 a `TypeError` in case its 1st `constructor` parameter is not a constructable function-type.', () => {
       expect(() => defineStableTypeIdentity(true, 'Foo', 'Foo')).toThrowError(
         new TypeError(
-          'The provided "constructor" parameter has to be a constructable function type.'
+          'The provided "constructor" parameter has to be at least a constructable function-type.'
         )
       );
       expect(() => defineStableTypeIdentity('', 'Foo', 'Foo')).toThrowError(
         new TypeError(
-          'The provided "constructor" parameter has to be a constructable function type.'
+          'The provided "constructor" parameter has to be at least a constructable function-type.'
         )
       );
 
@@ -78,17 +88,51 @@ describe(
       ].forEach((fctType) => {
         expect(() => defineStableTypeIdentity(fctType, 'Foo', 'Foo')).toThrowError(
           new TypeError(
-            'The provided "constructor" parameter has to be a constructable function type.'
+            'The provided "constructor" parameter has to be at least a constructable function-type.'
           )
         );
       });
       expect(() => defineStableTypeIdentity(() => {}, 'Foo', 'Foo')).toThrowError(
         new TypeError(
-          'The provided "constructor" parameter has to be a constructable function type.'
+          'The provided "constructor" parameter has to be at least a constructable function-type.'
         )
       );
       expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo', 'Foo')).not.toThrow();
-      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo', 'Foo')).not.toThrow();
+      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Bar')).not.toThrow();
+    });
+
+    it('throws 💣 a `TypeError` in case its 1st `constructor` parameter is constructable but neither an ES5 class nor an ES3 function-type.', () => {
+      expect(() => defineStableTypeIdentity(Boolean, 'Foo', 'Foo')).toThrowError(
+        new TypeError(
+          'Built-in constructors are not supported. The "Stable Type Identity" feature anyhow is useful for just ES5 class-constructors and ES3 constructor functions.'
+        )
+      );
+      expect(() => defineStableTypeIdentity(WeakMap, 'Bar', 'Bar')).toThrowError(
+        new TypeError(
+          'Built-in constructors are not supported. The "Stable Type Identity" feature anyhow is useful for just ES5 class-constructors and ES3 constructor functions.'
+        )
+      );
+
+      // - `EventTarget` and `URL` are not universal reliable test candidates because in node.js
+      //    each is implemented as class unlike e.g. `Boolean` or `WeakMap` which are true built-ins.
+      //    Within a browser-environment the former two and both latter mentioned ones are all
+      //    built-in types, thus following logging is true for browsers but not for node.js ...
+      //    ```
+      //    console.log(Function.prototype.toString.call(EventTarget)); // 'function EventTarget() { [native code] }'
+      //    console.log(Function.prototype.toString.call(URL));         // 'function URL() { [native code] }'
+      //    console.log(Function.prototype.toString.call(Boolean));     // 'function Boolean() { [native code] }'
+      //    console.log(Function.prototype.toString.call(WeakMap));     // 'function WeakMap() { [native code] }'
+      //    ```
+      //    ... in node.js the logging is as follows ...
+      //    ```
+      //    console.log(Function.prototype.toString.call(EventTarget)); // 'class EventTarget { ... ... ... }'
+      //    console.log(Function.prototype.toString.call(URL));         // 'class URL { ... ... ... }'
+      //    console.log(Function.prototype.toString.call(Boolean));     // 'function Boolean() { [native code] }'
+      //    console.log(Function.prototype.toString.call(WeakMap));     // 'function WeakMap() { [native code] }'
+      //    ```
+
+      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo')).not.toThrow();
+      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Bar', 'Foo')).not.toThrow();
     });
 
     it('throws 💣 a `TypeError` in case its 2nd `constructorName` parameter is not a string type.', () => {
