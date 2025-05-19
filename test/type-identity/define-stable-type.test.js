@@ -1,35 +1,38 @@
 import { describe, it, expect } from 'vitest';
 
+import {
+  getDefinedConstructorName,
+  getOwnPropertyDescriptor,
+  getTaggedType
+} from '../../src/utility';
+
+import {
+  doesMatchNonEnumerableDescriptorDefault,
+  doesMatchStableNonEnumerableDescriptor
+} from '../../src/type-identity/utility';
+
 import { defineStableTypeIdentity, getTrustedType } from '../../src/type-identity';
 
 import {
   asyncGeneratorFunctionExpression,
-  // AsyncGeneratorFunction,
   generatorFunctionExpression,
-  // GeneratorFunction,
   asyncArrowFunctionExpression,
   asyncNonArrowFunctionExpression,
-  // AsyncFunction,
   conciseGenericMethod,
   spoofedArrowFunction
-  // MyClass,
-  // MySubclass,
-  // TaggedClass,
-  // ImplicitlyTaggedSubclass,
-  // ExplicitlyTaggedSubclass
 } from '../utility/__config';
 
-export class MyClass {}
-export class MySubclass extends MyClass {}
+class MyClass {}
+class MySubclass extends MyClass {}
 
-export class TaggedClass {
+class TaggedClass {
   get [Symbol.toStringTag]() {
     return 'TaggedClass';
   }
 }
-export class ImplicitlyTaggedSubclass extends TaggedClass {}
+class ImplicitlyTaggedSubclass extends TaggedClass {}
 
-export class ExplicitlyTaggedSubclass extends TaggedClass {
+class ExplicitlyTaggedSubclass extends TaggedClass {
   get [Symbol.toStringTag]() {
     return 'ExplicitlyTaggedSubclass';
   }
@@ -168,14 +171,62 @@ describe(
       expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo', ' B a r ')).not.toThrow();
       expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Bar', ' F o o ')).not.toThrow();
     });
-    it('ignores any non string value which has been passed as its optionally provided 3rd `taggedType` parameter.', () => {
-      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo', true)).not.toThrow();
-      expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Bar', 100)).not.toThrow();
-    });
 
     it('ignores any non string value which has been passed as its optionally provided 3rd `taggedType` parameter.', () => {
       expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Foo', true)).not.toThrow();
       expect(() => defineStableTypeIdentity(class AdhocClass {}, 'Bar', 100)).not.toThrow();
     });
+
+    describe(
+      'does successfully apply "Stable Type Identity" to a passed constructor function' +
+        ' which still features configurable property descriptors for its function-name' +
+        ' property and its prototypal `Symbol.toStringTag` slot. ',
+      () => {
+        it('✅ returns the boolean value `true` when invoked with a still configurable constructor function.', () => {
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(true);
+
+          expect(
+            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(false);
+
+          expect(MyClass.name).toStrictEqual('MyClass');
+
+          expect(getDefinedConstructorName(new MyClass())).toStrictEqual('MyClass');
+          expect(getTaggedType(new MyClass())).toStrictEqual('Object');
+
+          expect(defineStableTypeIdentity(MyClass, 'MyRedefinedType', 'Redefined')).toStrictEqual(
+            true
+          );
+
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(false);
+
+          expect(
+            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(true);
+        });
+        it("✅ The constructor-function's name has been correctly redefined.", () => {
+          expect(MyClass.name).toStrictEqual('MyRedefinedType');
+
+          expect(getDefinedConstructorName(new MyClass())).toStrictEqual('MyRedefinedType');
+        });
+        it(
+          '✅ Any instance of an correctly treated constructor-function unveils its' +
+            ' stable type-identity accordingly via e.g. `Object.prototype.toString.call()`.',
+          () => {
+            expect(Object.prototype.toString.call(new MyClass())).toStrictEqual(
+              '[object Redefined]'
+            );
+            expect(String(new MyClass())).toStrictEqual('[object Redefined]');
+            expect(new MyClass() + '').toStrictEqual('[object Redefined]');
+
+            expect(getTaggedType(new MyClass())).toStrictEqual('Redefined');
+          }
+        );
+      }
+    );
   }
 );
