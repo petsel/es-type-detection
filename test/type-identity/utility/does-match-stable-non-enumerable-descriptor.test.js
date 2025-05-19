@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { getOwnPropertyDescriptor } from '../../../src/utility';
-import { doesMatchStableFunctionNameDescriptor } from '../../../src/type-identity/utility';
+import { doesMatchStableNonEnumerableDescriptor } from '../../../src/type-identity/utility';
 
 import {
   asyncGeneratorFunctionExpression,
@@ -23,7 +23,7 @@ function runTestCases(label, cases) {
       // console.log({ input, expected, display, label });
       it(`returns ${(expected === true && '✅') || '❌'} \`${expected}\` for \`${display}\``, () => {
         expect(
-          doesMatchStableFunctionNameDescriptor(getNameDescriptor(input)),
+          doesMatchStableNonEnumerableDescriptor(getNameDescriptor(input)),
           `failed at input \`${input?.toString?.()}\` :: did expect \`${expected}\` :: with display \`${display}\``
         ).toStrictEqual(expected);
       });
@@ -32,11 +32,11 @@ function runTestCases(label, cases) {
 }
 
 describe(
-  '`doesMatchStableFunctionNameDescriptor` - does approve whether the passed value matches the stable' +
-    ' form of a function-name property-descriptor that can be reliably used for type-identity detection.',
+  '`doesMatchStableNonEnumerableDescriptor` - does approve whether the passed value' +
+    ' matches the stable (redefined) form of a non-enumerable property-descriptor.',
   () => {
     it('returns ❌ `false` when no argument is passed.', () => {
-      expect(doesMatchStableFunctionNameDescriptor()).toStrictEqual(false);
+      expect(doesMatchStableNonEnumerableDescriptor()).toStrictEqual(false);
     });
 
     runTestCases('⚙️ Built-in constructor-functions', [
@@ -115,7 +115,7 @@ describe(
       function namedFunctionExpression() {}
 
       expect(
-        doesMatchStableFunctionNameDescriptor(getNameDescriptor(namedFunctionExpression))
+        doesMatchStableNonEnumerableDescriptor(getNameDescriptor(namedFunctionExpression))
       ).toStrictEqual(false);
 
       Object.defineProperty(namedFunctionExpression, 'name', {
@@ -123,13 +123,13 @@ describe(
         get: ((type) => type).bind(namedFunctionExpression, 'foo')
       });
       expect(
-        doesMatchStableFunctionNameDescriptor(getNameDescriptor(namedFunctionExpression))
+        doesMatchStableNonEnumerableDescriptor(getNameDescriptor(namedFunctionExpression))
       ).toStrictEqual(true);
     });
     it('returns ✅ `true` for a class constructor with an correctly altered name-descriptor.', () => {
       class AnotherClass {}
 
-      expect(doesMatchStableFunctionNameDescriptor(getNameDescriptor(AnotherClass))).toStrictEqual(
+      expect(doesMatchStableNonEnumerableDescriptor(getNameDescriptor(AnotherClass))).toStrictEqual(
         false
       );
 
@@ -137,7 +137,7 @@ describe(
         configurable: false,
         get: ((type) => type).bind(AnotherClass, 'Bar')
       });
-      expect(doesMatchStableFunctionNameDescriptor(getNameDescriptor(AnotherClass))).toStrictEqual(
+      expect(doesMatchStableNonEnumerableDescriptor(getNameDescriptor(AnotherClass))).toStrictEqual(
         true
       );
     });

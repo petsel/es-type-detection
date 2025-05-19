@@ -12,7 +12,7 @@ import { isFunction, isString } from '../base';
 import { isClass, isES3Function } from '../function';
 
 import { isConstructable } from '../function/utility';
-import { doesMatchStableFunctionNameDescriptor } from './utility';
+import { doesMatchStableNonEnumerableDescriptor } from './utility';
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -219,7 +219,7 @@ export function hasStableTypeIdentity(...args) {
 
     isConfirmed =
       isStableTaggedType &&
-      doesMatchStableFunctionNameDescriptor(getOwnPropertyDescriptor(constructor, 'name'));
+      doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(constructor, 'name'));
 
     // if (isStableTaggedType) {
     //   isConfirmed
@@ -303,6 +303,7 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
   if (taggedType === '') {
     throw new RangeError('Invalid string value passed to "taggedType".');
   }
+  const toStringTagSymbol = Symbol.toStringTag;
 
   // // hint.
   // if (taggedType !== constructorName) {
@@ -312,7 +313,10 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
   // }
 
   const nameDescriptor = getOwnPropertyDescriptor(constructor, 'name');
-  const canBeDefined = nameDescriptor.configurable !== false;
+  const tagDescriptor = getOwnPropertyDescriptor(constructor.prototype, toStringTagSymbol) ?? {};
+
+  const canBeDefined =
+    nameDescriptor.configurable !== false && tagDescriptor.configurable !== false;
 
   if (canBeDefined) {
     defineProperty(constructor, 'name', {
@@ -321,7 +325,7 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
       enumerable: false,
       configurable: false
     });
-    defineProperty(constructor.prototype, Symbol.toStringTag, {
+    defineProperty(constructor.prototype, toStringTagSymbol, {
       get: getTrustedType.bind(constructor.prototype, taggedType),
       enumerable: false,
       configurable: false

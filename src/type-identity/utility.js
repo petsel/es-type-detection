@@ -14,36 +14,34 @@ import { isFunction, isStringValue } from '../base';
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**
- * Does approve whether the passed value matches the
- * default form of a function-name property-descriptor.
+ * Does approve whether the passed value matches the default data-structure of a non-enumerable
+ * property-descriptor which is ...
+ * `{ value: 'string-value', enumerable: false, writable: false, configurable: true }`
  * @internal
  * @param {any} value
  * @returns {boolean}
- *  Whether the passed value matches the default
- *  form of a function-name property-descriptor.
+ *  Whether the passed value matches the default data-structure of a non-enumerable property-descriptor.
  */
-export function doesMatchDefaultFunctionNameDescriptor(value) {
-  const { value: fctName, enumerable, writable, configurable } = value || {};
+export function doesMatchNonEnumerableDescriptorDefault(value) {
+  const { value: key, enumerable, writable, configurable } = value || {};
 
-  return (
-    isStringValue(fctName) && enumerable === false && writable === false && configurable === true
-  );
+  return isStringValue(key) && enumerable === false && writable === false && configurable === true;
 }
 
 /**
- * Does approve whether the passed value matches the stable form of a function-name
- * property-descriptor that can be reliably used for type-identity detection.
+ * Does approve whether the passed value matches the stable
+ * (redefined) form of a non-enumerable property-descriptor.
  * @internal
  * @param {any} value
  * @returns {boolean}
- *  Whether the passed value matches the stable form of a function-name
- *  property-descriptor that can be reliably used for type-identity detection.
+ *  Whether the passed value matches the stable (redefined)
+ *  form of a non-enumerable property-descriptor.
  */
-export function doesMatchStableFunctionNameDescriptor(value) {
-  const { get: getFctName, value: fctName, enumerable, writable, configurable } = value || {};
+export function doesMatchStableNonEnumerableDescriptor(value) {
+  const { get: getKey, value: key, enumerable, writable, configurable } = value || {};
 
   return (
-    ((isFunction(getFctName) && isStringValue(getFctName())) || isStringValue(fctName)) &&
+    ((isFunction(getKey) && isStringValue(getKey())) || isStringValue(key)) &&
     enumerable === false &&
     writable !== true &&
     configurable === false
@@ -65,7 +63,7 @@ export function doesMatchStableFunctionNameDescriptor(value) {
 //   // const isStableNameDescriptor =
 //   //   enumerable === false && writable !== true && configurable === false;
 //
-//   const isStableNameDescriptor = doesMatchStableFunctionNameDescriptor(
+//   const isStableNameDescriptor = doesMatchStableNonEnumerableDescriptor(
 //     getOwnPropertyDescriptor(constructor, 'name')
 //   );
 //   // proceed clause.
