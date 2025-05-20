@@ -228,6 +228,13 @@ describe("`getDefinedConstructorName` - retrieves, if available, the name of the
     [new MySubclass(), 'new MySubclass', 'MySubclass']
   ]);
 
+  function TypeWithSpoofedConstructor() {}
+  TypeWithSpoofedConstructor.prototype = { [Symbol.toStringTag]: 'Array' };
+
+  const typeWithSpoofedConstructor = new TypeWithSpoofedConstructor();
+  typeWithSpoofedConstructor.constructor = Error;
+  Object.setPrototypeOf(typeWithSpoofedConstructor, { [Symbol.toStringTag]: 'TypeError' });
+
   runTestCases('🧪 Special & `Symbol.toStringTag` spoofed/tagged objects', [
     [
       (function () {
@@ -240,6 +247,8 @@ describe("`getDefinedConstructorName` - retrieves, if available, the name of the
     [{ [Symbol.toStringTag]: 'CustomTag' }, "{ [Symbol.toStringTag]: '' }", 'Object'],
     [new TaggedClass(), 'new TaggedClass', 'TaggedClass'],
     [new ImplicitlyTaggedSubclass(), 'new ImplicitlyTaggedSubclass', 'ImplicitlyTaggedSubclass'],
-    [new ExplicitlyTaggedSubclass(), 'new ExplicitlyTaggedSubclass', 'ExplicitlyTaggedSubclass']
+    [new ExplicitlyTaggedSubclass(), 'new ExplicitlyTaggedSubclass', 'ExplicitlyTaggedSubclass'],
+
+    [typeWithSpoofedConstructor, 'typeWithSpoofedConstructor', 'Error']
   ]);
 });
