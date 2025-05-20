@@ -220,17 +220,6 @@ export function hasStableTypeIdentity(...args) {
     isConfirmed =
       isStableTaggedType &&
       doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(constructor, 'name'));
-
-    // if (isStableTaggedType) {
-    //   isConfirmed
-    //   const nameDescriptor = getOwnPropertyDescriptor(constructor, 'name');
-    //
-    //   isConfirmed =
-    //     !!nameDescriptor &&
-    //     nameDescriptor.configurable === false &&
-    //     nameDescriptor.writable !== true &&
-    //     nameDescriptor.enumerable === false;
-    // }
   }
   return isConfirmed;
 }
