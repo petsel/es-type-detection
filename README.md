@@ -14,20 +14,11 @@ Please read the [`TRADEMARK.md`](./TRADEMARK.md) for rules regarding project nam
 
 ### Project setup
 
-- download
+- clone (or download)
+  ```bash
+  git clone git@github.com:petsel/es-type-detection.git
+  ```
 - install
-- pre-setups
-
-  ... run ...
-
-  ```
-  % git config core.hooksPath .husky
-  ```
-
-  ```
-  % chmod +x .husky/*
-  ```
-
-  ```
-  % chmod +x .husky/pre-commit
+  ```bash
+  npm ci
   ```
