@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-  getDefinedConstructorName,
   getOwnPropertyDescriptor,
-  getTaggedType
+  getTypeSignature,
+  getTaggedType,
+  getDefinedConstructorName
 } from '../../src/utility';
 
 import {
@@ -179,53 +180,235 @@ describe(
 
     describe(
       'does successfully apply "Stable Type Identity" to a passed constructor function' +
-        ' which still features configurable property descriptors for its function-name' +
-        ' property and its prototypal `Symbol.toStringTag` slot. ',
+        ' which still features both configurable property descriptors, once for its' +
+        ' function-name property and once for its prototypal `Symbol.toStringTag` slot.',
       () => {
         it('✅ returns the boolean value `true` when invoked with a still configurable constructor function.', () => {
+          // - pre-run checks before executing "Stable Type Identity" re-definition.
+
           expect(
             doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(true);
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MySubclass, 'name'))
+          ).toStrictEqual(true);
+
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(
+              getOwnPropertyDescriptor(ImplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(true);
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(
+              getOwnPropertyDescriptor(ExplicitlyTaggedSubclass, 'name')
+            )
           ).toStrictEqual(true);
 
           expect(
             doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MyClass, 'name'))
           ).toStrictEqual(false);
+          expect(
+            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MySubclass, 'name'))
+          ).toStrictEqual(false);
+
+          expect(
+            doesMatchStableNonEnumerableDescriptor(
+              getOwnPropertyDescriptor(ImplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(false);
+          expect(
+            doesMatchStableNonEnumerableDescriptor(
+              getOwnPropertyDescriptor(ExplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(false);
 
           expect(MyClass.name).toStrictEqual('MyClass');
+          expect(MySubclass.name).toStrictEqual('MySubclass');
+
+          expect(ImplicitlyTaggedSubclass.name).toStrictEqual('ImplicitlyTaggedSubclass');
+          expect(ExplicitlyTaggedSubclass.name).toStrictEqual('ExplicitlyTaggedSubclass');
 
           expect(getDefinedConstructorName(new MyClass())).toStrictEqual('MyClass');
+          expect(getDefinedConstructorName(new MySubclass())).toStrictEqual('MySubclass');
+
+          expect(getDefinedConstructorName(new ImplicitlyTaggedSubclass())).toStrictEqual(
+            'ImplicitlyTaggedSubclass'
+          );
+          expect(getDefinedConstructorName(new ExplicitlyTaggedSubclass())).toStrictEqual(
+            'ExplicitlyTaggedSubclass'
+          );
+
           expect(getTaggedType(new MyClass())).toStrictEqual('Object');
+          expect(getTaggedType(new MySubclass())).toStrictEqual('Object');
+
+          expect(getTaggedType(new ImplicitlyTaggedSubclass())).toStrictEqual('TaggedClass');
+          expect(getTaggedType(new ExplicitlyTaggedSubclass())).toStrictEqual(
+            'ExplicitlyTaggedSubclass'
+          );
+
+          // - execute "Stable Type Identity" re-definition.
 
           expect(defineStableTypeIdentity(MyClass, 'MyRedefinedType', 'Redefined')).toStrictEqual(
             true
           );
+          expect(defineStableTypeIdentity(MySubclass, 'Subtype')).toStrictEqual(true);
 
-          expect(
-            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MyClass, 'name'))
-          ).toStrictEqual(false);
-
-          expect(
-            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MyClass, 'name'))
-          ).toStrictEqual(true);
+          expect(defineStableTypeIdentity(ImplicitlyTaggedSubclass, 'Foo')).toStrictEqual(true);
+          expect(defineStableTypeIdentity(ExplicitlyTaggedSubclass, 'Baz', 'Biz')).toStrictEqual(
+            true
+          );
         });
         it("✅ The constructor-function's name has been correctly redefined.", () => {
           expect(MyClass.name).toStrictEqual('MyRedefinedType');
+          expect(MySubclass.name).toStrictEqual('Subtype');
+
+          expect(ImplicitlyTaggedSubclass.name).toStrictEqual('Foo');
+          expect(ExplicitlyTaggedSubclass.name).toStrictEqual('Baz');
 
           expect(getDefinedConstructorName(new MyClass())).toStrictEqual('MyRedefinedType');
+          expect(getDefinedConstructorName(new MySubclass())).toStrictEqual('Subtype');
+
+          expect(getDefinedConstructorName(new ImplicitlyTaggedSubclass())).toStrictEqual('Foo');
+          expect(getDefinedConstructorName(new ExplicitlyTaggedSubclass())).toStrictEqual('Baz');
         });
         it(
-          '✅ Any instance of an correctly treated constructor-function unveils its' +
+          '✅ Any instance of a correctly treated constructor-function unveils its' +
             ' stable type-identity accordingly via e.g. `Object.prototype.toString.call()`.',
           () => {
             expect(Object.prototype.toString.call(new MyClass())).toStrictEqual(
               '[object Redefined]'
             );
+            expect(Object.prototype.toString.call(new MySubclass())).toStrictEqual(
+              '[object Subtype]'
+            );
             expect(String(new MyClass())).toStrictEqual('[object Redefined]');
+            expect(String(new MySubclass())).toStrictEqual('[object Subtype]');
+
             expect(new MyClass() + '').toStrictEqual('[object Redefined]');
+            expect(new MySubclass() + '').toStrictEqual('[object Subtype]');
 
             expect(getTaggedType(new MyClass())).toStrictEqual('Redefined');
+            expect(getTaggedType(new MySubclass())).toStrictEqual('Subtype');
+
+            expect(Object.prototype.toString.call(new ImplicitlyTaggedSubclass())).toStrictEqual(
+              '[object Foo]'
+            );
+            expect(Object.prototype.toString.call(new ExplicitlyTaggedSubclass())).toStrictEqual(
+              '[object Biz]'
+            );
+            expect(String(new ImplicitlyTaggedSubclass())).toStrictEqual('[object Foo]');
+            expect(String(new ExplicitlyTaggedSubclass())).toStrictEqual('[object Biz]');
+
+            expect(new ImplicitlyTaggedSubclass() + '').toStrictEqual('[object Foo]');
+            expect(new ExplicitlyTaggedSubclass() + '').toStrictEqual('[object Biz]');
+
+            expect(getTaggedType(new ImplicitlyTaggedSubclass())).toStrictEqual('Foo');
+            expect(getTaggedType(new ExplicitlyTaggedSubclass())).toStrictEqual('Biz');
           }
         );
+      }
+    );
+
+    describe(
+      'does prevent the "Stable Type Identity" application process for every passed constructor function' +
+        ' which does not have both configurable property descriptors, once for its function-name property' +
+        ' and once for its prototypal `Symbol.toStringTag` slot.',
+      () => {
+        it('❌ returns the boolean value `false` when invoked with a non-configurable constructor function.', () => {
+          // - pre-run checks before attempting another "Stable Type Identity" re-definition.
+
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(false);
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(getOwnPropertyDescriptor(MySubclass, 'name'))
+          ).toStrictEqual(false);
+
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(
+              getOwnPropertyDescriptor(ImplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(false);
+          expect(
+            doesMatchNonEnumerableDescriptorDefault(
+              getOwnPropertyDescriptor(ExplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(false);
+
+          expect(
+            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MyClass, 'name'))
+          ).toStrictEqual(true);
+          expect(
+            doesMatchStableNonEnumerableDescriptor(getOwnPropertyDescriptor(MySubclass, 'name'))
+          ).toStrictEqual(true);
+
+          expect(
+            doesMatchStableNonEnumerableDescriptor(
+              getOwnPropertyDescriptor(ImplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(true);
+          expect(
+            doesMatchStableNonEnumerableDescriptor(
+              getOwnPropertyDescriptor(ExplicitlyTaggedSubclass, 'name')
+            )
+          ).toStrictEqual(true);
+
+          // - re-definition fails (gets rejected).
+
+          expect(
+            defineStableTypeIdentity(MyClass, 'MyTwiceRedefinedType', 'TwiceRedefined')
+          ).toStrictEqual(false);
+          expect(
+            defineStableTypeIdentity(MySubclass, 'RedefinedSubtype', 'TwiceRedefined')
+          ).toStrictEqual(false);
+
+          expect(defineStableTypeIdentity(ImplicitlyTaggedSubclass, 'Foo', 'Bar')).toStrictEqual(
+            false
+          );
+          expect(defineStableTypeIdentity(ExplicitlyTaggedSubclass, 'Bizz', 'Buzz')).toStrictEqual(
+            false
+          );
+        });
+        it('✅ leaves an already established "Stable Type Identity" untouched.', () => {
+          // - the already established "Stable Type Identity" remained
+          //   unchanged despite the additional re-definition attempt.
+
+          expect(MyClass.name).toStrictEqual('MyRedefinedType');
+          expect(MySubclass.name).toStrictEqual('Subtype');
+
+          expect(ImplicitlyTaggedSubclass.name).toStrictEqual('Foo');
+          expect(ExplicitlyTaggedSubclass.name).toStrictEqual('Baz');
+
+          expect(getDefinedConstructorName(new MyClass())).toStrictEqual('MyRedefinedType');
+          expect(getDefinedConstructorName(new MySubclass())).toStrictEqual('Subtype');
+
+          expect(getDefinedConstructorName(new ImplicitlyTaggedSubclass())).toStrictEqual('Foo');
+          expect(getDefinedConstructorName(new ExplicitlyTaggedSubclass())).toStrictEqual('Baz');
+
+          expect(getTypeSignature(new MyClass())).toStrictEqual('[object Redefined]');
+          expect(getTypeSignature(new MySubclass())).toStrictEqual('[object Subtype]');
+
+          expect(String(new MyClass())).toStrictEqual('[object Redefined]');
+          expect(String(new MySubclass())).toStrictEqual('[object Subtype]');
+
+          expect(new MyClass() + '').toStrictEqual('[object Redefined]');
+          expect(new MySubclass() + '').toStrictEqual('[object Subtype]');
+
+          expect(getTaggedType(new MyClass())).toStrictEqual('Redefined');
+          expect(getTaggedType(new MySubclass())).toStrictEqual('Subtype');
+
+          expect(getTypeSignature(new ImplicitlyTaggedSubclass())).toStrictEqual('[object Foo]');
+          expect(getTypeSignature(new ExplicitlyTaggedSubclass())).toStrictEqual('[object Biz]');
+
+          expect(String(new ImplicitlyTaggedSubclass())).toStrictEqual('[object Foo]');
+          expect(String(new ExplicitlyTaggedSubclass())).toStrictEqual('[object Biz]');
+
+          expect(new ImplicitlyTaggedSubclass() + '').toStrictEqual('[object Foo]');
+          expect(new ExplicitlyTaggedSubclass() + '').toStrictEqual('[object Biz]');
+
+          expect(getTaggedType(new ImplicitlyTaggedSubclass())).toStrictEqual('Foo');
+          expect(getTaggedType(new ExplicitlyTaggedSubclass())).toStrictEqual('Biz');
+        });
       }
     );
   }
