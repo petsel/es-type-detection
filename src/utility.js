@@ -113,7 +113,7 @@ export function getDefinedConstructor(value = null) {
   if (value === null) {
     return;
   }
-  /** @type {Function|Object} */
+  /** @type {Function | Object} */
   const constructor = getOwnPropertyDescriptor(value, 'constructor')?.value ?? value.constructor;
 
   // various guards.
@@ -121,7 +121,7 @@ export function getDefinedConstructor(value = null) {
     // exit early with valid result.
     return constructor;
   } else {
-    /** @type {Function|undefined} */
+    /** @type {Function | undefined} */
     const creator = constructor?.constructor;
 
     if (isFunction(creator)) {
@@ -134,7 +134,7 @@ export function getDefinedConstructor(value = null) {
   //
   //   ... or the passed `value` was created via `Object.create(null)`.
 
-  /** @type {Object|null} */
+  /** @type {Object | null} */
   const prototype = getPrototypeOf(value) ?? null;
 
   // guard.
@@ -142,9 +142,10 @@ export function getDefinedConstructor(value = null) {
     return;
   }
   // - in case function execution reaches beyond this comment,
-  //   the `constructor` slot definitely has been manipulated.
+  //   the `constructor` slot definitely has been maliciously
+  //   manipulated.
 
-  /** @type {Function|Object} */
+  /** @type {Function | Object} */
   const protoConstructor =
     getOwnPropertyDescriptor(prototype, 'constructor')?.value ?? prototype.constructor;
 
@@ -153,7 +154,7 @@ export function getDefinedConstructor(value = null) {
     // exit with probably still valid result.
     return protoConstructor;
   } else {
-    /** @type {Function|undefined} */
+    /** @type {Function | undefined} */
     const protoCreator = protoConstructor?.constructor;
 
     if (isFunction(protoCreator)) {
@@ -241,7 +242,7 @@ export function getFunctionSource(value) {
  *  `value` parameter. Its **presence** is detected via `args.length`, allowing
  *  the function to distinguish between an explicitly passed `undefined` value
  *  and a completely omitted argument.
- * @returns {string|undefined}
+ * @returns {string | undefined}
  *  A `'string'` value which either corresponds with the passed value's
  *  constructor-function's name or its tagged type; or the `undefined`
  *  value if no argument was passed.
@@ -264,7 +265,7 @@ export function resolveType(...args) {
   }
   // - The following block provides a more generic solution ...
 
-  /** @type {Function|Object} */
+  /** @type {Function | Object} */
   const constructor = getOwnPropertyDescriptor(value, 'constructor')?.value ?? value.constructor;
 
   // guard.
