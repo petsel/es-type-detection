@@ -60,12 +60,12 @@ export {};
  */
 
 /**
- * @typedef {String & { __brand: 'StringObject' }} StringObject
- *  A boxed `String` object type, e.g., `new String()`.
+ * @typedef {String & { __brand: 'BoxedString' }} BoxedString
+ *  A boxed `String` object type, e.g., `new String('string')` or `Object('string')` .
  */
 
 /**
- * @typedef {StringValue | StringObject} StringType
+ * @typedef {StringValue | BoxedString} StringType
  *  Either a primitive string value or a boxed `String` object type.
  */
 
@@ -77,12 +77,12 @@ export {};
  */
 
 /**
- * @typedef {Number & { __brand: 'NumberObject' }} NumberObject
- *  A boxed `Number` object type, e.g., `new Number()`.
+ * @typedef {Number & { __brand: 'BoxedNumber' }} BoxedNumber
+ *  A boxed `Number` object type, e.g., `new Number(9_876)` or `Object(9_876)`.
  */
 
 /**
- * @typedef {NumberValue | NumberObject} NumberType
+ * @typedef {NumberValue | BoxedNumber} NumberType
  *  Either a primitive number value or a boxed `Number` object type.
  */
 
@@ -94,12 +94,12 @@ export {};
  */
 
 /**
- * @typedef {Boolean & { __brand: 'BooleanObject' }} BooleanObject
- *  A boxed `Boolean` object type, e.g., `new Boolean()`.
+ * @typedef {Boolean & { __brand: 'BoxedBoolean' }} BoxedBoolean
+ *  A boxed `Boolean` object type, e.g., `new Boolean(true)` or `Object(false)`.
  */
 
 /**
- * @typedef {BooleanValue | BooleanObject} BooleanType
+ * @typedef {BooleanValue | BoxedBoolean} BooleanType
  *  Either a primitive boolean value or a boxed `Boolean` object type.
  */
 
@@ -111,7 +111,7 @@ export {};
  */
 
 /**
- * @typedef {Symbol & { __brand: 'SymbolObject' }} SymbolObject
+ * @typedef {Symbol & { __brand: 'BoxedSymbol' }} BoxedSymbol
  *  A purposely boxed `Symbol` object type, e.g., created via `Object(Symbol('key'))`.
  *  This works perfectly fine when used as an object's symbol-key.
  *
@@ -146,7 +146,7 @@ export {};
  */
 
 /**
- * @typedef {SymbolValue | SymbolObject} SymbolType
+ * @typedef {SymbolValue | BoxedSymbol} SymbolType
  *  Either a primitive symbol value or a purposely boxed `Symbol` object type.
  */
 
@@ -158,7 +158,7 @@ export {};
  */
 
 /**
- * @typedef {BigInt & { __brand: 'BigIntObject' }} BigIntObject
+ * @typedef {BigInt & { __brand: 'BoxedBigInt' }} BoxedBigInt
  *  A purposely boxed `BigInt` object type, e.g., created via
  *  `Object(BigInt(1_000_000_000))` or `Object(1_000_000_000n)`.
  *
@@ -194,13 +194,13 @@ export {};
  *  console.log({ bigintResult_B }); // { bigintResult_B: 4000000000n }
  *  ```
  *
- *  This demonstrates that the internal type of a bigint operand
+ *  This demonstrates that the internal type of any bigint operand
  *  (primitive or boxed) does not affect arithmetic operations.
  *  Both boxed and primitive values can be used interchangeably in math.
  */
 
 /**
- * @typedef {BigIntValue | BigIntObject} BigIntType
+ * @typedef {BigIntValue | BoxedBigInt} BigIntType
  *  Either a primitive bigint value or a purposely boxed `BigInt` object type.
  */
 

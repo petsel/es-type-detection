@@ -20,19 +20,19 @@ import {
   isDictionaryObject,
   isString,
   isStringValue,
-  isStringObject,
+  isBoxedString,
   isNumber,
   isNumberValue,
-  isNumberObject,
+  isBoxedNumber,
   isBoolean,
   isBooleanValue,
-  isBooleanObject,
+  isBoxedBoolean,
   isSymbol,
   isSymbolValue,
-  isSymbolObject,
+  isBoxedSymbol,
   isBigInt,
   isBigIntValue,
-  isBigIntObject
+  isBoxedBigInt
 } from './base';
 
 import {
@@ -90,8 +90,9 @@ export default {
     hasStableTypeIdentity,
     hasCustomTypeIdentity,
     hasBuiltinTypeIdentity,
-    hasOwnWritablePrototype,
-    hasOwnPrototype
+    hasConstructSlot,
+    hasOwnPrototype,
+    hasOwnWritablePrototype
   },
   base: {
     isFunction,
@@ -100,21 +101,22 @@ export default {
     isDictionaryObject,
     isString,
     isStringValue,
-    isStringObject,
+    isBoxedString,
     isNumber,
     isNumberValue,
-    isNumberObject,
+    isBoxedNumber,
     isBoolean,
     isBooleanValue,
-    isBooleanObject,
+    isBoxedBoolean,
     isSymbol,
     isSymbolValue,
-    isSymbolObject,
+    isBoxedSymbol,
     isBigInt,
     isBigIntValue,
-    isBigIntObject
+    isBoxedBigInt
   },
   function: {
+    isConstructable,
     isClass,
     isGeneratorFunction,
     isAsyncGeneratorFunction,
@@ -126,8 +128,6 @@ export default {
     isArrow,
     isES3Function,
     isGenericFunction,
-    hasConstructSlot,
-    isConstructable,
     isUnnamedFunction
   },
   error: {

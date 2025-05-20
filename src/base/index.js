@@ -83,20 +83,8 @@ export function isDictionaryObject(value) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-// /**
-//  * @param {any} [value]
-//  *  An optionally passed value of any type.
-//  * @returns {value is Array}
-//  *  Whether the passed value is an `Array` type.
-//  */
-// export function isArray(value) {
-//   return Array.isArray(value);
-// }
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
 /** @typedef {import('../typedef.js').StringValue} StringValue */
-/** @typedef {import('../typedef.js').StringObject} StringObject */
+/** @typedef {import('../typedef.js').BoxedString} BoxedString */
 /** @typedef {import('../typedef.js').StringType} StringType */
 
 /**
@@ -111,10 +99,10 @@ export function isStringValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is StringObject}
+ * @returns {value is BoxedString}
  *  Whether the passed value is a boxed `String` object type.
  */
-export function isStringObject(value) {
+export function isBoxedString(value) {
   return (
     getTypeSignature(value) === '[object String]' &&
     getDefinedConstructorName(value) === 'String' &&
@@ -128,13 +116,13 @@ export function isStringObject(value) {
  *  Whether the passed value is a string, either a primitive string value or a boxed `String` object type.
  */
 export function isString(value) {
-  return isStringValue(value) || isStringObject(value);
+  return isStringValue(value) || isBoxedString(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('../typedef.js').NumberValue} NumberValue */
-/** @typedef {import('../typedef.js').NumberObject} NumberObject */
+/** @typedef {import('../typedef.js').BoxedNumber} BoxedNumber */
 /** @typedef {import('../typedef.js').NumberType} NumberType */
 
 /**
@@ -149,10 +137,10 @@ export function isNumberValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is NumberObject}
+ * @returns {value is BoxedNumber}
  *  Whether the passed value is a boxed `Number` object type.
  */
-export function isNumberObject(value) {
+export function isBoxedNumber(value) {
   return (
     getTypeSignature(value) === '[object Number]' &&
     getDefinedConstructorName(value) === 'Number' &&
@@ -166,13 +154,13 @@ export function isNumberObject(value) {
  *  Whether the passed value is a number, either a primitive number value or a boxed `Number` object type.
  */
 export function isNumber(value) {
-  return isNumberValue(value) || isNumberObject(value);
+  return isNumberValue(value) || isBoxedNumber(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('../typedef.js').BooleanValue} BooleanValue */
-/** @typedef {import('../typedef.js').BooleanObject} BooleanObject */
+/** @typedef {import('../typedef.js').BoxedBoolean} BoxedBoolean */
 /** @typedef {import('../typedef.js').BooleanType} BooleanType */
 
 /**
@@ -187,10 +175,10 @@ export function isBooleanValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BooleanObject}
+ * @returns {value is BoxedBoolean}
  *  Whether the passed value is a boxed `Boolean` object type.
  */
-export function isBooleanObject(value) {
+export function isBoxedBoolean(value) {
   return (
     getTypeSignature(value) === '[object Boolean]' &&
     getDefinedConstructorName(value) === 'Boolean' &&
@@ -204,13 +192,13 @@ export function isBooleanObject(value) {
  *  Whether the passed value is boolean, either a primitive boolean value or a boxed `Boolean` object type.
  */
 export function isBoolean(value) {
-  return isBooleanValue(value) || isBooleanObject(value);
+  return isBooleanValue(value) || isBoxedBoolean(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('../typedef.js').SymbolValue} SymbolValue */
-/** @typedef {import('../typedef.js').SymbolObject} SymbolObject */
+/** @typedef {import('../typedef.js').BoxedSymbol} BoxedSymbol */
 /** @typedef {import('../typedef.js').SymbolType} SymbolType */
 
 /**
@@ -225,10 +213,10 @@ export function isSymbolValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is SymbolObject}
+ * @returns {value is BoxedSymbol}
  *  Whether the passed value is a purposely boxed `Symbol` object type.
  */
-export function isSymbolObject(value) {
+export function isBoxedSymbol(value) {
   return (
     getTypeSignature(value) === '[object Symbol]' &&
     getDefinedConstructorName(value) === 'Symbol' &&
@@ -242,13 +230,13 @@ export function isSymbolObject(value) {
  *  Whether the passed value is a symbol, either a primitive symbol value or a purposely boxed `Symbol` object type.
  */
 export function isSymbol(value) {
-  return isSymbolValue(value) || isSymbolObject(value);
+  return isSymbolValue(value) || isBoxedSymbol(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('../typedef.js').BigIntValue} BigIntValue */
-/** @typedef {import('../typedef.js').BigIntObject} BigIntObject */
+/** @typedef {import('../typedef.js').BoxedBigInt} BoxedBigInt */
 /** @typedef {import('../typedef.js').BigIntType} BigIntType */
 
 /**
@@ -263,10 +251,10 @@ export function isBigIntValue(value) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {value is BigIntObject}
+ * @returns {value is BoxedBigInt}
  *  Whether the passed value is a purposely boxed `BigInt` object type.
  */
-export function isBigIntObject(value) {
+export function isBoxedBigInt(value) {
   return (
     getTypeSignature(value) === '[object BigInt]' &&
     getDefinedConstructorName(value) === 'BigInt' &&
@@ -280,7 +268,7 @@ export function isBigIntObject(value) {
  *  Whether the passed value is a bigint, either a primitive bigint value or a purposely boxed `BigInt` object type.
  */
 export function isBigInt(value) {
-  return isBigIntValue(value) || isBigIntObject(value);
+  return isBigIntValue(value) || isBoxedBigInt(value);
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

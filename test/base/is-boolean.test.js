@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { isBoolean, isBooleanValue, isBooleanObject } from '../../src/base';
+import { isBoolean, isBooleanValue, isBoxedBoolean } from '../../src/base';
 
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
@@ -130,10 +130,10 @@ describe('`isBooleanValue` - detects primitive boolean values only.', () => {
   );
 });
 
-describe('`isBooleanObject` - detects boxed `Boolean` object types only.', () => {
+describe('`isBoxedBoolean` - detects boxed `Boolean` object types only.', () => {
   runTestCases(
     '✅ Matches exclusively boxed `Boolean` object types, both through `new Boolean(false)` and `Object(false)` alike.',
-    isBooleanObject,
+    isBoxedBoolean,
     true,
     [
       [new Boolean(false), 'new Boolean(false)'],
@@ -141,7 +141,7 @@ describe('`isBooleanObject` - detects boxed `Boolean` object types only.', () =>
     ]
   );
 
-  runTestCases('❌ Rejects boolean values and non-boolean types.', isBooleanObject, false, [
+  runTestCases('❌ Rejects boolean values and non-boolean types.', isBoxedBoolean, false, [
     // [new Boolean(false), 'new Boolean(false)'],
     // [Object(true), 'Object(true)'],
     [false, 'false'],

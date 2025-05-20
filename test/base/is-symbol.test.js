@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { isSymbol, isSymbolValue, isSymbolObject } from '../../src/base';
+import { isSymbol, isSymbolValue, isBoxedSymbol } from '../../src/base';
 
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
@@ -122,15 +122,15 @@ describe('`isSymbolValue` - detects primitive symbol values only.', () => {
   );
 });
 
-describe('`isSymbolObject` - detects boxed `Symbol` object types only.', () => {
+describe('`isBoxedSymbol` - detects boxed `Symbol` object types only.', () => {
   runTestCases(
     "✅ Matches exclusively boxed `Symbol` object types, e.g. achieved through `Object(Symbol('key'))`.",
-    isSymbolObject,
+    isBoxedSymbol,
     true,
     [[Object(Symbol('key')), "Object(Symbol('key'))"]]
   );
 
-  runTestCases('❌ Rejects symbol values and non-symbol types.', isSymbolObject, false, [
+  runTestCases('❌ Rejects symbol values and non-symbol types.', isBoxedSymbol, false, [
     [new Boolean(false), 'new Boolean(false)'],
     [Object(true), 'Object(true)'],
     [false, 'false'],

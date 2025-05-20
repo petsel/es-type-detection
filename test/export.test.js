@@ -22,19 +22,19 @@ import {
   isDictionaryObject,
   isString,
   isStringValue,
-  isStringObject,
+  isBoxedString,
   isNumber,
   isNumberValue,
-  isNumberObject,
+  isBoxedNumber,
   isBoolean,
   isBooleanValue,
-  isBooleanObject,
+  isBoxedBoolean,
   isSymbol,
   isSymbolValue,
-  isSymbolObject,
+  isBoxedSymbol,
   isBigInt,
   isBigIntValue,
-  isBigIntObject
+  isBoxedBigInt
 } from '../src/base';
 
 import {
@@ -104,7 +104,7 @@ describe('The top most exported module ...', () => {
       expect(isObjectObject(module.utility)).toStrictEqual(true);
     });
     it('... that again features exactly 11 own property keys.', () => {
-      expect(Object.keys(module.utility).length).toStrictEqual(11);
+      expect(Object.keys(module.utility).length).toStrictEqual(12);
     });
     describe('The `utility` namespace should feature following utility methods ...', () => {
       runTestCases(module.utility, [
@@ -122,8 +122,10 @@ describe('The top most exported module ...', () => {
         ['hasCustomTypeIdentity', hasCustomTypeIdentity],
         ['hasBuiltinTypeIdentity', hasBuiltinTypeIdentity],
 
-        ['hasOwnWritablePrototype', hasOwnWritablePrototype],
-        ['hasOwnPrototype', hasOwnPrototype]
+        ['hasConstructSlot', hasConstructSlot],
+
+        ['hasOwnPrototype', hasOwnPrototype],
+        ['hasOwnWritablePrototype', hasOwnWritablePrototype]
       ]);
     });
   });
@@ -145,23 +147,23 @@ describe('The top most exported module ...', () => {
 
         ['isString', isString],
         ['isStringValue', isStringValue],
-        ['isStringObject', isStringObject],
+        ['isBoxedString', isBoxedString],
 
         ['isNumber', isNumber],
         ['isNumberValue', isNumberValue],
-        ['isNumberObject', isNumberObject],
+        ['isBoxedNumber', isBoxedNumber],
 
         ['isBoolean', isBoolean],
         ['isBooleanValue', isBooleanValue],
-        ['isBooleanObject', isBooleanObject],
+        ['isBoxedBoolean', isBoxedBoolean],
 
         ['isSymbol', isSymbol],
         ['isSymbolValue', isSymbolValue],
-        ['isSymbolObject', isSymbolObject],
+        ['isBoxedSymbol', isBoxedSymbol],
 
         ['isBigInt', isBigInt],
         ['isBigIntValue', isBigIntValue],
-        ['isBigIntObject', isBigIntObject]
+        ['isBoxedBigInt', isBoxedBigInt]
       ]);
     });
   });
@@ -170,11 +172,13 @@ describe('The top most exported module ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.function)).toStrictEqual(true);
     });
-    it('... that again features exactly 14 own property keys.', () => {
-      expect(Object.keys(module.function).length).toStrictEqual(14);
+    it('... that again features exactly 13 own property keys.', () => {
+      expect(Object.keys(module.function).length).toStrictEqual(13);
     });
     describe('The `function` namespace should feature following function-type detection methods ...', () => {
       runTestCases(module.function, [
+        ['isConstructable', isConstructable],
+
         ['isClass', isClass],
 
         ['isGeneratorFunction', isGeneratorFunction],
@@ -190,9 +194,6 @@ describe('The top most exported module ...', () => {
 
         ['isES3Function', isES3Function],
         ['isGenericFunction', isGenericFunction],
-
-        ['hasConstructSlot', hasConstructSlot],
-        ['isConstructable', isConstructable],
 
         ['isUnnamedFunction', isUnnamedFunction]
       ]);

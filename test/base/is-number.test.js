@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { isNumber, isNumberValue, isNumberObject } from '../../src/base';
+import { isNumber, isNumberValue, isBoxedNumber } from '../../src/base';
 
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
@@ -129,10 +129,10 @@ describe('`isNumberValue` - detects primitive number values only.', () => {
   );
 });
 
-describe('`isNumberObject` - detects boxed `Number` object types only.', () => {
+describe('`isBoxedNumber` - detects boxed `Number` object types only.', () => {
   runTestCases(
     '✅ Matches exclusively boxed `Number` object types, both through `new Number(10)` and `Object(10)` alike.',
-    isNumberObject,
+    isBoxedNumber,
     true,
     [
       [new Number(10), 'new Number(10)'],
@@ -142,7 +142,7 @@ describe('`isNumberObject` - detects boxed `Number` object types only.', () => {
     ]
   );
 
-  runTestCases('❌ Rejects number values and non-number types.', isNumberObject, false, [
+  runTestCases('❌ Rejects number values and non-number types.', isBoxedNumber, false, [
     [new Boolean(false), 'new Boolean(false)'],
     [Object(true), 'Object(true)'],
     [false, 'false'],

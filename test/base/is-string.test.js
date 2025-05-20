@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { isString, isStringValue, isStringObject } from '../../src/base';
+import { isString, isStringValue, isBoxedString } from '../../src/base';
 
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
@@ -125,10 +125,10 @@ describe('`isStringValue` - detects primitive string values only.', () => {
   );
 });
 
-describe('`isStringObject` - detects boxed `String` object types only.', () => {
+describe('`isBoxedString` - detects boxed `String` object types only.', () => {
   runTestCases(
     "✅ Matches exclusively boxed `String` object types, both through `new String('')` and `Object('')` alike.",
-    isStringObject,
+    isBoxedString,
     true,
     [
       [new String('string'), "new String('string')"],
@@ -136,7 +136,7 @@ describe('`isStringObject` - detects boxed `String` object types only.', () => {
     ]
   );
 
-  runTestCases('❌ Rejects string values and non-string types.', isStringObject, false, [
+  runTestCases('❌ Rejects string values and non-string types.', isBoxedString, false, [
     [new Boolean(false), 'new Boolean(false)'],
     [Object(true), 'Object(true)'],
     [false, 'false'],

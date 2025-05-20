@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { isBigInt, isBigIntValue, isBigIntObject } from '../../src/base';
+import { isBigInt, isBigIntValue, isBoxedBigInt } from '../../src/base';
 
 function runTestCases(label, testFct, expected, cases) {
   describe(label, () => {
@@ -122,15 +122,15 @@ describe('`isBigIntValue` - detects primitive bigint values only.', () => {
   );
 });
 
-describe('`isBigIntObject` - detects boxed `Bigint` object types only.', () => {
+describe('`isBoxedBigInt` - detects boxed `Bigint` object types only.', () => {
   runTestCases(
     '✅ Matches exclusively boxed `Bigint` object types, e.g. achieved through `Object(BigInt(10))`.',
-    isBigIntObject,
+    isBoxedBigInt,
     true,
     [[Object(BigInt(10)), 'Object(BigInt(10))']]
   );
 
-  runTestCases('❌ Rejects bigint values and non-bigint types.', isBigIntObject, false, [
+  runTestCases('❌ Rejects bigint values and non-bigint types.', isBoxedBigInt, false, [
     [new Boolean(false), 'new Boolean(false)'],
     [Object(true), 'Object(true)'],
     [false, 'false'],
