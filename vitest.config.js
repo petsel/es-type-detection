@@ -10,6 +10,7 @@ export default {
         'src/**/*.test.js', // Don’t cover test files (if placed in src)
         'test/', // Don’t cover anything in your test folder
         'dist/', // Build output
+        'docs/', // Docs output
         'coverage/', // Prevent self-inclusion
         '**/*.config.*' // any config
         //'**/vite.config.*',     // Vite config
