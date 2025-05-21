@@ -1,0 +1,7 @@
+{
+  "types": [
+    { "type": "feat", "section": "✨ Features" },
+    { "type": "fix", "section": "🐞 Fixes" },
+    { "type": "chore", "section": "🧹 Chores", "hidden": true }
+  ]
+}
