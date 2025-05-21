@@ -14,9 +14,18 @@
   "files": [
     "dist"
   ],
+  "lint-staged": {
+    "*.{js,cjs,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "prepare": "git config core.hooksPath .husky && chmod +x .husky/* && chmod +x .husky/pre-commit",
-    "release:mock": "npm run lint && npm run format && npm run test && npm run coverage && npm run docs && npm run build",
+    "release:mock": "npm run lint && npm run lint:fix && npm run format && npm run coverage && npm run docs && npm run build",
     "rollup:build": "rollup -c",
     "build": "vite build",
     "lint": "eslint src/**/*.{js,mjs,cjs} test/**/*.{js,mjs,cjs} --no-error-on-unmatched-pattern",
@@ -26,15 +35,21 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
+    "bundle-docs": "rm -rf docs/coverage && cp -r coverage docs/coverage",
     "docs:html": "typedoc --options typedoc-html.json",
     "docs:md": "typedoc --options typedoc-md.json",
-    "docs": "npm run docs:html && npm run docs:md",
+    "docs": "npm run docs:html && npm run docs:md && npm run bundle-docs",
     "dev:docs": "vitepress dev docs",
     "build:docs": "rm -rf docs/.vitepress/dist && vitepress build docs",
-    "preview:docs": "npm run build:docs && vitepress preview docs"
+    "preview:docs": "npm run build:docs && vitepress preview docs",
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "dependencies": {
-    "vite": "6.2.6",
+    "esbuild": "^0.25.4",
+    "vite": "^6.3.5",
     "vitepress": "^1.6.3",
     "vitest": "^3.0.9"
   },
@@ -54,9 +69,19 @@
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "rollup": "^4.37.0",
+    "standard-version": "^9.5.0",
     "typedoc": "^0.28.1",
     "typedoc-plugin-markdown": "^4.6.1",
     "vite-plugin-eslint": "^1.8.1",
     "yaml-eslint-parser": "^1.3.0"
+  },
+  "overrides": {
+    "esbuild": "^0.25.4",
+    "vite": {
+      "esbuild": "^0.25.4"
+    },
+    "vitepress": {
+      "esbuild": "^0.25.4"
+    }
   }
 }
