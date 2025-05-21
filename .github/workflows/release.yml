@@ -12,35 +12,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      # - name: 📦 Cache Node.js dependencies
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
+
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
 
-      - name: Install dependencies.
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: Run es-lint.
-        run: npm run lint
+      - name: ✅ Run ESLint (check only)
+        run: npm run lint:check
 
-      - name: Run prettier.
-        run: npm run format
+      - name: ✅ Run Prettier (check only)
+        run: npm run format:check
 
-      - name: Run test suites.
-        run: npm run test
-
-      - name: Run test coverage and create report.
+      - name: 🧪 Run test suites with coverage.
         run: npm run coverage
 
-      - name: Create documentation.
-        run: npm run docs
+      # - name: 📘 Generate API documentation with coverage report included.
+      #   run: npm run docs
 
       - name: Build.
         run: npm run build
+
+      # - name: 📤 Upload coverage reports to Codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage/lcov.info
+      #     flags: unittests
+      #     name: codecov-report
+      #     fail_ci_if_error: true
+      #
+      # - name: 🌐 Deploy to GitHub Pages
+      #   if: github.ref == 'refs/heads/dev'
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs
+      #     publish_branch: gh-pages
+      #     force_orphan: true
 
       - name: Set up .npmrc for publishing.
         run: |
@@ -49,20 +72,21 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Set up .npmrc for publishing.
-        run: |
-          # Authenticate with the npm registry using the automation token
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-          # - tells npm that anything under the @petsel scope should go to the default public registry.
-          # - matters only if
-          #    - one uses a custom private registry elsewhere
-          #    - one wants to be explicit (some monorepo setups do this)
-          # echo "@petsel:registry=https://registry.npmjs.org/" >> ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Set up .npmrc for publishing.
+      #   run: |
+      #     # Authenticate with the npm registry using the automation token
+      #     echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      #
+      #     # - tells npm that anything under the @petsel scope should go to the default public registry.
+      #     # - matters only if
+      #     #    - one uses a custom private registry elsewhere
+      #     #    - one wants to be explicit (some monorepo setups do this)
+      #     echo "@petsel:registry=https://registry.npmjs.org/" >> ~/.npmrc
+      #   env:
+      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Dry run npm publish.
+        if: github.event_name != 'workflow_dispatch'
         run: npm publish --access public --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
