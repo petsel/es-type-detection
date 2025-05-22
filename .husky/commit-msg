@@ -1,4 +1,6 @@
-# #!/bin/sh
-# . "$(dirname "$0")/_/husky.sh"
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running commit message lint/check ..."
 
 npx --no -- commitlint --edit "$1"
