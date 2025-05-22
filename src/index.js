@@ -116,7 +116,7 @@ export default {
     isBigIntValue,
     isBoxedBigInt
   },
-  function: {
+  fn: {
     isConstructable,
     isClass,
     isGeneratorFunction,

@@ -169,15 +169,15 @@ describe('The top most exported module ...', () => {
     });
   });
 
-  describe('... 🧠 should feature the `function` property ...', () => {
+  describe('... 🧠 should feature the `fn` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
-      expect(isObjectObject(module.function)).toStrictEqual(true);
+      expect(isObjectObject(module.fn)).toStrictEqual(true);
     });
     it('... that again features exactly 13 own property keys.', () => {
-      expect(Object.keys(module.function).length).toStrictEqual(14);
+      expect(Object.keys(module.fn).length).toStrictEqual(14);
     });
-    describe('The `function` namespace should feature following function-type detection methods ...', () => {
-      runTestCases(module.function, [
+    describe('The `fn` namespace should feature following function-type detection methods ...', () => {
+      runTestCases(module.fn, [
         ['isConstructable', isConstructable],
 
         ['isClass', isClass],
@@ -202,7 +202,7 @@ describe('The top most exported module ...', () => {
     });
   });
 
-  describe('... 💣 should feature the `error` property ...', () => {
+  describe('... 🔥 should feature the `error` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.error)).toStrictEqual(true);
     });
