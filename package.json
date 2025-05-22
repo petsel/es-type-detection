@@ -1,12 +1,86 @@
 {
   "name": "@petsel/es-type-detection",
   "version": "0.1.0",
+  "keywords": [
+    "ECMAScript",
+    "JavaScript",
+    "types",
+    "detection",
+    "type detection",
+    "type detection methods",
+    "isConstructable",
+    "hasConstructSlot",
+    "hasOwnPrototype",
+    "hasOwnWritablePrototype",
+    "isFunction",
+    "isClass",
+    "isGeneratorFunction",
+    "isAsyncGeneratorFunction",
+    "isAnyGeneratorFunction",
+    "isAsyncFunction",
+    "isAsyncNonArrow",
+    "isAsyncArrow",
+    "isNonAsyncArrow",
+    "isArrow",
+    "isES3Function",
+    "isGenericFunction",
+    "isConciseGenericMethod",
+    "isUnnamedFunction",
+    "isGenerator",
+    "isAsyncGenerator",
+    "isAnyGenerator",
+    "doesMatchThenable",
+    "doesMatchSafeThenable",
+    "isPromise",
+    "isError",
+    "isErrorError",
+    "isEvalError",
+    "isRangeError",
+    "isReferenceError",
+    "isSyntaxError",
+    "isTypeError",
+    "isURIError",
+    "isAggregateError",
+    "isObject",
+    "isObjectObject",
+    "isDictionaryObject",
+    "isString",
+    "isStringValue",
+    "isBoxedString",
+    "isNumber",
+    "isNumberValue",
+    "isBoxedNumber",
+    "isBoolean",
+    "isBooleanValue",
+    "isBoxedBoolean",
+    "isSymbol",
+    "isSymbolValue",
+    "isBoxedSymbol",
+    "isBigInt",
+    "isBigIntValue",
+    "isBoxedBigInt",
+    "getTypeSignature",
+    "getTaggedType",
+    "getDefinedConstructor",
+    "getDefinedConstructorName",
+    "resolveType",
+    "defineStableTypeIdentity",
+    "hasStableTypeIdentity",
+    "hasCustomTypeIdentity",
+    "hasBuiltinTypeIdentity"
+  ],
   "description": "A utility library for consistent and extensible type detection in JavaScript.",
   "license": "MIT",
+  "author": "Peter Seliger",
+  "homepage": "https://petsel.github.io/es-type-detection/",
   "funding": {
     "type": "custom",
     "url": "https://github.com/petsel/es-type-detection"
   },
+  "bugs": {
+    "url": "https://github.com/petsel/es-type-detection/issues"
+  },
+  "sideEffects": false,
   "main": "dist/es-type-detection.cjs.js",
   "module": "dist/es-type-detection.es.js",
   "unpkg": "dist/es-type-detection.umd.js",
@@ -14,6 +88,12 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "require": "./dist/es-type-detection.cjs.js",
+      "import": "./dist/es-type-detection.es.js"
+    }
+  },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
       "eslint --fix",
@@ -47,13 +127,12 @@
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "esbuild": "^0.25.4",
     "vite": "^6.3.5",
     "vitepress": "^1.6.3",
-    "vitest": "^3.0.9"
-  },
-  "devDependencies": {
+    "vitest": "^3.0.9",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@rollup/plugin-commonjs": "^28.0.3",
