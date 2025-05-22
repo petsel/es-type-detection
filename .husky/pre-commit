@@ -1,5 +1,7 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# # Please remove the following two lines from .husky/pre-commit:
+# # They WILL FAIL in v10.0.0
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
 
 echo "🔍 Running lint-staged on staged files ..."
 

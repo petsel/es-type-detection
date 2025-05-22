@@ -1,5 +1,7 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# # Please remove the following two lines from .husky/commit-msg:
+# # They WILL FAIL in v10.0.0
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
 
 echo "🔍 Running commit message lint/check ..."
 
