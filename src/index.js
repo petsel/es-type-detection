@@ -54,6 +54,7 @@ import {
   isArrow,
   isES3Function,
   isGenericFunction,
+  isConciseGenericMethod,
   isUnnamedFunction
 } from './function';
 
@@ -128,6 +129,7 @@ export default {
     isArrow,
     isES3Function,
     isGenericFunction,
+    isConciseGenericMethod,
     isUnnamedFunction
   },
   error: {

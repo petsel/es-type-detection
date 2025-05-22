@@ -602,6 +602,14 @@ describe('Testing all `Function` introspection methods related to function types
 
     describe('... verifies whether ...', () => {
       allTestEntries
+        .filter(([_, spec]) => !!spec.is_concise_generic_method)
+        .forEach(([key, spec]) => {
+          const candidate = getTestCandidateBySpecificationKey(key);
+          it(`- ✅ ${spec.description} counts as generic function as well.`, () => {
+            expect(isGenericFunction(candidate)).toBe(true);
+          });
+        });
+      allTestEntries
         .filter(([_, spec]) => !!spec.is_generic_function)
         .forEach(([key, spec]) => {
           const candidate = getTestCandidateBySpecificationKey(key);

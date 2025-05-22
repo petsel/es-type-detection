@@ -56,6 +56,7 @@ import {
   isArrow,
   isES3Function,
   isGenericFunction,
+  isConciseGenericMethod,
   isUnnamedFunction
 } from '../src/function';
 
@@ -173,7 +174,7 @@ describe('The top most exported module ...', () => {
       expect(isObjectObject(module.function)).toStrictEqual(true);
     });
     it('... that again features exactly 13 own property keys.', () => {
-      expect(Object.keys(module.function).length).toStrictEqual(13);
+      expect(Object.keys(module.function).length).toStrictEqual(14);
     });
     describe('The `function` namespace should feature following function-type detection methods ...', () => {
       runTestCases(module.function, [
@@ -194,6 +195,7 @@ describe('The top most exported module ...', () => {
 
         ['isES3Function', isES3Function],
         ['isGenericFunction', isGenericFunction],
+        ['isConciseGenericMethod', isConciseGenericMethod],
 
         ['isUnnamedFunction', isUnnamedFunction]
       ]);
