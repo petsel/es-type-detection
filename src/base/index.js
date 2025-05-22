@@ -21,6 +21,7 @@ import { getPrototypeOf, getTypeSignature, getDefinedConstructorName } from '../
 export function isFunction(value) {
   return (
     'function' === typeof value &&
+    'function' === typeof value.bind &&
     'function' === typeof value.call &&
     'function' === typeof value.apply
   );
