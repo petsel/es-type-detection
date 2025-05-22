@@ -1,6 +1,7 @@
 {
   "name": "@petsel/es-type-detection",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "A utility library for consistent and extensible type detection in JavaScript.",
   "keywords": [
     "ECMAScript",
     "JavaScript",
@@ -69,10 +70,12 @@
     "hasCustomTypeIdentity",
     "hasBuiltinTypeIdentity"
   ],
-  "description": "A utility library for consistent and extensible type detection in JavaScript.",
   "license": "MIT",
   "author": "Peter Seliger",
-  "homepage": "https://petsel.github.io/es-type-detection/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/petsel/es-type-detection.git"
+  },
   "funding": {
     "type": "custom",
     "url": "https://github.com/petsel/es-type-detection"
@@ -80,19 +83,25 @@
   "bugs": {
     "url": "https://github.com/petsel/es-type-detection/issues"
   },
+  "homepage": "https://petsel.github.io/es-type-detection/",
   "sideEffects": false,
   "main": "dist/es-type-detection.cjs.js",
   "module": "dist/es-type-detection.es.js",
   "unpkg": "dist/es-type-detection.umd.js",
   "jsdelivr": "dist/es-type-detection.umd.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "exports": {
     ".": {
       "require": "./dist/es-type-detection.cjs.js",
       "import": "./dist/es-type-detection.es.js"
     }
+  },
+  "engines": {
+    "node": ">=18.17.0"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
