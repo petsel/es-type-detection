@@ -5,7 +5,7 @@ export {};
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**
- * @typedef {Object & {
+ * @typedef {{
  *   constructor: Function,
  *   __brand: 'AnyObject',
  * }} AnyObject
@@ -20,7 +20,7 @@ export {};
  */
 
 /**
- * @typedef {Object & {
+ * @typedef {{
  *   constructor: Object,
  *   __brand: 'PlainObject',
  * }} PlainObject
@@ -61,7 +61,7 @@ export {};
 
 /**
  * @typedef {String & { __brand: 'BoxedString' }} BoxedString
- *  A boxed `String` object type, e.g., `new String('string')` or `Object('string')` .
+ *  A boxed `String` object type, e.g., `new String('string')` or `Object('string')`.
  */
 
 /**

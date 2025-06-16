@@ -103,7 +103,7 @@ export function getTaggedType(...args) {
 /**
  * @param {any} [value]
  *  An optionally passed value of any type.
- * @returns {ClassConstructor | NewableFunction | ES3Function | CallableFunction | undefined}
+ * @returns {ClassConstructor | ES3Function | NewableFunction | undefined}
  *  if available, the passed value's constructor-function - either a built-in
  *  type's constructor-function or an ES6-class constructor-function or an
  *  ES3-function - otherwise `undefined`.
@@ -118,14 +118,14 @@ export function getDefinedConstructor(value = null) {
 
   // various guards.
   if (isFunction(constructor)) {
-    // exit early with valid result.
+    // exit early with a valid result.
     return constructor;
   } else {
     /** @type {Function | undefined} */
     const creator = constructor?.constructor;
 
     if (isFunction(creator)) {
-      // exit early with valid result.
+      // exit early with a valid result.
       return creator;
     }
   }
@@ -151,14 +151,14 @@ export function getDefinedConstructor(value = null) {
 
   // various guards.
   if (isFunction(protoConstructor)) {
-    // exit with probably still valid result.
+    // exit with a probably still valid result.
     return protoConstructor;
   } else {
     /** @type {Function | undefined} */
     const protoCreator = protoConstructor?.constructor;
 
     if (isFunction(protoCreator)) {
-      // exit with probably still valid result.
+      // exit with a probably still valid result.
       return protoCreator;
     }
   }
@@ -168,7 +168,7 @@ export function getDefinedConstructor(value = null) {
 /**
  * Implements a getter for the passed value's constructor-function name.
  * In case of being able to retrieve a constructor, the remaining constraint
- * is due to any function's `name` related property descriptor which by default,
+ * is due to any function's `name` related property descriptor, which by default,
  * hence without any intentional further change, is ...
  *
  * ```
@@ -232,7 +232,7 @@ export function getFunctionSource(value) {
  * This works for every built-in type.
  *
  * In order to assure stable type-identity of custom type systems, based
- * on both class- and ES3- constructor functions, that remain unaffected
+ * on both class- and ES3-constructor functions, that remain unaffected
  * by code minification processes, one has to apply a utility function
  * which does permanently brand such types by writing and freezing both
  * of a constructor-function's property-descriptors - the function's `name`

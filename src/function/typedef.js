@@ -9,6 +9,7 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: Generator,
+ *   __constructorName: 'GeneratorFunction',
  *   __brand: 'GeneratorFunction',
  * }} GeneratorFunction
  *
@@ -17,7 +18,7 @@ export {};
  * /** @type {GeneratorFunction} *\/
  * const generatorFunction = (function* () { yield 1; }).constructor;
  * ```
- * @property {'GeneratorFunction'} [Symbol.toStringTag]
+ * `@property {'GeneratorFunction'} [Symbol.toStringTag]`
  *  Defines the `Symbol.toStringTag` property as `"GeneratorFunction"`.
  */
 
@@ -26,6 +27,7 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: AsyncGenerator,
+ *   __constructorName: 'AsyncGeneratorFunction',
  *   __brand: 'AsyncGeneratorFunction',
  * }} AsyncGeneratorFunction
  *
@@ -34,12 +36,12 @@ export {};
  * /** @type {AsyncGeneratorFunction} *\/
  * const AsyncGeneratorCtor = (async function* () {}).constructor;
  * ```
- * @property {'AsyncGeneratorFunction'} [Symbol.toStringTag]
+ * `@property {'AsyncGeneratorFunction'} [Symbol.toStringTag]`
  *  Defines the `Symbol.toStringTag` property as `"AsyncGeneratorFunction"`.
  */
 
 /**
- * @typedef {Function & {
+ * @typedef {GeneratorFunction | AsyncGeneratorFunction & {
  *   constructor: GeneratorFunction | AsyncGeneratorFunction,
  *   __brand: 'AnyGeneratorFunction',
  * }} AnyGeneratorFunction
@@ -60,10 +62,10 @@ export {};
  * either by an async arrow function expression or by either of both async
  * non-arrow function variants, an async function expression or an async
  * function statement.
- * @property {'AsyncFunction'} [Symbol.toStringTag]
+ * `@property {'AsyncFunction'} [Symbol.toStringTag]`
  *  Defines the `Symbol.toStringTag` property as `"AsyncFunction"`.
  *
- * Within an TypeScript environment (hence `.ts` instead of `.js` files)
+ * Within a TypeScript environment (hence `.ts` instead of `.js` files)
  * one can annotate `AsyncFunction` like that ...
  *
  * const AsyncFunctionConstructor = (async () => {}).constructor;
@@ -72,8 +74,8 @@ export {};
 
 /**
  * @typedef {Function & {
- *   constructor: Function,
  *   prototype: undefined,
+ *   __constructorName: 'Function',
  *   __brand: 'NonAsyncArrow',
  * }} NonAsyncArrow
  *
@@ -84,8 +86,8 @@ export {};
 /**
  * @typedef {Function & {
  *   prototype: undefined,
- *   __brand: 'AnyArrow',
  *   __constructorName: 'Function' | 'AsyncFunction',
+ *   __brand: 'AnyArrow',
  * }} AnyArrow
  *
  * Any variant of an arrow function expression - created as:
@@ -95,21 +97,21 @@ export {};
 
 /**
  * @typedef {Function & {
- *   constructor: Function,
  *   prototype: undefined,
+ *   __constructorName: 'Function',
  *   __brand: 'ConciseGenericMethod',
  * }} ConciseGenericMethod
  *
  * A `Function` type that misses its own `prototype` slot. Thus, it does share
- * some of the characteristics of a `NonAsyncArrow` function type - but it gets
- * created exclusively by a non-async and non-generator shorthand method definition.
+ * some characteristics of a `NonAsyncArrow` function type - but it gets created
+ * exclusively by a non-async and non-generator shorthand method definition.
  * (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions#description).
  */
 
 /**
  * @typedef {Function & {
- *   constructor: Function,
  *   prototype: { writable: true },
+ *   __constructorName: 'Function',
  *   __brand: 'ES3Function',
  * }} ES3Function
  *
@@ -122,9 +124,9 @@ export {};
  * @template T
  * @typedef {new (...args: any[]) => T} ClassConstructor
  *
- * The above generic definition of a class based constructor function
+ * The above generic definition of a class-based constructor function
  * represents any constructable class; or in other words - it represents
- * a `T` type specific class constructor.
+ * a `T` type-specific class constructor.
  *
  * To be used later as e.g. follows ...
  *
@@ -181,7 +183,7 @@ export {};
 //  * A branded subclass constructor that extends the built-in `Function` class.
 //  * Used to represent classes like `class SubclassedFunction extends Function {}`.
 //  *
-//  * One could consider following use case ...
+//  * One could consider following use-case ...
 //  *
 //  * class CustomFunction extends Function {
 //  *   /**
@@ -210,7 +212,7 @@ export {};
 //  * A branded structural type for subclass instances where
 //  * the subclass explicitly extends `Function`.
 //  *
-//  * A valid use case for example is ...
+//  * A valid use-case for example is ...
 //  *
 //  * class CustomFunction extends Function {
 //  *   /**

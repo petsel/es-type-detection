@@ -6,7 +6,7 @@ export {};
 
 /**
  * @template T
- * @typedef {object & {
+ * @typedef {{
  *   value: T,
  *   done: boolean,
  *   __brand: 'IteratorResult',
@@ -21,7 +21,7 @@ export {};
 /** @typedef {import('../function/typedef.js').GeneratorFunction} GeneratorFunction */
 
 /**
- * @typedef {object & {
+ * @typedef {{
  *   constructor: GeneratorFunction,
  *   next: (value?: any) => IteratorResult<any>,
  *   return?: (value?: any) => IteratorResult<any>,
@@ -34,14 +34,14 @@ export {};
  * /** @type {Generator} *\/
  * const generatorType = (function* () { yield 1; })();
  * ```
- * @property {'Generator'} [Symbol.toStringTag]
+ * `@property {'Generator'} [Symbol.toStringTag]`
  *  Defines the `Symbol.toStringTag` property as `"Generator"`.
  */
 
 /** @typedef {import('../function/typedef.js').AsyncGeneratorFunction} AsyncGeneratorFunction */
 
 /**
- * @typedef {object & {
+ * @typedef {{
  *   constructor: AsyncGeneratorFunction,
  *   next: (value?: any) => Promise<IteratorResult<any>>,
  *   return?: (value?: any) => Promise<IteratorResult<any>>,
@@ -56,7 +56,7 @@ export {};
  *   yield await Promise.resolve(1);
  * })();
  * ```
- * @property {'AsyncGenerator'} [Symbol.toStringTag]
+ * `@property {'AsyncGenerator'} [Symbol.toStringTag]`
  *  Defines the `Symbol.toStringTag` property as `"AsyncGenerator"`.
  */
 
@@ -70,7 +70,8 @@ export {};
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**
- * @typedef {object | Function & {
+ * @typedef {{
+ *   constructor: Object | Function,
  *   then: (onFulfilled?: Function, onRejected?: Function) => any,
  *   __brand: 'Thenable',
  * }} Thenable
