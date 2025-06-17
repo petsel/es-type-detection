@@ -43,8 +43,8 @@ console.log(resolveType([])); // "Array"
 - [Project Website](https://petsel.github.io/es-type-detection/)
 
 - [📘 API Reference (HTML, TypeDoc)](https://petsel.github.io/es-type-detection/api/html/index.html)
+- [📄 API Docs (Markdown Export)](https://petsel.github.io/es-type-detection/api/markdown/modules.md)
 - [📊 Test Coverage Report](https://petsel.github.io/es-type-detection/coverage/index.html)
-<!--[📄 API Docs (Markdown Export)](https://petsel.github.io/es-type-detection/api/markdown/modules.md)-->
 
 ## 🛡 License and Usage Notice
 
