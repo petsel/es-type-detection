@@ -10,9 +10,10 @@ import { isFunction } from '../base';
 /**
  * Detects whether a passed value features an own `prototype` property.
  * @param {Function} value
- *  Assumes a function type, but does not check for it.
+ *  Assumes a function type but does not check for it.
  * @returns {boolean}
  *  Whether the passed type features an own `prototype` property.
+ * @category Function Type Detection Helper
  */
 export function hasOwnPrototype(value) {
   return !!getOwnPropertyDescriptor(value, 'prototype');
@@ -22,10 +23,11 @@ export function hasOwnPrototype(value) {
  * Detects whether a passed value features an own, truly `writable`
  * `prototype` property.
  * @param {Function} value
- *  Assumes a function type, but does not check for it.
+ *  Assumes a function type but does not check for it.
  * @returns {boolean}
  *  Whether the passed type features an own, truly `writable`
  *  `prototype` property.
+ * @category Function Type Detection Helper
  */
 export function hasOwnWritablePrototype(value) {
   return getOwnPropertyDescriptor(value, 'prototype')?.writable === true;
@@ -40,7 +42,7 @@ export function hasOwnWritablePrototype(value) {
  * slot; it does never invoke the passed value itself.
  *
  * The `construct` proxy handler is allowed to overwrite the
- * `[[construct]]` slot of a proxied value, but it can not turn
+ * `[[construct]]` slot of a proxied value, but it cannot turn
  * something non constructable into a constructable type.
  *
  * - see ... [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/construct]
@@ -53,6 +55,7 @@ export function hasOwnWritablePrototype(value) {
  * @returns {boolean}
  *  A boolean value which indicates whether the tested
  *  type could possibly serve as constructor function.
+ * @category Function Type Detection Helper
  */
 export function hasConstructSlot(value) {
   let canConstruct = false;
@@ -69,11 +72,12 @@ export function hasConstructSlot(value) {
 /**
  * Detects whether the passed `value` is a constructable function type.
  *
- * It does so by just probing the `[[construct]]` slot of the passed
- * possibly constructable type; it does never invoke the passed type.
+ * It does so by verifying whether a function has an own `prototype`, and in
+ * case it does, by additionally just probing the `[[construct]]` slot of the
+ * passed possibly constructable type; it does never invoke the passed type.
  *
  * The `construct` proxy handler is allowed to overwrite the
- * `[[construct]]` slot of a proxied value, but it can not turn
+ * `[[construct]]` slot of a proxied value, but it cannot turn
  * something non constructable into a constructable type.
  *
  * - see ... [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/construct]
@@ -86,9 +90,11 @@ export function hasConstructSlot(value) {
  * @returns {boolean}
  *  A boolean value which indicates whether the
  *  tested type can serve as constructor function.
+ * @category Function Type Detection Helper
  */
 export function isConstructable(value) {
-  return isFunction(value) && hasConstructSlot(value);
+  return isFunction(value) && hasOwnPrototype(value) && hasConstructSlot(value);
+  // return isFunction(value) && hasConstructSlot(value);
 }
 
 // /**
@@ -100,8 +106,8 @@ export function isConstructable(value) {
 //  * invoke it.
 //  *
 //  * The `construct` proxy handler is allowed to overwrite
-//  * the `[[construct]]` slot of a proxyfied/proxied value,
-//  * but it can not turn something non constructable into
+//  * the `[[construct]]` slot of a proxied value, but
+//  * it cannot turn something non constructable into
 //  * a constructable type.
 //  *
 //  *  - see ... [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/construct]
@@ -111,12 +117,12 @@ export function isConstructable(value) {
 //  *     > the resulting `Proxy` object, the `target` used to initialize
 //  *     > the proxy must itself be a valid constructor."
 //  *
-//  *  - Thus it is feasibly enough to let the construct trap
+//  *  - Thus, it is feasible enough to let the construct trap
 //  *    return an object instance.
 //  *
 //  * **Note:**
 //  *
-//  * The [[construct]] slot of either type of generator functions,
+//  * The [[construct]] slot of either generator function type,
 //  * async or not, indicates that generator functions are not
 //  * constructable, despite each returning a valid instance of
 //  * its type when being invoked with just the call/`()` operator.
@@ -129,7 +135,8 @@ export function isConstructable(value) {
 //  * @param value{any}
 //  * @returns {boolean}
 //  *  A boolean value which indicates whether the
-//  *  tested type can serve as constructor function.
+//  *  tested type can serve as a constructor function.
+//  * @category Function Type Detection Helper
 //  */
 // export function isConstructable(value) {
 //   return (

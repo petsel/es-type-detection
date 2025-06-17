@@ -1,12 +1,14 @@
 {
+  "plugin": ["typedoc-plugin-markdown"],
   "tsconfig": "tsconfig.typedoc.json",
+  "out": "docs/api/markdown",
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
-  "plugin": ["typedoc-plugin-markdown"],
-  "out": "docs/api/markdown",
   "excludeInternal": true,
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "includeVersion": true
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "defaultCategory": "Uncategorized"
 }

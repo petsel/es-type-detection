@@ -21,6 +21,7 @@ import { isFunction, isStringValue } from '../base';
  * @param {any} value
  * @returns {boolean}
  *  Whether the passed value matches the default data-structure of a non-enumerable property-descriptor.
+ * @category Type Identity Helper
  */
 export function doesMatchNonEnumerableDescriptorDefault(value) {
   const { value: key, enumerable, writable, configurable } = value || {};
@@ -36,6 +37,7 @@ export function doesMatchNonEnumerableDescriptorDefault(value) {
  * @returns {boolean}
  *  Whether the passed value matches the stable (redefined)
  *  form of a non-enumerable property-descriptor.
+ * @category Type Identity Helper
  */
 export function doesMatchStableNonEnumerableDescriptor(value) {
   const { get: getKey, value: key, enumerable, writable, configurable } = value || {};
@@ -53,6 +55,7 @@ export function doesMatchStableNonEnumerableDescriptor(value) {
 // /**
 //  * @param {ClassConstructor | ES3Function} constructor
 //  * @returns {boolean}
+//  * @category Type Identity Helper
 //  */
 // export function isStableTypeIdentityCustomConstructor(constructor) {
 //   // guard.
@@ -87,6 +90,7 @@ export function doesMatchStableNonEnumerableDescriptor(value) {
 //  * @param {ClassConstructor | ES3Function} constructor
 //  * @param {string } taggedType
 //  * @returns {boolean}
+//  * @category Type Identity Helper
 //  */
 // export function isStableTaggedCustomConstructor(constructor, taggedType) {
 //   // let isConfirmed = isConstructable(constructor) && (isClass(constructor) || isES3Function(constructor) )

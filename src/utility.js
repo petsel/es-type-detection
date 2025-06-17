@@ -40,6 +40,7 @@ export const getPrototypeOf = Object.getPrototypeOf;
  * @returns {string | undefined}
  *  The value’s internal type signature (e.g., `'[object Array]'` for an
  *  `Array` instance), or the `undefined` value if no argument was passed.
+ * @category Basic Type Detection Helper
  */
 export function getTypeSignature(...args) {
   /** @type {any} */
@@ -71,7 +72,7 @@ export function getTypeSignature(...args) {
  *
  * Custom tag names can be defined via the `Symbol.toStringTag` property.
  *
- * Full example code for a successful  _"spoofing"_ attempt:
+ * Full example code for a successful _"spoofing"_ attempt:
  *
  * ```js
  * const myObj = { foo: 'bar' }
@@ -91,6 +92,7 @@ export function getTypeSignature(...args) {
  * @returns {string | undefined}
  *  The extracted tag name (e.g. `'Array'`, `'Date'`) or `undefined` if no
  *  value was provided.
+ * @category Basic Type Detection Helper
  */
 export function getTaggedType(...args) {
   const result = getTypeSignature(...args);
@@ -107,6 +109,7 @@ export function getTaggedType(...args) {
  *  if available, the passed value's constructor-function - either a built-in
  *  type's constructor-function or an ES6-class constructor-function or an
  *  ES3-function - otherwise `undefined`.
+ * @category Basic Type Detection Helper
  */
 export function getDefinedConstructor(value = null) {
   // guard.
@@ -190,13 +193,14 @@ export function getDefinedConstructor(value = null) {
  * as the latter can be safely excluded, the detection approach is safe.
  * One even can or better yet should take advantage of it, branding a
  * function permanently, in order to e.g. let constructor functions
- * harden each their name as countermeasure to code-minification tasks.
+ * harden each their name as a countermeasure to code-minification tasks.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {string | undefined}
  *  if available, the passed value's constructor-function name - retrieved
  *  exclusively from linked property-descriptors - otherwise `undefined`.
  *  Any unnamed function refers to the empty string value/`''` as its name.
+ * @category Basic Type Detection Helper
  */
 export function getDefinedConstructorName(value) {
   const constructor = getDefinedConstructor(value);
@@ -217,9 +221,10 @@ export function getDefinedConstructorName(value) {
  * ... which helps in passing by some possibly manipulated
  * `toString` functionality.
  * @param {Function} value
- *  Assumes a function type, but does not check for it.
+ *  Assumes a function type but does not check for it.
  * @returns {string}
  *  Returns a function's stringified implementation.
+ * @category Basic Type Detection Helper
  */
 export function getFunctionSource(value) {
   return Function.prototype.toString.call(value).trim();
@@ -227,7 +232,7 @@ export function getFunctionSource(value) {
 
 /**
  * Resolves the passed value's type-name through a combined, balanced approach of
- * retrieving either the value's constructor-function name, or its `toString` tag.
+ * retrieving either the value's constructor-function name or its `toString` tag.
  *
  * This works for every built-in type.
  *
@@ -246,6 +251,7 @@ export function getFunctionSource(value) {
  *  A `'string'` value which either corresponds with the passed value's
  *  constructor-function's name or its tagged type; or the `undefined`
  *  value if no argument was passed.
+ * @category Basic Type Detection Helper
  */
 export function resolveType(...args) {
   /** @type {any} */

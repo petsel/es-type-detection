@@ -2,6 +2,8 @@
 
 export {};
 
+/** @category Base and Boxed Type Detection */
+
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /**

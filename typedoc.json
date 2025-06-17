@@ -1,4 +1,5 @@
 {
+  "out": "docs/api",
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
   "allowJs": true,
@@ -7,6 +8,7 @@
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "out": "docs/api",
-  "includeVersion": true
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "defaultCategory": "Uncategorized"
 }

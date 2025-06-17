@@ -2,6 +2,8 @@
 
 export {};
 
+/** @category Function Type Detection */
+
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @typedef {import('../flow/typedef.js').Generator} Generator */

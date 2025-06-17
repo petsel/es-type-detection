@@ -14,6 +14,7 @@ import { isError } from './index';
  *  whether the passed value along its (non/existing) prototype chain
  *  does feature a prototype object which does qualify as the plain
  *  `Error` type's prototype.
+ * @category Error Type Detection Helper
  */
 export function hasMatchingErrorPrototype(value) {
   const prototype = getPrototypeOf(value) ?? null;
@@ -62,9 +63,10 @@ export function hasMatchingErrorPrototype(value) {
 //  * being executed upon the value it has been delegated to.
 //  * @param {Function} value
 //  *  Assumes and works best with an error
-//  *  type, but does not check for it.
+//  *  type but does not check for it.
 //  * @returns {string}
 //  *  Returns a stringified error signature.
+//  * @category Error Type Detection Helper
 //  */
 // export function getErrorString(value) {
 //   return Error.prototype.toString.call(value).trim();

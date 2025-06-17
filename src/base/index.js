@@ -17,6 +17,7 @@ import { getPrototypeOf, getTypeSignature, getDefinedConstructorName } from '../
  * @returns {value is Function}
  *  A boolean value which indicates whether
  *  the tested type is any kind of function.
+ * @category Base and Boxed Type Detection
  */
 export function isFunction(value) {
   return (
@@ -37,12 +38,13 @@ export function isFunction(value) {
 /**
  * Matches generic object types hence real objects and boxed objects alike
  * excluding function types (though they are technically objects too) and
- * the `null` value which is a primitive value and just a placeholder for
+ * the `null` value, which is a primitive value and just a placeholder for
  * a yet missing/unassigned object type.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is AnyObject}
  *  Whether the passed value matches the generic object type.
+ * @category Base and Boxed Type Detection
  */
 export function isObject(value) {
   // - more explicit. exits early with `false` in case
@@ -62,6 +64,7 @@ export function isObject(value) {
  *  An optionally passed value of any type.
  * @returns {value is PlainObject}
  *  Whether the passed value is a direct instance of the built-in `Object` type.
+ * @category Base and Boxed Type Detection
  */
 export function isObjectObject(value) {
   return (
@@ -71,12 +74,13 @@ export function isObjectObject(value) {
 
 /**
  * Matches object structures which do not have a prototype object.
- * Such objects remain unaffected to changes of `Object.prototype`.
+ * Such objects remain unaffected by changes of `Object.prototype`.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is DictionaryObject}
  *  Whether the passed value can be described as _"Null-prototype object"_
  *  or _"Prototype-less object"_.
+ * @category Base and Boxed Type Detection
  */
 export function isDictionaryObject(value) {
   return getTypeSignature(value) === '[object Object]' && (getPrototypeOf(value) ?? null) === null;
@@ -93,6 +97,7 @@ export function isDictionaryObject(value) {
  *  An optionally passed value of any type.
  * @returns {value is StringValue}
  *  Whether the passed value is a primitive string value.
+ * @category Base and Boxed Type Detection
  */
 export function isStringValue(value) {
   return typeof value === 'string';
@@ -102,6 +107,7 @@ export function isStringValue(value) {
  *  An optionally passed value of any type.
  * @returns {value is BoxedString}
  *  Whether the passed value is a boxed `String` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoxedString(value) {
   return (
@@ -115,6 +121,7 @@ export function isBoxedString(value) {
  *  An optionally passed value of any type.
  * @returns {value is StringType}
  *  Whether the passed value is a string, either a primitive string value or a boxed `String` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isString(value) {
   return isStringValue(value) || isBoxedString(value);
@@ -131,6 +138,7 @@ export function isString(value) {
  *  An optionally passed value of any type.
  * @returns {value is NumberValue}
  *  Whether the passed value is a primitive number value.
+ * @category Base and Boxed Type Detection
  */
 export function isNumberValue(value) {
   return typeof value === 'number';
@@ -140,6 +148,7 @@ export function isNumberValue(value) {
  *  An optionally passed value of any type.
  * @returns {value is BoxedNumber}
  *  Whether the passed value is a boxed `Number` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoxedNumber(value) {
   return (
@@ -153,6 +162,7 @@ export function isBoxedNumber(value) {
  *  An optionally passed value of any type.
  * @returns {value is NumberType}
  *  Whether the passed value is a number, either a primitive number value or a boxed `Number` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isNumber(value) {
   return isNumberValue(value) || isBoxedNumber(value);
@@ -169,6 +179,7 @@ export function isNumber(value) {
  *  An optionally passed value of any type.
  * @returns {value is BooleanValue}
  *  Whether the passed value is a primitive boolean value.
+ * @category Base and Boxed Type Detection
  */
 export function isBooleanValue(value) {
   return typeof value === 'boolean';
@@ -178,6 +189,7 @@ export function isBooleanValue(value) {
  *  An optionally passed value of any type.
  * @returns {value is BoxedBoolean}
  *  Whether the passed value is a boxed `Boolean` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoxedBoolean(value) {
   return (
@@ -191,6 +203,7 @@ export function isBoxedBoolean(value) {
  *  An optionally passed value of any type.
  * @returns {value is BooleanType}
  *  Whether the passed value is boolean, either a primitive boolean value or a boxed `Boolean` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoolean(value) {
   return isBooleanValue(value) || isBoxedBoolean(value);
@@ -207,6 +220,7 @@ export function isBoolean(value) {
  *  An optionally passed value of any type.
  * @returns {value is SymbolValue}
  *  Whether the passed value is a primitive symbol value.
+ * @category Base and Boxed Type Detection
  */
 export function isSymbolValue(value) {
   return typeof value === 'symbol';
@@ -216,6 +230,7 @@ export function isSymbolValue(value) {
  *  An optionally passed value of any type.
  * @returns {value is BoxedSymbol}
  *  Whether the passed value is a purposely boxed `Symbol` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoxedSymbol(value) {
   return (
@@ -229,6 +244,7 @@ export function isBoxedSymbol(value) {
  *  An optionally passed value of any type.
  * @returns {value is SymbolType}
  *  Whether the passed value is a symbol, either a primitive symbol value or a purposely boxed `Symbol` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isSymbol(value) {
   return isSymbolValue(value) || isBoxedSymbol(value);
@@ -245,6 +261,7 @@ export function isSymbol(value) {
  *  An optionally passed value of any type.
  * @returns {value is BigIntValue}
  *  Whether the passed value is a primitive bigint value.
+ * @category Base and Boxed Type Detection
  */
 export function isBigIntValue(value) {
   return typeof value === 'bigint';
@@ -254,6 +271,7 @@ export function isBigIntValue(value) {
  *  An optionally passed value of any type.
  * @returns {value is BoxedBigInt}
  *  Whether the passed value is a purposely boxed `BigInt` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBoxedBigInt(value) {
   return (
@@ -267,6 +285,7 @@ export function isBoxedBigInt(value) {
  *  An optionally passed value of any type.
  * @returns {value is BigIntType}
  *  Whether the passed value is a bigint, either a primitive bigint value or a purposely boxed `BigInt` object type.
+ * @category Base and Boxed Type Detection
  */
 export function isBigInt(value) {
   return isBigIntValue(value) || isBoxedBigInt(value);

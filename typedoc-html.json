@@ -1,11 +1,13 @@
 {
   "tsconfig": "tsconfig.typedoc.json",
+  "out": "docs/api/html",
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
-  "out": "docs/api/html",
   "excludeInternal": true,
   "excludeExternals": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "includeVersion": true
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "defaultCategory": "Uncategorized"
 }

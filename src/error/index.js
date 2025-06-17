@@ -13,8 +13,9 @@ import { hasMatchingErrorPrototype } from './utility';
  * @returns {value is AnyError}
  *  whether the passed value matches any error type, hence it is
  *  an instance, either of the basic `Error` type, or of one of the
- *  built-in error-type subclasses (`SyntaxError`, `ReferenceError` etc.),
+ *  built-in error-type subclasses (`SyntaxError`, `ReferenceError`, etc.),
  *  or of a custom error-type that extends the basic `Error` type.
+ * @category Error Type Detection
  */
 export function isError(value) {
   const signature = getTypeSignature(value);
@@ -46,6 +47,7 @@ export function isError(value) {
  *  An optionally passed value of any type.
  * @returns {value is PlainError}
  *  whether the passed value matches exactly the built-in basic `Error` type.
+ * @category Error Type Detection
  */
 export function isErrorError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'Error';
@@ -56,6 +58,7 @@ export function isErrorError(value) {
  *  An optionally passed value of any type.
  * @returns {value is EvalError}
  *  whether the passed value matches exactly the built-in `EvalError` subtype.
+ * @category Error Type Detection
  */
 export function isEvalError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'EvalError';
@@ -66,6 +69,7 @@ export function isEvalError(value) {
  *  An optionally passed value of any type.
  * @returns {value is RangeError}
  *  whether the passed value matches exactly the built-in `RangeError` subtype.
+ * @category Error Type Detection
  */
 export function isRangeError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'RangeError';
@@ -76,6 +80,7 @@ export function isRangeError(value) {
  *  An optionally passed value of any type.
  * @returns {value is ReferenceError}
  *  whether the passed value matches exactly the built-in `ReferenceError` subtype.
+ * @category Error Type Detection
  */
 export function isReferenceError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'ReferenceError';
@@ -86,6 +91,7 @@ export function isReferenceError(value) {
  *  An optionally passed value of any type.
  * @returns {value is SyntaxError}
  *  whether the passed value matches exactly the built-in `SyntaxError` subtype.
+ * @category Error Type Detection
  */
 export function isSyntaxError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'SyntaxError';
@@ -96,6 +102,7 @@ export function isSyntaxError(value) {
  *  An optionally passed value of any type.
  * @returns {value is TypeError}
  *  whether the passed value matches exactly the built-in `TypeError` subtype.
+ * @category Error Type Detection
  */
 export function isTypeError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'TypeError';
@@ -106,6 +113,7 @@ export function isTypeError(value) {
  *  An optionally passed value of any type.
  * @returns {value is URIError}
  *  whether the passed value matches exactly the built-in `URIError` subtype.
+ * @category Error Type Detection
  */
 export function isURIError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'URIError';
@@ -116,6 +124,7 @@ export function isURIError(value) {
  *  An optionally passed value of any type.
  * @returns {value is AggregateError}
  *  whether the passed value matches exactly the built-in `AggregateError` subtype.
+ * @category Error Type Detection
  */
 export function isAggregateError(value) {
   return isError(value) && getDefinedConstructorName(value) === 'AggregateError';

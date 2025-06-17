@@ -24,6 +24,7 @@ import { isFunction } from '../base';
  * @returns {value is ClassConstructor}
  *  A boolean value which indicates whether the
  *  tested value is a class-constructor function.
+ * @category Function Type Detection
  */
 export function isClass(value) {
   return (
@@ -46,6 +47,7 @@ export function isClass(value) {
 //  * @returns {value is SubclassedConstructor}
 //  *  A boolean value which indicates whether the
 //  *  tested value is a subclassed constructor function.
+//  * @category Function Type Detection
 //  */
 // export function isSubclass(value) {
 //   return (
@@ -66,6 +68,7 @@ export function isClass(value) {
  * @returns {value is GeneratorFunction}
  *  A boolean value which indicates whether the tested value is exclusively a
  *  `GeneratorFunction` type.
+ * @category Function Type Detection
  */
 export function isGeneratorFunction(value) {
   return (
@@ -84,6 +87,7 @@ export function isGeneratorFunction(value) {
  * @returns {value is AsyncGeneratorFunction}
  *  A boolean value which indicates whether the tested value is exclusively an
  *  `AsyncGeneratorFunction` type.
+ * @category Function Type Detection
  */
 export function isAsyncGeneratorFunction(value) {
   return (
@@ -103,6 +107,7 @@ export function isAsyncGeneratorFunction(value) {
  * @returns {value is AnyGeneratorFunction}
  *  A boolean value which indicates whether the tested value is either
  *  an async or a non-async generator function.
+ * @category Function Type Detection
  */
 export function isAnyGeneratorFunction(value) {
   if (isFunction(value)) {
@@ -128,12 +133,13 @@ export function isAnyGeneratorFunction(value) {
  * or an async function statement.
  * It does not detect an async generator function since the latter is not
  * an async function itself but the factory function of an async generator.
- * Async functions do return promises, but do not return async generators.
+ * Async functions do return promises but do not return async generators.
  * @param {any} [value]
  *  An optionally passed value of any type.
  * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether
  *  the tested value is an async function.
+ * @category Function Type Detection
  */
 export function isAsyncFunction(value) {
   return (
@@ -152,6 +158,7 @@ export function isAsyncFunction(value) {
  * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether the tested value does match
  *  exclusively a non-arrow async function.
+ * @category Function Type Detection
  */
 export function isAsyncNonArrow(value) {
   return (
@@ -168,6 +175,7 @@ export function isAsyncNonArrow(value) {
  * @returns {value is AsyncFunction}
  *  A boolean value which indicates whether the tested value is exclusively
  *  an async arrow function.
+ * @category Function Type Detection
  */
 export function isAsyncArrow(value) {
   return (
@@ -186,6 +194,7 @@ export function isAsyncArrow(value) {
  * @returns {value is NonAsyncArrow}
  *  A boolean value which indicates whether the tested value is exclusively
  *  a non-async arrow function.
+ * @category Function Type Detection
  */
 export function isNonAsyncArrow(value) {
   return isArrow(value) && !isAsyncFunction(value);
@@ -201,6 +210,7 @@ export function isNonAsyncArrow(value) {
  * @returns {value is AnyArrow}
  *  A boolean value which indicates whether the tested value is
  *  either an async or a non-async arrow function expression.
+ * @category Function Type Detection
  */
 export function isArrow(value) {
   return (
@@ -223,6 +233,7 @@ export function isArrow(value) {
  *  A boolean value which indicates whether the tested value is exclusively
  *  the only available/known function type back at ES3 (in addition to all
  *  the built-in constructor functions).
+ * @category Function Type Detection
  */
 export function isES3Function(value) {
   return (
@@ -250,6 +261,7 @@ export function isES3Function(value) {
  *  A boolean value which indicates whether the tested value is exclusively a
  *  concise generic method, a function created by a non-async and non-generator
  *  shorthand method definition.
+ * @category Function Type Detection
  */
 export function isConciseGenericMethod(value) {
   return (
@@ -257,8 +269,8 @@ export function isConciseGenericMethod(value) {
     !hasOwnPrototype(value) &&
     getTypeSignature(value) === '[object Function]' &&
     getDefinedConstructorName(value) === 'Function' &&
-    // - until here all of the above steps do
-    //   apply for non-async arrow functions too.
+    // - until here all above steps do apply
+    //   for non-async arrow functions too.
 
     !isArrow(value)
   );
@@ -274,7 +286,7 @@ export function isConciseGenericMethod(value) {
  * - or a non-async arrow function expression.
  * - or either a non-async and non-generator concise method (shorthand function definition).
  *
- * Thus following specific (non-generic) function types are excluded ...
+ * Thus, the following specific (non-generic) function types are excluded ...
  *
  * - class constructor functions,
  * - any generator function,
@@ -287,6 +299,7 @@ export function isConciseGenericMethod(value) {
  * @returns {value is (ES3Function | NonAsyncArrow)}
  *  A boolean value which indicates whether the tested value is either
  *  a good old ES3 function or a non-async arrow function expression.
+ * @category Function Type Detection
  */
 export function isGenericFunction(value) {
   return (
@@ -350,6 +363,7 @@ export function isGenericFunction(value) {
 //  * @returns {value is FunctionSubtype}
 //  *  A boolean value which indicates whether the tested type is a
 //  *  `Function` subtype (an instance of a class which extends `Function`).
+//  * @category Function Type Detection
 //  */
 // export function isFunctionSubtype(value) {
 //   return (
@@ -372,6 +386,7 @@ export function isGenericFunction(value) {
  * @returns {value is UnnamedFunction}
  *  A boolean value which indicates whether
  *  the tested type is an unnamed function.
+ * @category Function Type Detection
  */
 export function isUnnamedFunction(value) {
   return isFunction(value) && value.name === '';

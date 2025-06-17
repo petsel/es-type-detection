@@ -27,7 +27,7 @@ const defineProperty = Object.defineProperty;
 
 /**
  * Does approve whether the passed value features the type-identity of any built-in type
- * which is ...the passed value is an instance of one of the language core's built-in
+ * that is ...the passed value is an instance of one of the language core's built-in
  * types and either does not have any `Symbol.toStringTag` related slots or features
  * just the type's standard-conform default `Symbol.toStringTag` property-descriptor.
  * @param {...any} args
@@ -37,6 +37,7 @@ const defineProperty = Object.defineProperty;
  *  and a completely omitted argument.
  * @returns {boolean}
  *  Whether the passed value features the built-in type-identity.
+ * @category Type Identity
  */
 export function hasBuiltinTypeIdentity(...args) {
   let isConfirmed = args.length >= 1;
@@ -46,7 +47,7 @@ export function hasBuiltinTypeIdentity(...args) {
     const value = args[0] ?? null;
 
     // - `null` and `undefined` both have a stable type-identity.
-    //   Thus, further checks are not necessary, stability already
+    //   Thus, further checks are not necessary; stability already
     //   is confirmed.
     if (value !== null && (isConfirmed = !isClass(value.constructor))) {
       const toStringTagSymbol = Symbol.toStringTag;
@@ -105,7 +106,7 @@ const builtInToStringTagTypes = new Set(['Math', 'JSON', 'Reflect', 'Atomics']);
 /**
  * Does approve whether the passed value features a custom applied type-identity,
  * which is ... there are `Symbol.toStringTag` related slots available, directly
- * owned either by the passed value itself or by its prototype, and none of it
+ * owned either by the passed value itself or by its prototype, and none of them
  * can be matched against a built-in type-identity.
  * @param {...any} args
  *  A variadic argument list. The first argument (`args[0]`) is the optional
@@ -114,6 +115,7 @@ const builtInToStringTagTypes = new Set(['Math', 'JSON', 'Reflect', 'Atomics']);
  *  and a completely omitted argument.
  * @returns {boolean}
  *  Whether the passed value features a custom applied type-identity.
+ * @category Type Identity
  */
 export function hasCustomTypeIdentity(...args) {
   let isConfirmed = args.length >= 1 && !hasBuiltinTypeIdentity(...args);
@@ -157,6 +159,7 @@ export function hasCustomTypeIdentity(...args) {
  *  and a completely omitted argument.
  * @returns {boolean}
  *  Whether the passed value features a stable type-identity.
+ * @category Type Identity
  */
 export function hasStableTypeIdentity(...args) {
   let isConfirmed = hasBuiltinTypeIdentity(...args);
@@ -186,9 +189,9 @@ export function hasStableTypeIdentity(...args) {
     const descriptor = typeTagDescriptor || prototypeTagDescriptor;
 
     // @IMPORTANT ... never change the inverse but explicitly excluding logic
-    //                for the  `writable` property. This is due to how the
+    //                for the `writable` property. This is due to how the
     //                prototypal `[Symbol.toStringTag]` getter function of
-    //                any class based implementation does create its related
+    //                any class-based implementation does create its related
     //                property-descriptor.
     //  ```
     //  get [Symbol.toStringTag]() {
@@ -253,6 +256,7 @@ export function getTrustedType(type) {
  * @returns {boolean}
  *  Whether the "Stable Type Identity" could be
  *  successfully applied upon the passed constructor.
+ * @category Type Identity
  */
 export function defineStableTypeIdentity(constructor, constructorName, taggedType) {
   // guard.
@@ -273,7 +277,7 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
     throw new TypeError('The provided "constructorName" parameter needs to be a string.');
   }
   // - assure a string value primitive because that is what a name-descriptor will be checked
-  //   for in order to pass as stable descriptor for a reliably type-identity verification.
+  //   for in order to pass as a stable descriptor for the reliable type-identity verification.
   constructorName = String(constructorName).trim();
 
   // guard.
@@ -283,8 +287,8 @@ export function defineStableTypeIdentity(constructor, constructorName, taggedTyp
   if (!isString(taggedType)) {
     taggedType = constructorName;
   } else {
-    // - assure a string value primitive because that is what a `Symbol.toStringTag`-descriptor will
-    //   be checked for in order to pass as stable descriptor for a reliably type-identity verification.
+    // - assure a string value primitive because that is what a `Symbol.toStringTag`-descriptor will be
+    //   checked for in order to pass as a stable descriptor for the reliable type-identity verification.
     taggedType = String(taggedType).trim();
   }
 
