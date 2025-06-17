@@ -86,7 +86,7 @@
   "homepage": "https://petsel.github.io/es-type-detection/",
   "sideEffects": false,
   "main": "dist/es-type-detection.cjs.js",
-  "module": "dist/es-type-detection.es.js",
+  "module": "dist/es-type-detection.esm.js",
   "unpkg": "dist/es-type-detection.umd.js",
   "jsdelivr": "dist/es-type-detection.umd.js",
   "files": [
@@ -97,7 +97,7 @@
   "exports": {
     ".": {
       "require": "./dist/es-type-detection.cjs.js",
-      "import": "./dist/es-type-detection.es.js"
+      "import": "./dist/es-type-detection.esm.js"
     }
   },
   "engines": {

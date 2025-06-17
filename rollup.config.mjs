@@ -4,7 +4,7 @@ import terser from '@rollup/plugin-terser';
 
 // const formats = [
 //   { format: 'cjs', file: 'dist/es-type-detection.cjs.js' },
-//   { format: 'es', file: 'dist/es-type-detection.es.js' },
+//   { format: 'es', file: 'dist/es-type-detection.esm.js' },
 //   { format: 'umd', file: 'dist/es-type-detection.umd.js', name: 'ESTypeDetection' },
 //   { format: 'umd', file: 'dist/es-type-detection.umd.min.js', name: 'ESTypeDetection', plugins: [terser()] }
 // ];
