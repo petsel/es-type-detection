@@ -739,10 +739,12 @@ describe('Testing all `Function` introspection methods related to function types
         allTestEntries.filter(([key /* , spec */]) =>
           isConstructable(getTestCandidateBySpecificationKey(key))
         ).length
-      ).toStrictEqual(allTestEntries.filter(([_, spec]) => spec.is_constructable).length);
+      ).toStrictEqual(allTestEntries.filter(([_, spec]) => !!spec.is_constructable).length);
 
       // counter check on the test configuration.
-      expect(allTestEntries.filter(([_, spec]) => spec.is_constructable).length).toStrictEqual(9);
+      expect(allTestEntries.filter(([_, spec]) => !!spec.is_constructable).length).toStrictEqual(
+        13
+      );
     });
 
     describe('... verifies whether ...', () => {

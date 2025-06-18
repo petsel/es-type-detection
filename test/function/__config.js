@@ -325,37 +325,37 @@ export const testIndex = {
         is_constructable: true
         // constructableWithNew: true,
         // constructableWithoutNew: false,
-      }
+      },
 
-      // BigInt: {
-      //   description: 'the built-in `BigInt` type',
-      //   // callable: true,
-      //   is_constructable: true,
-      //   // constructableWithNew: false,
-      //   // constructableWithoutNew: true,
-      // },
-      // Symbol: {
-      //   description: 'the built-in `Symbol` type',
-      //   // callable: true,
-      //   is_constructable: true,
-      //   // constructableWithNew: false,
-      //   // constructableWithoutNew: true,
-      // },
-      //
-      // String: {
-      //   description: 'the built-in `String` type',
-      //   // callable: true,
-      //   is_constructable: true,
-      //   // constructableWithNew: true,
-      //   // constructableWithoutNew: false,
-      // },
-      // Array: {
-      //   description: 'the built-in `Object` type',
-      //   // callable: true,
-      //   is_constructable: true,
-      //   // constructableWithNew: true,
-      //   // constructableWithoutNew: true,
-      // },
+      BigInt: {
+        description: 'the built-in `BigInt` type',
+        // callable: true,
+        is_constructable: true
+        // constructableWithNew: false,
+        // constructableWithoutNew: true,
+      },
+      Symbol: {
+        description: 'the built-in `Symbol` type',
+        // callable: true,
+        is_constructable: true
+        // constructableWithNew: false,
+        // constructableWithoutNew: true,
+      },
+
+      String: {
+        description: 'the built-in `String` type',
+        // callable: true,
+        is_constructable: true
+        // constructableWithNew: true,
+        // constructableWithoutNew: false,
+      },
+      Array: {
+        description: 'the built-in `Array` type',
+        // callable: true,
+        is_constructable: true
+        // constructableWithNew: true,
+        // constructableWithoutNew: true,
+      }
     }
   },
   candidate: {
