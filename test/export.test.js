@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-  getTypeSignature,
+  resolveType,
   getTaggedType,
-  getDefinedConstructor,
+  getTypeSignature,
   getDefinedConstructorName,
-  resolveType
+  getDefinedConstructor
 } from '../src/utility';
 
 import {
@@ -76,9 +76,9 @@ import {
   isGenerator,
   isAsyncGenerator,
   isAnyGenerator,
+  isPromise,
   doesMatchThenable,
-  doesMatchSafeThenable,
-  isPromise
+  doesMatchSafeThenable
 } from '../src/flow';
 
 import module from '../src';
@@ -96,37 +96,49 @@ describe('The top most exported module ...', () => {
   it('... is expected to be a plain object (that)...', () => {
     expect(isObjectObject(module)).toStrictEqual(true);
   });
-  it('... features exactly 5 own property keys.', () => {
-    expect(Object.keys(module).length).toStrictEqual(5);
+  it('... features exactly 6 own property keys.', () => {
+    expect(Object.keys(module).length).toStrictEqual(6);
   });
 
   describe('... 🛠️ should feature the `utility` property ...', () => {
     it('... which itself refers a plain object too ...', () => {
       expect(isObjectObject(module.utility)).toStrictEqual(true);
     });
-    it('... that again features exactly 11 own property keys.', () => {
-      expect(Object.keys(module.utility).length).toStrictEqual(12);
+    it('... that again features exactly 8 own property keys.', () => {
+      expect(Object.keys(module.utility).length).toStrictEqual(8);
     });
     describe('The `utility` namespace should feature following utility methods ...', () => {
       runTestCases(module.utility, [
-        ['getTypeSignature', getTypeSignature],
-        ['getTaggedType', getTaggedType],
-
-        ['getDefinedConstructor', getDefinedConstructor],
-        ['getDefinedConstructorName', getDefinedConstructorName],
-
         ['resolveType', resolveType],
 
-        ['defineStableTypeIdentity', defineStableTypeIdentity],
+        ['getTaggedType', getTaggedType],
+        ['getTypeSignature', getTypeSignature],
 
-        ['hasStableTypeIdentity', hasStableTypeIdentity],
-        ['hasCustomTypeIdentity', hasCustomTypeIdentity],
-        ['hasBuiltinTypeIdentity', hasBuiltinTypeIdentity],
+        ['getDefinedConstructorName', getDefinedConstructorName],
+        ['getDefinedConstructor', getDefinedConstructor],
 
         ['hasConstructSlot', hasConstructSlot],
 
         ['hasOwnPrototype', hasOwnPrototype],
         ['hasOwnWritablePrototype', hasOwnWritablePrototype]
+      ]);
+    });
+  });
+
+  describe('... 🪞 should feature the `identity` property ...', () => {
+    it('... which itself refers a plain object too ...', () => {
+      expect(isObjectObject(module.identity)).toStrictEqual(true);
+    });
+    it('... that again features exactly 11 own property keys.', () => {
+      expect(Object.keys(module.identity).length).toStrictEqual(4);
+    });
+    describe('The `identity` namespace should feature following identity methods ...', () => {
+      runTestCases(module.identity, [
+        ['defineStableTypeIdentity', defineStableTypeIdentity],
+
+        ['hasStableTypeIdentity', hasStableTypeIdentity],
+        ['hasCustomTypeIdentity', hasCustomTypeIdentity],
+        ['hasBuiltinTypeIdentity', hasBuiltinTypeIdentity]
       ]);
     });
   });
@@ -238,10 +250,10 @@ describe('The top most exported module ...', () => {
         ['isAsyncGenerator', isAsyncGenerator],
         ['isAnyGenerator', isAnyGenerator],
 
-        ['doesMatchThenable', doesMatchThenable],
-        ['doesMatchSafeThenable', doesMatchSafeThenable],
+        ['isPromise', isPromise],
 
-        ['isPromise', isPromise]
+        ['doesMatchThenable', doesMatchThenable],
+        ['doesMatchSafeThenable', doesMatchSafeThenable]
       ]);
     });
   });

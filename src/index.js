@@ -1,9 +1,9 @@
 import {
-  getTypeSignature,
+  resolveType,
   getTaggedType,
-  getDefinedConstructor,
+  getTypeSignature,
   getDefinedConstructorName,
-  resolveType
+  getDefinedConstructor
 } from './utility';
 
 import {
@@ -74,26 +74,23 @@ import {
   isGenerator,
   isAsyncGenerator,
   isAnyGenerator,
+  isPromise,
   doesMatchThenable,
-  doesMatchSafeThenable,
-  isPromise
+  doesMatchSafeThenable
 } from './flow';
 
 /* eslint-disable sort-keys */
 export default {
-  utility: {
-    getTypeSignature,
-    getTaggedType,
-    getDefinedConstructor,
-    getDefinedConstructorName,
-    resolveType,
-    defineStableTypeIdentity,
-    hasStableTypeIdentity,
-    hasCustomTypeIdentity,
-    hasBuiltinTypeIdentity,
-    hasConstructSlot,
-    hasOwnPrototype,
-    hasOwnWritablePrototype
+  error: {
+    isError,
+    isErrorError,
+    isEvalError,
+    isRangeError,
+    isReferenceError,
+    isSyntaxError,
+    isTypeError,
+    isURIError,
+    isAggregateError
   },
   base: {
     isFunction,
@@ -132,24 +129,29 @@ export default {
     isConciseGenericMethod,
     isUnnamedFunction
   },
-  error: {
-    isError,
-    isErrorError,
-    isEvalError,
-    isRangeError,
-    isReferenceError,
-    isSyntaxError,
-    isTypeError,
-    isURIError,
-    isAggregateError
-  },
   flow: {
     isGenerator,
     isAsyncGenerator,
     isAnyGenerator,
+    isPromise,
     doesMatchThenable,
-    doesMatchSafeThenable,
-    isPromise
+    doesMatchSafeThenable
+  },
+  identity: {
+    defineStableTypeIdentity,
+    hasStableTypeIdentity,
+    hasCustomTypeIdentity,
+    hasBuiltinTypeIdentity
+  },
+  utility: {
+    resolveType,
+    getTaggedType,
+    getTypeSignature,
+    getDefinedConstructorName,
+    getDefinedConstructor,
+    hasConstructSlot,
+    hasOwnPrototype,
+    hasOwnWritablePrototype
   }
 };
 /* eslint-enable sort-keys */
